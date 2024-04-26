@@ -1,10 +1,5 @@
 // for use in typingmind as a standalone sourced script, including on mobile
 
-const Mine = {
-  qsaa: qs => Array.from(document.querySelectorAll(qs)),
-  noop: () => {},
-  isi: injectStylesheetIdempotent,
-};
 const injectStylesheetIdempotent = (cssTemplateString = '') => {
   const curedCssTemplateString = cssTemplateString.trim();
   const allStyleTagContents = Mine.qsaa('style').map(e => e.textContent);
@@ -18,6 +13,11 @@ const injectStylesheetIdempotent = (cssTemplateString = '') => {
   const uninitializer = () => newStyleTag.remove();
 
   return uninitializer;
+};
+const Mine = {
+  qsaa: qs => Array.from(document.querySelectorAll(qs)),
+  noop: () => {},
+  isi: injectStylesheetIdempotent,
 };
 
 Mine.isi(`
