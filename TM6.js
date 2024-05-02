@@ -81,6 +81,10 @@ body {
 .response-block li:nth-child(even), .response-block p:nth-child(even) {
   background-color: RGBA(0,0,0,0.3);
 }
+
+[data-element-id="list-more-button"] {
+  display: none;
+}
 `);
   const main = async () => {
   };
