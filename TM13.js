@@ -11,6 +11,8 @@
   } else {
     let lastOpenChat;
     const setLastOpenedChat = async () => {
+      if (!document.hasFocus()) return;
+
       const chatId = window.location.hash.split('chat=')[1] || '';
       if (chatId !== lastOpenChat) {
         localStorage.setItem('mine_lastOpenChatId', chatId);
