@@ -1,12 +1,12 @@
 // for use in typingmind as a standalone sourced script, including on mobile.
 // runs at global scope
 (() => {
-  if (window.location.href.includes('mine_use_last_chat=true')) {
+  if (window.location.href.includes('#mine_use_last_chat=true')) {
     const chatId = localStorage.getItem('mine_lastOpenChatId') || '';
     if (chatId) {
       window.location.href = `https://www.typingmind.com/#chat=${chatId}`;
     } else {
-      window.location.href = `https://www.typingmind.com/`;
+      window.location.href = `https://www.typingmind.com/#`;
     }
   } else {
     let lastOpenChat;
