@@ -14,7 +14,7 @@
       if (!document.hasFocus()) return;
 
       const chatId = window.location.hash.split('chat=')[1] || '';
-      if (chatId !== lastOpenChat) {
+      if (chatId !== lastOpenChat && chatId) {
         localStorage.setItem('mine_lastOpenChatId', chatId);
         lastOpenChat = chatId;
       }
