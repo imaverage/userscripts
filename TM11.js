@@ -4,9 +4,10 @@
   if (window.location.href.includes('#mine_use_last_chat=true')) {
     const chatId = localStorage.getItem('mine_lastOpenChatId') || '';
     if (chatId) {
-      window.location.href = `https://www.typingmind.com/#chat=${chatId}`;
+      window.location.hash = `#chat=${chatId}`;
+      window.location.reload();
     } else {
-      window.location.href = `https://www.typingmind.com/#`;
+      window.location.hash = `https://www.typingmind.com/#`;
     }
   } else {
     let lastOpenChat;
