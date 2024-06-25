@@ -23,6 +23,17 @@
   };
   
   Mine.isi(`
+/* hide avatar on mobile */
+@media (max-width: 767px) {
+  [data-element-id="response-block"] {
+    padding-left: 0;
+  }
+
+  [data-element-id="chat-avatar-container"] {
+    display: none;
+  }
+}
+
 div:has(> div > img[src="/logo.png"]) {
   display: none;
 }
