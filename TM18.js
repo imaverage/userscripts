@@ -51,6 +51,11 @@
   [data-element-id="chat-avatar-container"] {
     display: none;
   }
+
+  /* model name snippet */
+  [data-element-id="current-chat-title"] .truncate {
+    display: none;
+  }
 }
 
 div:has(> div > img[src="/logo.png"]) {
