@@ -53,7 +53,7 @@
   }
 
   /* model name snippet */
-  [data-element-id="current-chat-title"] [aria-haspopup="menu"] .truncate
+  [data-element-id="current-chat-title"] [aria-haspopup="menu"] .truncate {
     display: none;
   }
 }
