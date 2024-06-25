@@ -5,6 +5,7 @@
     const chatId = localStorage.getItem('mine_lastOpenChatId') || '';
     if (chatId) {
       window.location.href = `https://www.typingmind.com/?#chat=${chatId}`;
+      return;
     } else {
       window.location.hash = `https://www.typingmind.com/#`;
     }
