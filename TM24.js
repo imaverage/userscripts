@@ -396,6 +396,7 @@ body {
           event.source.postMessage({ encryptedError }, "*");
         };
         if (!memoryPluginPassword) {
+          // alert not showing up seem to fail silently and hang
           alert('memory plugin password not found. start a new chat and send a message "memoryPluginPassword=<the-password-no-quotes>" with no quotes');
           await fail();
           return;
