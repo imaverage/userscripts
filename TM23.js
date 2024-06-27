@@ -202,5 +202,216 @@ body {
     attachMetaInfoV1();
   }
 
+  const installMemoryPluginV1 = async () => {
+    const api = {
+      SEARCH: async ({query, lookbackDays}) => searchRef(query, lookbackDays),
+    };
+  
+    const searchRef = async (query, lookbackDays) => {
+      const dbName = 'keyval-store';
+      const storeName = 'keyval';
+      const results = [];
+  
+      // Calculate the start date based on lookbackDays
+      const startDate = new Date();
+      startDate.setDate(startDate.getDate() - lookbackDays);
+  
+      return new Promise((resolve, reject) => {
+        const request = indexedDB.open(dbName);
+  
+        request.onerror = event => reject(`IndexedDB error: ${event.target.error}`);
+  
+        request.onsuccess = event => {
+          const db = event.target.result;
+          const transaction = db.transaction([storeName], 'readonly');
+          const store = transaction.objectStore(storeName);
+          const cursorRequest = store.openCursor();
+  
+          cursorRequest.onerror = event => reject(`Cursor error: ${event.target.error}`);
+  
+          cursorRequest.onsuccess = event => {
+            const cursor = event.target.result;
+            if (cursor) {
+              const key = cursor.key;
+              const value = cursor.value;
+  
+              // Check if the key starts with 'CHAT_' and has a messages array
+              if (key.startsWith('CHAT_') && Array.isArray(value.messages)) {
+                // Create a case-insensitive word boundary regex
+                const regex = new RegExp(`\\b${query}\\b`, 'i');
+  
+                // Filter user messages that match the query and are after the start date
+                const matchingMessages = value.messages
+                  .filter(msg =>
+                    msg.role === 'user' &&
+                    regex.test(msg.content) &&
+                    new Date(msg.createdAt) >= startDate
+                  )
+                  .map(msg => ({
+                    content: msg.content,
+                    createdAt: msg.createdAt
+                  }));
+  
+                results.push(...matchingMessages);
+              }
+  
+              cursor.continue();
+            } else {
+              // Sort results by createdAt in descending order (most recent first)
+              results.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+              resolve(results);
+            }
+          };
+        };
+      });
+    };
+  
+    const getMemoryPluginPassword = async () => {
+      const dbName = 'keyval-store';
+      const storeName = 'keyval';
+  
+      return new Promise((resolve, reject) => {
+        const request = indexedDB.open(dbName);
+  
+        request.onerror = event => reject(`IndexedDB error: ${event.target.error}`);
+  
+        request.onsuccess = event => {
+          const db = event.target.result;
+          const transaction = db.transaction([storeName], 'readonly');
+          const store = transaction.objectStore(storeName);
+          const cursorRequest = store.openCursor();
+  
+          cursorRequest.onerror = event => reject(`Cursor error: ${event.target.error}`);
+  
+          cursorRequest.onsuccess = event => {
+            const cursor = event.target.result;
+            if (cursor) {
+              const key = cursor.key;
+              const value = cursor.value;
+  
+              if (key.startsWith('CHAT_') && Array.isArray(value.messages)) {
+                const passwordMessage = value.messages.find(msg =>
+                  msg.role === 'user' &&
+                  typeof msg.content === 'string' &&
+                  msg.content.trim().match(/^memoryPluginPassword=.+$/)
+                );
+  
+                if (passwordMessage) {
+                  const password = passwordMessage.content.trim().split('=')[1];
+                  resolve(password);
+                  return;
+                }
+              }
+  
+              cursor.continue();
+            } else {
+              resolve(null);
+            }
+          };
+        };
+      });
+    };
+    const memoryPluginPassword = await getMemoryPluginPassword();
+  
+    // keep this constant between plugin and top window script
+    const EncryptionLib = (() => {
+      // This salt should be unique per application, but doesn't need to be secret
+      const SALT = new Uint8Array([0x63, 0x72, 0x79, 0x70, 0x74, 0x6f, 0x73, 0x61, 0x6c, 0x74, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36]);
+  
+      // Use a password that you can remember but others can't guess
+      const PASSWORD = memoryPluginPassword;
+  
+      async function deriveKey(password) {
+        const encoder = new TextEncoder();
+        const passwordBuffer = encoder.encode(password);
+  
+        const keyMaterial = await window.crypto.subtle.importKey(
+          'raw',
+          passwordBuffer,
+          { name: 'PBKDF2' },
+          false,
+          ['deriveBits', 'deriveKey']
+        );
+  
+        return window.crypto.subtle.deriveKey(
+          {
+            name: 'PBKDF2',
+            salt: SALT,
+            iterations: 100000,
+            hash: 'SHA-256'
+          },
+          keyMaterial,
+          { name: 'AES-GCM', length: 256 },
+          false,
+          ['encrypt', 'decrypt']
+        );
+      }
+  
+      async function encrypt(data) {
+        const key = await deriveKey(PASSWORD);
+        const encoder = new TextEncoder();
+        const encodedData = encoder.encode(JSON.stringify(data));
+  
+        const iv = window.crypto.getRandomValues(new Uint8Array(12));
+        const encryptedData = await window.crypto.subtle.encrypt(
+          { name: 'AES-GCM', iv: iv },
+          key,
+          encodedData
+        );
+  
+        return {
+          iv: Array.from(iv),
+          data: Array.from(new Uint8Array(encryptedData))
+        };
+      }
+  
+      async function decrypt(encryptedObj) {
+        const key = await deriveKey(PASSWORD);
+  
+        const decryptedData = await window.crypto.subtle.decrypt(
+          { name: 'AES-GCM', iv: new Uint8Array(encryptedObj.iv) },
+          key,
+          new Uint8Array(encryptedObj.data)
+        );
+  
+        return JSON.parse(new TextDecoder().decode(decryptedData));
+      }
+  
+      return {
+        encrypt,
+        decrypt
+      };
+    })();
+  
+    window.addEventListener("message", async (event) => {
+      const { encryptedData } = event.data;
+      if (!encryptedData) return;
+  
+      try {
+        const decryptedData = await EncryptionLib.decrypt(encryptedData);
+        const { id, func, request } = decryptedData;
+  
+        const fail = async () => {
+          const encryptedError = await EncryptionLib.encrypt({ id, error: "Function not found" });
+          event.source.postMessage({ encryptedError }, "*");
+        };
+        if (!memoryPluginPassword) {
+          alert('memory plugin password not found. start a new chat and send a message "memoryPluginPassword=<the-password-no-quotes>" with no quotes');
+          await fail();
+          return;
+        }
+        if (typeof api[func] === "function") {
+          const result = await api[func](request);
+          const encryptedResult = await EncryptionLib.encrypt({ id, result });
+          event.source.postMessage({ encryptedResult }, "*");
+        } else {
+          await fail();
+        }
+      } catch (error) {
+        console.error("Decryption error:", error);
+      }
+    });
+  };
+  installMemoryPluginV1();
 })();
 
