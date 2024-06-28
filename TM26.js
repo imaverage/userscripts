@@ -597,59 +597,69 @@ body {
   
     const handleLongPress = (callback, duration = 500) => {
       let timer;
-      let active = false;
-  
+      let isLongPress = false;
+    
       const start = () => {
-        active = true;
+        isLongPress = false;
         timer = setTimeout(() => {
+          isLongPress = true;
           callback(true);
-          active = false;
         }, duration);
       };
-  
+    
       const cancel = () => {
         clearTimeout(timer);
-        active = false;
       };
-  
-      const isActive = () => active;
-  
-      return { start, cancel, isActive };
+    
+      const isLongPressDetected = () => isLongPress;
+    
+      return { start, cancel, isLongPressDetected };
     };
+    
     const setupButton = (button) => {
       const executeCommand = async (isLongPressed) => {
         const action = button.textContent.toLowerCase();
         const selectedText = currentSelection;
-  
-        let success;
+    
         if (commands[action]) {
-          success = await commands[action]({ selectedText, isLongPressed });
+          await commands[action]({ selectedText, isLongPressed });
         }
-  
-        if (success) {
-          hidePopover();
-        }
+    
+        hidePopover();
       };
-  
+    
       const longPress = handleLongPress(() => executeCommand(true));
-  
-      const handleClick = async (e) => {
+    
+      const handleInteraction = async (e) => {
         e.preventDefault();
         e.stopPropagation();
-  
-        if (!longPress.isActive()) {
-          await executeCommand(false);
+    
+        // For touch devices
+        if (e.type === 'touchend') {
+          longPress.cancel();
+          if (!longPress.isLongPressDetected()) {
+            await executeCommand(false);
+          }
+        } 
+        // For desktop devices
+        else if (e.type === 'click') {
+          if (!longPress.isLongPressDetected()) {
+            await executeCommand(false);
+          }
         }
       };
-  
-      button.addEventListener('mousedown', longPress.start);
+    
+      // Touch events for mobile
       button.addEventListener('touchstart', longPress.start);
-      button.addEventListener('mouseup', longPress.cancel);
-      button.addEventListener('mouseleave', longPress.cancel);
-      button.addEventListener('touchend', longPress.cancel);
+      button.addEventListener('touchend', handleInteraction);
       button.addEventListener('touchcancel', longPress.cancel);
-      button.addEventListener('click', handleClick);
+    
+      // Mouse events for desktop
+      button.addEventListener('mousedown', longPress.start);
+      button.addEventListener('click', handleInteraction);
+      button.addEventListener('mouseleave', longPress.cancel);
     };
+    
     popover.querySelectorAll('.popover-button').forEach(setupButton);
   };
   setTimeout(installSelectionPopovers, 1000);
