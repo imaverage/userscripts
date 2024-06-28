@@ -425,20 +425,39 @@ body {
   const installSelectionPopovers = async () => {
     const getTa = async () => await Mine.waitForQs('#chat-input-textbox');
     const getSendButton = async () => await Mine.waitForQs(`[data-element-id="send-button"]`);
+    const getQuoteResponseMerge = (quote, response) => `> ${quote}\n${response}`;
+    const appendTaText = async (textToAppend, doSubmit) => {
+      const ta = await getTa();
+      const newVal = ta.value?`${ta.value}\n\n${textToAppend}`:textToAppend;
+      Mine.updateReactTypableFormValue(ta, newVal);
+      if (doSubmit) {
+        (await getSendButton()).click();
+      }
+      return true;
+    };
     const commands = {
-      'quote': async ({selectedText, isLongPressed}) => {
+      'elaborate': async ({selectedText, isLongPressed}) => {
+        const quotedResp = getQuoteResponseMerge(selectedText, 'elaborate');
+        return await appendTaText(quotedResp, isLongPressed);
+      },
+      '👍🏻': async ({selectedText, isLongPressed}) => {
+        const quotedResp = getQuoteResponseMerge(selectedText, '👍🏻');
+        return await appendTaText(quotedResp, isLongPressed);
+      },
+      '👎🏻': async ({selectedText, isLongPressed}) => {
+        const quotedResp = getQuoteResponseMerge(selectedText, '👎🏻');
+        return await appendTaText(quotedResp, isLongPressed);
+      },
+      '♥️': async ({selectedText, isLongPressed}) => {
+        const quotedResp = getQuoteResponseMerge(selectedText, '♥️');
+        return await appendTaText(quotedResp, isLongPressed);
+      },
+      '>': async ({selectedText, isLongPressed}) => {
         const reply = prompt(`> ${selectedText}`);
         if (!reply) return false;
   
-        const ta = await getTa();
-        const quotedResp = `> ${selectedText}\n${reply}`;
-        const newVal = ta.value?`${ta.value}\n\n${quotedResp}`:quotedResp;
-        Mine.updateReactTypableFormValue(ta, newVal);
-        if (isLongPressed) {
-          (await getSendButton()).click();
-        }
-  
-        return true;
+        const quotedResp = getQuoteResponseMerge(selectedText, reply);
+        return await appendTaText(quotedResp, isLongPressed);
       },
     };
   
