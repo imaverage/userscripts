@@ -43,6 +43,13 @@
   [data-element-id="current-chat-title"] [aria-haspopup="menu"] .truncate {
     display: none;
   }
+
+  [data-element-id="search-shortcut-button"] {
+    display: none;
+  }
+  [id="chat-input-textbox"] {
+    padding-left: 10px;
+  }
 }
 
 div:has(> div > img[src="/logo.png"]) {
@@ -623,11 +630,14 @@ body {
         const action = button.textContent.toLowerCase();
         const selectedText = currentSelection;
     
+        let isSuccess = false;
         if (commands[action]) {
-          await commands[action]({ selectedText, isLongPressed });
+          isSuccess = await commands[action]({ selectedText, isLongPressed });
         }
-    
-        hidePopover();
+
+        if (isSuccess) {
+          hidePopover();
+        }
       };
     
       const longPress = handleLongPress(() => executeCommand(true));
