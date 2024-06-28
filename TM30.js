@@ -499,8 +499,8 @@ body {
         background-color: transparent;
         border: none;
         color: var(--popover-text);
-        font-size: 12px;
-        padding: 4px;
+        font-size: 14px;
+        padding: 6px 8px;
         margin: 0 2px;
         cursor: pointer;
         transition: background-color 0.1s;
@@ -539,64 +539,72 @@ body {
     const positionPopover = (rect) => {
       const viewportWidth = window.innerWidth;
       const viewportHeight = window.innerHeight;
-  
-      // Initially position the popover
-      let left = rect.left + (rect.width - popover.offsetWidth) / 2;
-      let top = rect.bottom + 10;
-  
-      // Make popover visible but hidden for calculations
-      popover.style.visibility = 'hidden';
-      popover.style.display = 'flex';
-  
-      // Adjust position to fit within viewport
-      const adjustPosition = () => {
+    
+      // Delay positioning calculation
+      setTimeout(() => {
+        // Make popover visible but hidden for calculations
+        popover.style.visibility = 'hidden';
+        popover.style.display = 'flex';
+    
         const popoverRect = popover.getBoundingClientRect();
-  
-        // Adjust horizontal position
-        if (popoverRect.right > viewportWidth) {
-          left = viewportWidth - popoverRect.width - 10;
+    
+        let left = rect.left + (rect.width - popoverRect.width) / 2;
+        let top = rect.bottom + 10;
+    
+        // Fallback positioning for first selection
+        if (top <= 0 || top >= viewportHeight) {
+          top = viewportHeight / 2;
         }
-        if (left < 10) {
-          left = 10;
-        }
-  
-        // Adjust vertical position
-        if (popoverRect.bottom > viewportHeight) {
-          top = rect.top - popoverRect.height - 10;
-        }
-        if (top < 10) {
-          top = 10;
-        }
-  
-        popover.style.left = `${left}px`;
-        popover.style.top = `${top}px`;
-  
-        // Check if further adjustment is needed
-        const newRect = popover.getBoundingClientRect();
-        if (newRect.right > viewportWidth || newRect.bottom > viewportHeight) {
-          adjustPosition();
-        }
-      };
-  
-      adjustPosition();
-  
-      // Make popover visible again
-      popover.style.visibility = 'visible';
+    
+        // Adjust position to fit within viewport
+        const adjustPosition = () => {
+          // Adjust horizontal position
+          if (left + popoverRect.width > viewportWidth) {
+            left = viewportWidth - popoverRect.width - 10;
+          }
+          if (left < 10) {
+            left = 10;
+          }
+    
+          // Adjust vertical position
+          if (top + popoverRect.height > viewportHeight) {
+            top = rect.top - popoverRect.height - 10;
+          }
+          if (top < 10) {
+            top = 10;
+          }
+    
+          popover.style.left = `${left}px`;
+          popover.style.top = `${top}px`;
+    
+          // Check if further adjustment is needed
+          const newRect = popover.getBoundingClientRect();
+          if (newRect.right > viewportWidth || newRect.bottom > viewportHeight) {
+            adjustPosition();
+          }
+        };
+    
+        adjustPosition();
+    
+        // Make popover visible again
+        popover.style.visibility = 'visible';
+        popover.classList.add('show');
+      }, 50); // Small delay to ensure layout is complete
     };
-  
+    
     const showPopoverIfSelection = () => {
       const selection = window.getSelection();
-  
+    
       if (selection.toString().length > 0 && !isPopoverVisible) {
         currentSelection = selection.toString();
         const range = selection.getRangeAt(0);
         const rect = range.getBoundingClientRect();
-  
-        positionPopover(rect);
+    
+        popover.style.display = 'flex';
+        popover.classList.remove('show');
         isPopoverVisible = true;
-        setTimeout(() => {
-          popover.classList.add('show');
-        }, 0);
+        
+        positionPopover(rect);
       } else if (selection.toString().length === 0 && !popover.contains(document.activeElement)) {
         hidePopover();
       }
@@ -693,7 +701,6 @@ body {
     };
     
     popover.querySelectorAll('.popover-button').forEach(setupButton);
-
   };
   setTimeout(installSelectionPopovers, 1000);
 })();
