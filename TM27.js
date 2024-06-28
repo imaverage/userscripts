@@ -599,7 +599,7 @@ body {
       let timer;
       let isLongPress = false;
     
-      const start = () => {
+      const start = (e) => {
         isLongPress = false;
         timer = setTimeout(() => {
           isLongPress = true;
@@ -617,6 +617,8 @@ body {
     };
     
     const setupButton = (button) => {
+      let isTouchDevice = false;
+    
       const executeCommand = async (isLongPressed) => {
         const action = button.textContent.toLowerCase();
         const selectedText = currentSelection;
@@ -634,33 +636,35 @@ body {
         e.preventDefault();
         e.stopPropagation();
     
-        // For touch devices
         if (e.type === 'touchend') {
-          longPress.cancel();
-          if (!longPress.isLongPressDetected()) {
-            await executeCommand(false);
-          }
-        } 
-        // For desktop devices
-        else if (e.type === 'click') {
-          if (!longPress.isLongPressDetected()) {
-            await executeCommand(false);
-          }
+          isTouchDevice = true;
+        }
+    
+        // Prevent execution on 'click' event if it's a touch device
+        if (e.type === 'click' && isTouchDevice) {
+          return;
+        }
+    
+        longPress.cancel();
+        if (!longPress.isLongPressDetected()) {
+          await executeCommand(false);
         }
       };
     
-      // Touch events for mobile
-      button.addEventListener('touchstart', longPress.start);
+      button.addEventListener('touchstart', (e) => {
+        e.preventDefault(); // Prevent mouse events from firing
+        longPress.start(e);
+      });
       button.addEventListener('touchend', handleInteraction);
       button.addEventListener('touchcancel', longPress.cancel);
     
-      // Mouse events for desktop
       button.addEventListener('mousedown', longPress.start);
       button.addEventListener('click', handleInteraction);
       button.addEventListener('mouseleave', longPress.cancel);
     };
     
     popover.querySelectorAll('.popover-button').forEach(setupButton);
+
   };
   setTimeout(installSelectionPopovers, 1000);
 })();
