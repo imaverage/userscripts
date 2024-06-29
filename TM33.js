@@ -50,6 +50,11 @@
   [id="chat-input-textbox"] {
     padding-left: 10px;
   }
+
+  .enter-to-send {display: none;}
+  [data-element-id="chat-space-end-part"] {padding:4px;}
+  [data-element-id="message-input"] {margin-top: -20px;}
+  [data-element-id="prompt-library-small-button"] {display: none;}
 }
 
 div:has(> div > img[src="/logo.png"]) {
