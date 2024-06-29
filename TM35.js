@@ -173,7 +173,7 @@ body {
       }
 
       const cxtSize = await getContextSize();
-      const metaMsg = `${msgCount}/<span style='${msgCount >= cxtSize ? 'color:red;' : ''};'>${cxtSize} mcxt</span>`;
+      const metaMsg = `${msgCount}/<span style='${msgCount >= cxtSize ? 'color:red;' : ''};'>${cxtSize} mc</span>`;
       myInfoDiv.innerHTML = metaMsg;
     };
     const updateContextDivider = async () => {
