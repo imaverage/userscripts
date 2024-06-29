@@ -57,7 +57,7 @@
   [data-element-id="prompt-library-small-button"] {display: none;}
   #chat-input-textbox {padding: 7px;}
   [data-element-id="chat-input-textbox-container"] button {opacity: 0.7;}
-  [data-element-id="response-block"] {padding:0;}
+  [data-element-id="response-block"] {padding:0;padding-bottom:10px;}
   #elements-in-action-buttons {zoom:0.7;}
   [data-element-id="chat-space-end-part"] [data-element-id="input-row"] {gap:5px;}
 }
