@@ -55,6 +55,11 @@
   [data-element-id="chat-space-end-part"] {padding:4px;}
   [data-element-id="message-input"] {margin-top: -20px;}
   [data-element-id="prompt-library-small-button"] {display: none;}
+  #chat-input-textbox {padding: 7px;}
+  [data-element-id="chat-input-textbox-container"] button {opacity: 0.7;}
+  [data-element-id="response-block"] {padding:0;}
+  #elements-in-action-buttons {zoom:0.7;}
+  [data-element-id="chat-space-end-part"] [data-element-id="input-row"] {gap:5px;}
 }
 
 div:has(> div > img[src="/logo.png"]) {
