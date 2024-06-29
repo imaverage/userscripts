@@ -452,7 +452,7 @@ body {
         const quotedResp = getQuoteResponseMerge(selectedText, '♥️');
         return await appendTaText(quotedResp, isLongPressed);
       },
-      'T': async ({selectedText, isLongPressed}) => {
+      'quote': async ({selectedText, isLongPressed}) => {
         const reply = prompt(`> ${selectedText}`);
         if (!reply) return false;
   
