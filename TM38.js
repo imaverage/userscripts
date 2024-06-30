@@ -28,6 +28,7 @@
   const getStopButton = () => Mine.qsaa('button').find(e => e.innerText === 'Stop');
   const isAiTyping = () => !!getStopButton();
 
+  Mine.quietQs(`[data-element-id="pinned-characters-container"]`);
   Mine.isi(`
 /* hide avatar on mobile */
 @media (max-width: 767px) {
