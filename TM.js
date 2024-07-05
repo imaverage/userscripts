@@ -742,5 +742,42 @@ body {
     );
   };
   installPluginNoiseHider();
+
+  const installCustomToolButtons = async () => {
+    Mine.attachToElementContinuously(
+      async () => await Mine.waitFor(() => {
+          const t = Mine.qs(`[id="elements-in-action-buttons"]`);
+          if (!t) return null;
+          return t.children.length?t:null;
+      }, {timeoutMs: 60_000*10, recheckIntervalMs: 100}),
+      async targetEle => {
+          const firstBtn = targetEle.querySelector('button');
+          const b = document.createElement('button');
+          b.innerHTML = '↑';
+          b.className = firstBtn.className;
+          b.addEventListener('click', async () => {
+              const findLastElementAboveViewport = (elements) => {
+                const viewportTop = window.scrollY || window.pageYOffset;
+                
+                for (let i = elements.length - 1; i >= 0; i--) {
+                  const elementBottom = elements[i].getBoundingClientRect().bottom;
+                  if (elementBottom <= 0) {
+                    return i;
+                  }
+                }
+                return -1;
+              };
+              const eles = Mine.qsaa('[data-element-id="user-message"]');
+              let tei = findLastElementAboveViewport(eles);
+              if (tei === -1) tei = eles.length-1;  // cycle
+              if (tei >= 0) {
+                  eles[tei].scrollIntoView({behavior: 'smooth'});
+              }
+          });
+          firstBtn.before(b);
+      },
+    );
+  };
+  installCustomToolButtons();
 })();
 
