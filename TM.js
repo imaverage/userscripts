@@ -29,6 +29,13 @@
 
   Mine.quietQs(`[data-element-id="pinned-characters-container"]`);
   Mine.isi(`
+  [id="elements-in-action-buttons"] button {
+    scale: 0.8;
+  }
+  [id="elements-in-action-buttons"] {
+    gap: 0.1rem;
+  }
+
 /* hide avatar on mobile */
 @media (max-width: 767px) {
   [data-element-id="response-block"] {
@@ -58,7 +65,6 @@
   #chat-input-textbox {padding: 7px;}
   [data-element-id="chat-input-textbox-container"] button {opacity: 0.7;}
   [data-element-id="response-block"] {padding:0;padding-top:10px;}
-  #elements-in-action-buttons {zoom:0.7;}
   [data-element-id="chat-space-end-part"] [data-element-id="input-row"] {gap:5px;}
 }
 
