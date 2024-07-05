@@ -782,6 +782,6 @@ body {
       },
     );
   };
-  installCustomToolButtons();
+  if (isMobile) installCustomToolButtons();
 })();
 
