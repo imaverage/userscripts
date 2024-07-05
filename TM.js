@@ -713,5 +713,34 @@ body {
     popover.querySelectorAll('.popover-button').forEach(setupButton);
   };
   setTimeout(installSelectionPopovers, 1000);
+
+  const installPluginNoiseHider = async () => {
+    Mine.attachToElementContinuously(
+      async () => await Mine.waitFor(() => Mine.qs('[data-element-id="current-chat-title"] button[id^="headlessui-menu-button-:"][aria-haspopup="menu"]:has(.text-blue-500)')?.parentElement, {recheckIntervalMs: 500, timeoutMs: Infinity}),
+      targetRootEle => {
+        Mine.addEventListenerForSubtreeAddOrRemove(
+          targetRootEle,
+          async () => {
+            const unwantedPluginNames = [
+              "Web Search",
+              "Perplexity Search",
+              "DALL-E 3",
+              "Simple Calculator",
+              "Stable Diffusion v2 Image",
+              "Stable Diffusion v3 Image",
+              "Image Search",
+              "Web Page Reader",
+              "Market News",
+              "Azure AI Search",
+              "Render Chart",
+              "Render HTML",
+            ].map(t => t.toLowerCase());
+            const pluginItems = [...targetRootEle.querySelectorAll('[role="menuitem"]')];
+            pluginItems.filter(e => unwantedPluginNames.includes(e.innerText.toLowerCase().split('\n').pop())).forEach(e => e.style.display = 'none');
+        });
+      },
+    );
+  };
+  installPluginNoiseHider();
 })();
 
