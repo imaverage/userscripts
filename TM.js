@@ -771,7 +771,7 @@ body {
         b.innerHTML = '↑';
         b.className = firstBtn.className;
         b.style.opacity = '0';
-        b.style.transition = 'opacity 0.2s ease-in-out';
+        b.style.transition = 'opacity 0.1s ease-in-out';
         b.addEventListener('click', async () => {
           const eles = Mine.qsaa('[data-element-id="user-message"]');
           let tei = findLastElementAboveViewport(eles);
