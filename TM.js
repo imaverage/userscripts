@@ -746,7 +746,7 @@ body {
   const installCustomToolButtons = async () => {
     Mine.attachToElementContinuously(
       async () => await Mine.waitFor(() => {
-        const t = Mine.qs(`[id="elements-in-action-buttons"]`);
+        const t = Mine.qs(`#elements-in-action-buttons`);
         if (!t) return null;
         return t.children.length?t:null;
       }, {timeoutMs: 60_000*10, recheckIntervalMs: 100}),
