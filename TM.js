@@ -781,7 +781,7 @@ body {
           }
         });
         firstBtn.before(b);
-        setTimeout(() => b.style.opacity = '1';, 50);
+        setTimeout(() => b.style.opacity = '1', 50);
       },
     );
   };
