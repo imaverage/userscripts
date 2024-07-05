@@ -749,7 +749,7 @@ body {
         const t = Mine.qs(`#elements-in-action-buttons`);
         if (!t) return null;
         return t.children.length?t:null;
-      }, {timeoutMs: 60_000*10, recheckIntervalMs: 100}),
+      }, {timeoutMs: Infinity, recheckIntervalMs: 100}),
       async targetEle => {
         const firstBtn = [...targetEle.querySelectorAll('button')].find(btn => getComputedStyle(btn).display !== 'none');
         const b = document.createElement('button');
