@@ -744,6 +744,15 @@ body {
   installPluginNoiseHider();
 
   const installCustomToolButtons = async () => {
+    const findLastElementAboveViewport = (elements) => {
+      const viewportTop = window.scrollY || window.pageYOffset;
+      
+      for (let i = elements.length - 1; i >= 0; i--) {
+        const elementBottom = elements[i].getBoundingClientRect().bottom;
+        if (elementBottom <= 0) return i;
+      }
+      return -1;
+    };
     Mine.attachToElementContinuously(
       async () => await Mine.waitFor(() => {
         const t = Mine.qs(`#elements-in-action-buttons`);
@@ -756,17 +765,6 @@ body {
         b.innerHTML = '↑';
         b.className = firstBtn.className;
         b.addEventListener('click', async () => {
-          const findLastElementAboveViewport = (elements) => {
-            const viewportTop = window.scrollY || window.pageYOffset;
-            
-            for (let i = elements.length - 1; i >= 0; i--) {
-              const elementBottom = elements[i].getBoundingClientRect().bottom;
-              if (elementBottom <= 0) {
-                return i;
-              }
-            }
-            return -1;
-          };
           const eles = Mine.qsaa('[data-element-id="user-message"]');
           let tei = findLastElementAboveViewport(eles);
           if (tei === -1) tei = eles.length-1;  // cycle
