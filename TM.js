@@ -29,12 +29,17 @@
 
   Mine.quietQs(`[data-element-id="pinned-characters-container"]`);
   Mine.isi(`
-  [id="elements-in-action-buttons"] button {
-    scale: 0.8;
-  }
-  [id="elements-in-action-buttons"] {
-    gap: 0.1rem;
-  }
+[class*="message-index-"] {
+  padding-left: 9px;
+  padding-right: 9px;
+}
+
+[id="elements-in-action-buttons"] button {
+  scale: 0.8;
+}
+[id="elements-in-action-buttons"] {
+  gap: 0.1rem;
+}
 
 /* hide avatar on mobile */
 @media (max-width: 767px) {
