@@ -290,7 +290,6 @@ body {
 
                     const differenceMs = currentDate.getTime() - memoryDate.getTime();
                     const differenceSecs = Math.round(differenceMs / 1000);
-                    console.log(differenceSecs);
 
                     const isJustNow = Math.abs(differenceSecs < 10);  // in case the createdAt timezone changes
                     return !isJustNow;
