@@ -761,7 +761,7 @@ body {
     };
     Mine.attachToElementContinuously(
       async () => await Mine.waitFor(() => {
-        const t = Mine.qs(`#elements-in-action-buttons`);
+        const t = await Mine.waitForQs(`#elements-in-action-buttons`);
         if (!t) return null;
         return t.children.length?t:null;
       }, {timeoutMs: Infinity, recheckIntervalMs: 1000}),  // possible performance hit like when scrolling
