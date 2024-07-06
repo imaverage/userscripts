@@ -323,8 +323,6 @@ body {
   
               cursor.continue();
             } else {
-              // Sort results by createdAt in descending order (most recent first)
-              results.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
               resolve(results);
             }
           };
