@@ -760,7 +760,7 @@ body {
       return -1;
     };
     Mine.attachToElementContinuously(
-      async () => await Mine.waitFor(() => {
+      async () => await Mine.waitFor(async () => {
         const t = await Mine.waitForQs(`#elements-in-action-buttons`);
         if (!t) return null;
         return t.children.length?t:null;
