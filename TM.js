@@ -227,7 +227,7 @@ body {
 
   const installMemoryPluginV1 = async () => {
     const api = {
-      SEARCH: async ({query, lookbackDays}) => searchRef(query, lookbackDays),
+      SEARCH: async ({queries, lookbackDays}) => queries.some(query => searchRef(query, lookbackDays)),
     };
   
     const searchRef = async (query, lookbackDays) => {
