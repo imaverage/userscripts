@@ -280,7 +280,20 @@ body {
                   .map(msg => ({
                     content: msg.content,
                     createdAt: msg.createdAt
-                  }));
+                  }))
+                  .filter(msg => {
+                    const currentUTC = new Date().toUTCString();
+                    const memoryTimestamp = msg.createdAt;
+
+                    const currentDate = new Date(currentUTC);
+                    const memoryDate = new Date(memoryTimestamp);
+
+                    const differenceMs = currentDate.getTime() - memoryDate.getTime();
+                    const differenceSecs = Math.round(differenceMs / 1000);
+
+                    const isJustNow = differenceSecs < 10;
+                    return !isJustNow;
+                  });
   
                 results.push(...matchingMessages);
               }
