@@ -236,6 +236,7 @@ body {
       }
     `);
   }
+  
   const installMemoryPluginV1 = async () => {
     const api = {
       SEARCH: async ({queries, lookbackDays}) => {
