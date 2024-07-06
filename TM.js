@@ -227,7 +227,14 @@ body {
 
   const installMemoryPluginV1 = async () => {
     const api = {
-      SEARCH: async ({queries, lookbackDays}) => queries.find(query => searchRef(query, lookbackDays)),
+      SEARCH: async ({queries, lookbackDays}) => {
+        for (let i=0;i<queries.length;i++) {
+          const query = queries[i];
+          const results = await searchRef(query, lookbackDays);
+          if (results.length) return results;
+        }
+        return [];
+      },
     };
   
     const searchRef = async (query, lookbackDays) => {
