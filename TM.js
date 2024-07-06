@@ -278,37 +278,47 @@ body {
               const key = cursor.key;
               const value = cursor.value;
   
-              // Check if the key starts with 'CHAT_' and has a messages array
               if (key.startsWith('CHAT_') && Array.isArray(value.messages)) {
-                // Create a case-insensitive word boundary regex
                 const regex = new RegExp(`\\b${query}\\b`, 'i');
   
-                // Filter user messages that match the query and are after the start date
-                const matchingMessages = value.messages
-                  .filter(msg =>
-                    msg.role === 'user' &&
-                    regex.test(msg.content) &&
-                    new Date(msg.createdAt) >= startDate
-                  )
-                  .map(msg => ({
-                    content: msg.content,
-                    createdAt: msg.createdAt
-                  }))
-                  .filter(msg => {
-                    const currentUTC = new Date().toUTCString();
-                    const memoryTimestamp = msg.createdAt;
+                const matchingMessages = 
+                  value
+                    .messages
+                    .filter(msg =>
+                      msg.role === 'user' &&
+                      regex.test(msg.content) &&
+                      new Date(msg.createdAt) >= startDate
+                    );
 
-                    const currentDate = new Date(currentUTC);
-                    const memoryDate = new Date(memoryTimestamp);
-
-                    const differenceMs = currentDate.getTime() - memoryDate.getTime();
-                    const differenceSecs = Math.round(differenceMs / 1000);
-
-                    const isJustNow = Math.abs(differenceSecs < 10);  // in case the createdAt timezone changes
-                    return !isJustNow;
-                  });
+                // if title matches, then add first chat msg if it is recent
+                if (regex.test(value.chatTitle)) {
+                  const firstMsg = value.messages.find(msg => msg.role === 'user');
+                  if (firstMsg && new Date(firstMsg.createdAt) >= startDate && 
+                      !matchingMessages.some(msg => msg.createdAt === firstMsg.createdAt)) {
+                    matchingMessages.push(firstMsg);
+                  }
+                }
   
-                results.push(...matchingMessages);
+                const curedMsgs = 
+                  matchingMessages
+                    .map(msg => ({
+                      content: msg.content,
+                      createdAt: msg.createdAt
+                    }))
+                    .filter(msg => {
+                      const currentUTC = new Date().toUTCString();
+                      const memoryTimestamp = msg.createdAt;
+
+                      const currentDate = new Date(currentUTC);
+                      const memoryDate = new Date(memoryTimestamp);
+
+                      const differenceMs = currentDate.getTime() - memoryDate.getTime();
+                      const differenceSecs = Math.round(differenceMs / 1000);
+
+                      const isJustNow = Math.abs(differenceSecs < 10);  // in case the createdAt timezone changes
+                      return !isJustNow;
+                    });
+                results.push(...curedMsgs);
               }
   
               cursor.continue();
