@@ -229,13 +229,6 @@ body {
   if (isMobile) {
     attachMetaInfoV1();
   }
-  if (isMobile) {
-    Mine.isi(`
-[data-element-id="chat-space-middle-part"] {
-  background: black;
-}
-`);
-  }
 
   const installMemoryPluginV1 = async () => {
     const api = {
