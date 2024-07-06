@@ -229,7 +229,13 @@ body {
   if (isMobile) {
     attachMetaInfoV1();
   }
-
+  if (isMobile) {
+    Mine.isi(`
+      [data-element-id="current-chat-title"] > :first-child {
+        gap: 0;
+      }
+    `);
+  }
   const installMemoryPluginV1 = async () => {
     const api = {
       SEARCH: async ({queries, lookbackDays}) => {
