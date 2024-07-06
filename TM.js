@@ -230,14 +230,14 @@ body {
       SEARCH: async ({queries, lookbackDays}) => {
         for (let i=0;i<queries.length;i++) {
           const query = queries[i];
-          const results = await searchRef(query, lookbackDays);
+          const results = await getSearchResults(query, lookbackDays);
           if (results.length) return results;
         }
         return [];
       },
     };
   
-    const searchRef = async (query, lookbackDays) => {
+    const getSearchResults = async (query, lookbackDays) => {
       const dbName = 'keyval-store';
       const storeName = 'keyval';
       const results = [];
