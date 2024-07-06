@@ -29,9 +29,6 @@
 
   Mine.quietQs(`[data-element-id="pinned-characters-container"]`);
   Mine.isi(`
-[data-element-id="chat-space-middle-part"] {
-  background: black;
-}
 [class*="message-index-"] {
   padding-left: 9px;
   padding-right: 9px;
@@ -231,6 +228,13 @@ body {
   const isMobile = () => /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
   if (isMobile) {
     attachMetaInfoV1();
+  }
+  if (isMobile) {
+    Mine.isi(`
+[data-element-id="chat-space-middle-part"] {
+  background: black;
+}
+`);
   }
 
   const installMemoryPluginV1 = async () => {
