@@ -29,6 +29,9 @@
 
   Mine.quietQs(`[data-element-id="pinned-characters-container"]`);
   Mine.isi(`
+[data-element-id="chat-space-middle-part"] {
+  background: black;
+}
 [class*="message-index-"] {
   padding-left: 9px;
   padding-right: 9px;
