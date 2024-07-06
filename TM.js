@@ -39,6 +39,7 @@
 }
 [id="elements-in-action-buttons"] {
   gap: 0.1rem;
+  margin-bottom: 0;
 }
 
 /* hide avatar on mobile */
