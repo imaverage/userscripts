@@ -19,9 +19,10 @@ const main = async () => {
 }
 
 @media (max-width: 767px) {
-  [class*="message-index-"] {
-    padding-left: 9px;
+  /* cant use message-index- bc thats doesnt covery typing state */  
+  div:has(>[data-element-id="response-block"]) {
     padding-right: 9px;
+    padding-left: 9px;
   }
   [data-element-id="current-chat-title"] > :first-child {
     gap: 0;
