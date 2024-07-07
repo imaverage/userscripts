@@ -1,5 +1,5 @@
 // for use in typingmind as a standalone sourced script, including on mobile. runs at global scope
-(() => {
+const main = async () => {
   if (window.location.href.includes('mine_use_last_chat=true')) {
     const chatId = localStorage.getItem('mine_lastOpenChatId') || '';
     if (chatId) {
@@ -834,5 +834,5 @@ body {
     );
   };
   if (isMobile) installCustomToolButtons();
-})();
-
+};
+main().then();
