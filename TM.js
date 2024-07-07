@@ -6,14 +6,10 @@ const main = async () => {
   const getChatIndexedDbValue = async urlChatValue => await Mine.getIndexedDbValue(`CHAT_${urlChatValue}`, 'keyval-store', 'keyval');
   const getStopButton = () => Mine.qsaa('button').find(e => e.innerText === 'Stop');
   const isAiTyping = () => !!getStopButton();
+  const isMobile = () => /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
   Mine.quietQs(`[data-element-id="pinned-characters-container"]`);
   Mine.isi(`
-[class*="message-index-"] {
-  padding-left: 9px;
-  padding-right: 9px;
-}
-
 [id="elements-in-action-buttons"] button {
   scale: 0.8;
 }
@@ -22,8 +18,14 @@ const main = async () => {
   margin-bottom: 0;
 }
 
-/* hide avatar on mobile */
 @media (max-width: 767px) {
+  [class*="message-index-"] {
+    padding-left: 9px;
+    padding-right: 9px;
+  }
+  [data-element-id="current-chat-title"] > :first-child {
+    gap: 0;
+  }
   [data-element-id="response-block"] {
     padding-left: 0;
   }
@@ -206,16 +208,8 @@ body {
       },
     );
   };
-  const isMobile = () => /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
   if (isMobile) {
     attachMetaInfoV1();
-  }
-  if (isMobile) {
-    Mine.isi(`
-      [data-element-id="current-chat-title"] > :first-child {
-        gap: 0;
-      }
-    `);
   }
 
   const installMemoryPluginV1 = async () => {
