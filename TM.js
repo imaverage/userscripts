@@ -48,6 +48,7 @@ const main = async () => {
   [data-element-id="chat-space-end-part"] {padding:4px;}
   [data-element-id="message-input"] {margin-top: -20px;}
   [data-element-id="prompt-library-small-button"] {display: none;}
+  [data-element-id="output-settings-button"] {display: none;}
   #chat-input-textbox {padding: 7px;}
   [data-element-id="chat-input-textbox-container"] button {opacity: 0.7;}
   [data-element-id="response-block"] {padding:0;padding-top:10px;}
@@ -756,7 +757,6 @@ body {
         Mine.addEventListenerForSubtreeAddOrRemove(
           targetRootEle,
           async () => {
-            await Mine.sleep(1000); // TODO: rm
             const unwantedPluginNames = [
               "Web Search",
               "Perplexity Search",
