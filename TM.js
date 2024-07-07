@@ -52,7 +52,6 @@ const main = async () => {
   #chat-input-textbox {padding: 7px;}
   [data-element-id="chat-input-textbox-container"] button {opacity: 0.7;}
   [data-element-id="response-block"] {padding:0;padding-top:10px;}
-  [data-element-id="chat-space-end-part"] [data-element-id="input-row"] {gap:5px;}
 }
 
 div:has(> div > img[src="/logo.png"]) {
