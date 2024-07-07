@@ -756,6 +756,7 @@ body {
         Mine.addEventListenerForSubtreeAddOrRemove(
           targetRootEle,
           async () => {
+            await Mine.sleep(1000); // TODO: rm
             const unwantedPluginNames = [
               "Web Search",
               "Perplexity Search",
