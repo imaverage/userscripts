@@ -812,4 +812,961 @@ body {
     );
   };
   if (isMobile) installCustomToolButtons();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  // This code should be placed in the script of your top-most window
+  const getStopButton = () => Mine.qsaa('button').find(e => e.innerText === 'Stop');
+  const isAiTyping = () => !!getStopButton();
+
+
+  // in https://cdn.jsdelivr.net/gh/imaverage/userscripts@main/TM2.js as well (TM# might change)
+  Mine.isi(`
+  [data-element-id="message-input"] .pt-2 {
+    padding-top: 0;
+  }
+  [data-element-id="chat-space-end-part"] {
+    padding-bottom: 5px;
+  }
+
+  div:has(> div > img[src="/logo.png"]) {
+    display: none;
+  }
+  .prose {
+    background: rgb(39, 39, 42);
+    border-radius: 16px;
+    padding: 10px;
+    color: white;
+  }
+  /* my avatar */
+  [data-element-id="response-block"]:has([data-element-id="user-message"]) [data-element-id="chat-avatar-container"] {
+    display: none;
+  }
+
+  div:has(>.bg-blue-500) {
+    display: flex;
+    justify-content: flex-end;
+  }
+  div > button:has(.user-avatar) {
+    visibility: hidden;
+  }
+
+  body {
+    background: rgb(16,17,17) !important;
+  }
+  .response-block:hover {
+    background: none !important;
+  }
+
+  /* might need to separate these two */
+  .response-block li,
+  .response-block p
+  {
+    border-radius: 5px;
+    margin: 2px;
+    padding-left: 2px;
+    padding-right: 2px;
+  }
+
+  .response-block li, .response-block li *
+  .response-block p, .response-block p *
+  {
+    color: white;
+    transition: color 0.1s ease-in-out;
+  }
+  .response-block li:hover, .response-block li:hover *,
+  .response-block p:hover, .response-block p:hover *
+  {
+    color: hotpink;
+    transition: color 0s;
+  }
+
+  .response-block li ul {
+    margin-top: 0;
+  }
+  .response-block li:nth-child(even), .response-block p:nth-child(even) {
+    background-color: RGBA(0,0,0,0.3);
+  }
+  `);
+  /*
+  textarea.my_notes {
+    position: absolute;
+    top: 56px;
+    right: -1px;
+    width: 273px;
+    border: 1px solid dimgray;
+    height: calc(100% - 56px);
+    background: transparent;
+    border-radius: 10px 0 0 10px;
+  }
+  */
+
+  Mine.quietQs(`a[href="https://custom.typingmind.com"]`);
+  Mine.isi(`form[action="https://codepen.io/pen/define"] {display: none !important;}`);
+
+  // for voice calls support
+  Mine.isi(`[data-element-id="response-block"] div:has(>audio):has(button), [data-element-id="response-block"] div:has(>[data-element-id="in-message-play-button"]) {display: none;}`);
+
+  Mine.isi(`
+  [data-element-id="ai-characters-system-instruction-input"] {
+    height: 300px;
+  }
+
+
+  /* voice recognition dialog */
+  [data-element-id="pop-up-modal"]:has(option[value="en-AU"]) {
+    right: 10px;
+    top: 100px;
+    position: absolute;
+    zoom: 0.7;
+  }
+
+  .enter-to-send {
+    display: none;
+  }
+
+  [data-headlessui-state] button {
+    border-radius: 10px;
+  }
+
+  .firstLookbackMessage:before {
+    margin-bottom: 10px;
+    content: "——— context lookback starts ———";
+    opacity: 0;
+    display: block;
+    text-align: center;
+    color: gray;
+    font-style: italic;
+    transition: opacity 0.25s ease-in-out;
+  }
+  .firstLookbackMessage.visible:before {
+    opacity: 0.5;
+  }
+
+
+  /* pretty tables */
+  table {
+    padding: 2px;
+  }
+  thead th:first-child {
+    border-top-left-radius: 10px;
+  }
+  thead th:last-child {
+    border-top-right-radius: 10px;
+  }
+  table thead {
+    background-color: rgba(0, 0, 0, 0.2);
+  }
+  table tr td:first-child {
+    background-color: rgba(0, 0, 0, 0.2);
+  }
+
+  table tr:hover {
+    background-color: rgba(0, 0, 0, 0.4) !important;
+  }
+  table tr:nth-child(even) {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+  table tr th:first-child,
+  table tr td:first-child {
+    padding: 10px;
+  }
+  `);
+
+
+  Mine.isi(`.transition {transition-duration: 0s !important;}`);
+  const ensureSidebarClosed = async () => {
+    if (getIsSideBarOpen()) {
+      const isMaximized = document.body.clientWidth > 1000;
+      if (!isMaximized)
+        Mine.qs('button:has([d="M6 18L18 6M6 6l12 12"])').click();
+      else
+        (await getSidebarToggleEle()).click();
+    }
+  };
+
+  const getChatIndexedDbValue = async urlChatValue => await Mine.getIndexedDbValue(`CHAT_${urlChatValue}`, 'keyval-store', 'keyval');
+  const getIsResponding = () => !!Mine.qs(`[data-element-id="response-block"]:not(:has([id^="message-timestamp-"]))`);
+  const getSidebarToggleEle = async () => await Mine.waitFor(() => Mine.qsaa('button').find(e => e.innerText === 'Open sidebar'));
+  const getTa = async () => await Mine.waitForQs('#chat-input-textbox');
+  const stopAiResponse = async () => {
+    const _ = async () => {
+      const stopButton = await Mine.waitFor(getStopButton);
+      if (!stopButton) return;
+
+      stopButton.click();
+      await Mine.sleep(100);  // might need to raise this to 500 if finniky
+    };
+    const ta = await getTa();
+    const oldValue = ta.value;
+    if (oldValue) {
+      Mine.updateReactTypableFormValue(ta, '');
+    }
+    await _();
+    if (oldValue) {
+      Mine.updateReactTypableFormValue(ta, oldValue);
+    }
+    await Mine.sleep(100);
+  };
+  const closeSide = async () => {
+    const unhideSidebar = Mine.isi(`div > div:has(> #navbar) {display:none;}`.trim());
+
+    (await getSidebarToggleEle()).click();
+    document.body.style.display = 'block';
+
+    setTimeout(unhideSidebar, 300);
+  };
+  const getIsSideBarOpen = () => Mine.qs('#navbar')?.getBoundingClientRect().left === 0;
+  const attachMetaInfoV1 = async () => {
+    const infoIconPath = `M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z`;
+    const getContextSize = async () => {
+      const chatId = window.location.hash.split('chat=')[1];
+      if (!chatId) return null;
+
+      const inf = await getChatIndexedDbValue(chatId);
+      const contextSize = inf.chatParams.contextLimit;
+      return contextSize;
+    };
+    const getMsgEles = () => Mine.qsaa(`[data-element-id="response-block"]`);
+    const updateInfoButton = async () => {
+      const infoButton = Mine.qsaa('[data-element-id="current-chat-title"] button').reverse()[0];
+      if (!infoButton) return;
+
+      const ID = '__mine_info_div';
+      const getMyInfoEle = () => Mine.qs(`#${ID}`);
+
+      const maybeMyInfoDiv = getMyInfoEle();
+      if (!maybeMyInfoDiv) {
+        const newEle = document.createElement('div');
+        newEle.id = ID;
+        newEle.style.opacity = '0';
+        newEle.style.transition = 'opacity 0.2s';
+        infoButton.parentNode.insertBefore(newEle, infoButton);
+        newEle.offsetWidth;  // trigger css reflow
+        newEle.style.opacity = '1';
+      }
+
+      const myInfoDiv = maybeMyInfoDiv || getMyInfoEle();
+      const msgEles = getMsgEles();
+      let msgCount = msgEles.length;
+
+      const latestContextClearEle = Mine.qsaa('[data-element-id="clear-context-divider"]').pop();
+      const getAreElementsInThisOrder = (eleA, eleB) => eleB.compareDocumentPosition(eleA) & Node.DOCUMENT_POSITION_PRECEDING;
+      if (latestContextClearEle && msgEles.length) {
+        const lastMsgEle = msgEles.slice(-1)[0];
+        if (getAreElementsInThisOrder(lastMsgEle, latestContextClearEle)) {
+          msgCount = 0;
+        }
+        else {
+          const indexAfterContextClear = msgEles.findIndex(msgEle => getAreElementsInThisOrder(latestContextClearEle, msgEle));
+          msgCount = msgCount-indexAfterContextClear+1;
+        }
+      }
+
+      const cxtSize = await getContextSize();
+      const metaMsg = `${msgCount} / <span style='${msgCount >= cxtSize ? 'color:red;' : ''};'>${cxtSize} mcxt</span>`;
+      myInfoDiv.innerHTML = metaMsg;
+    };
+    const updateContextDivider = async () => {
+      if (isAiTyping()) return;
+
+      Mine.qsaa('.firstLookbackMessage.visible').forEach(e => {
+        e.classList.remove('firstLookbackMessage');
+        e.classList.remove('visible');
+      });
+
+      const msgElesRev = getMsgEles().reverse();
+      const contextSize = Number(await getContextSize());
+      if (contextSize <= msgElesRev.length) {
+        const contextLookbackTailMsg = msgElesRev[contextSize-1];
+        const targetMsgEle = contextLookbackTailMsg.closest('[data-element-id="response-block"]').parentElement;
+        if (targetMsgEle) {
+          targetMsgEle.classList.add('firstLookbackMessage');
+          targetMsgEle.classList.add('visible');
+        }
+      }
+    };
+    const refreshCurrentChatMeta = async () => {
+      // TODO: hide info button in this case
+      const chatId = window.location.hash.split('chat=')[1];
+      if (!chatId) return;
+      const inf = await getChatIndexedDbValue(chatId);
+      if (!inf) return;
+
+      await updateInfoButton();
+      await updateContextDivider();
+    };
+
+    // TODO: wipe above stuff too that isnt used anymore
+    // Mine.attachToElementContinuously(
+    //   async () => await Mine.waitForQs('[data-element-id="chat-space-middle-part"]', {recheckIntervalMs: 500, timeoutMs: Infinity}),
+    //   targetRootEle => {
+    //     refreshCurrentChatMeta();
+    //     Mine.addEventListenerForSubtreeAddOrRemove(targetRootEle, refreshCurrentChatMeta);
+    //   },
+    // );
+  };
+
+
+  const main = async () => {
+    const verticalMoreIconPath = `M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z`;
+    const stopIconPath = `M400 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48z`;
+    const regenerateIconPath = `M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z`;
+    const css = `
+  ${Mine.getCssToHide(`[data-element-id="input-row"] div:has([data-element-id="prompt-library-small-button"])`)}
+  ${Mine.getCssToQuietQs('[data-element-id="current-chat-title"]', {delayMs: 0})}
+
+  textarea[data-element-id="new-system-instruction"],
+  textarea[placeholder*="Function Spec"],
+  textarea[placeholder*="JS code"]
+  {
+    font-family: Courier New;
+    height: 400px;
+  }
+
+  .pb-safe:focus {
+    outline: none;
+  }
+
+  .fixed:has([data-element-id="chat-space-end-part"]) {
+    filter: drop-shadow(0px -5px 10px #000000);
+  }
+
+  [data-element-id="send-button"] {
+    display: none;
+  }
+  [data-element-id="main-page-buttons-containter"] button {
+    opacity: 0.2;
+    transition: opacity 0.2s !important;
+  }
+  [data-element-id="main-page-buttons-containter"] button:hover {
+    opacity: 1;
+  }
+
+  [data-element-id="message-input"] label:has(input[type=checkbox]) {
+    display: none;
+  }
+  [id="elements-in-action-buttons"] {
+    display: none;
+  }
+
+  [data-element-id="user-message"] {
+    max-height: 502px;
+  }
+
+  [data-element-id="config-buttons"] {
+    display: none;
+  }
+  [data-element-id="response-block"]:has([data-element-id="model-setting-info"]) {
+    border: 1px solid rgba(255,255,255,0.3);
+    opacity: 0.25;
+    margin-bottom: 25px;
+  }
+
+  [data-element-id="width-adjust-bar"] {
+    display: none;
+  }
+
+
+  /* typing animation */
+  [data-element-id="response-block"]:not(:has([d="${verticalMoreIconPath}"])) div[data-element-id="ai-response"] p:last-of-type:after {
+    animation: blink 1s steps(5,start) infinite;
+    content: "▋";
+    vertical-align: baseline;
+  }
+  @keyframes blink {
+    0% {opacity: 1}
+    50% {opacity: 0}
+    to {opacity: 1}
+  }
+
+  /* typing message */
+  [data-element-id="response-block"] + div {
+    /* display: none; */
+  }
+  div.text-gray-500:has(>svg.animate-spin) {
+  /*  display: none; */
+  }
+
+
+  /* context limit reached buton */
+  [data-element-id="chat-space-middle-part"] .text-right button {
+    display: none;
+  }
+
+  /* fix janky where it bounces down after responding. */
+  /* fixed with my scroll override changes i think */
+  /*[data-element-id="response-block"]:has([data-element-id="edit-message-button"]) {
+    margin-bottom: 25px;
+  }
+  */
+
+  [data-element-id="chat-space-middle-part"] {
+    padding-bottom: 126px !important;  /* when resuming a chat, it jumps bc it gets a wierdly tall margin */
+  }
+
+  /* stop button */
+  [data-element-id="chat-space-background"] button:has([d="${stopIconPath}"]) {
+    display: none;
+  }
+
+  .sticky div:has(>a[href^="https://blog.typingmind.com/"]) {
+    visibility: hidden;
+  }
+  button:has([d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"]):focus {
+    outline: none;
+  }
+  #nav-buy-button {
+    display: none;
+  }
+  #chat-input-textbox {
+    padding-left: 12px;
+    background: rgba(0, 0, 0, 0.2);
+  }
+  #chat-input-textbox + button {
+    display: none;
+  }
+  div:has(>button [d="${regenerateIconPath}"]) {
+    display: none;
+  }
+  .transition-all {
+    transition-property: none !important;
+  }
+
+  .user-avatar {
+    background: black;
+  }
+
+  div:has(>.pb-safe) {
+    border: 1px solid dimgray;
+    border-bottom-width: 0;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    opacity: 1;
+    transition: opacity 0.2s;
+  }
+  div:has(>.pb-safe):focus-within,
+  div:has(>.pb-safe):hover{
+    opacity: 1;
+  }
+
+  button[data-element-id="output-settings-button"] {
+    display: none;
+  }
+    `.trim();
+    const fixUx = async () => {
+      Mine.isi(css);
+      // document.body.style.setProperty('background-color', 'rgb(16,17,17)', 'important');
+      // await closeSide();
+    };
+    fixUx().then();
+
+    const isModifierFree = ev => !ev.altKey && !ev.ctrlKey && !ev.metaKey && !ev.shiftKey;
+    const fixScrollingAndHotkeys = async () => {
+      const originalScrollTo = window.scrollTo;
+      window.scrollTo = (...args) => {
+        const firstArg = args[0];
+        const options =
+          (typeof firstArg === 'object')
+            ? firstArg
+            : { top: firstArg, left: args[1] };
+        options.behavior = 'smooth';
+
+        originalScrollTo.call(window, options);
+      };
+
+      document.addEventListener('keyup', async ev => {
+        if (!(isModifierFree(ev) && ev.target.tagName.toLowerCase() === 'body')) return;
+
+        const keyMap = {
+          q: async () => {
+            const sel = document.getSelection()?.toString();
+            if (!sel) return;
+
+            const selLines = sel.split('\n').filter(l => !!l.length).map(l => `> ${l}`);
+            const newMsg = selLines.join('\n');
+
+            const replyWithStatement = async statement => {
+              const taEle = await getTa();
+              const taVal = taEle.value;
+              const newVal = `${taVal.trimEnd()}\n\n${statement}\n`.trim()+'\n';
+              Mine.updateReactTypableFormValue(taEle, newVal);
+              taEle.focus();
+              taEle.setSelectionRange(taEle.value.length, taEle.value.length);
+            };
+            await replyWithStatement(newMsg);
+          },
+        };
+
+        if (ev.key in keyMap) {
+          await keyMap[ev.key]();
+        }
+      });
+    };
+    setTimeout(fixScrollingAndHotkeys, 500);
+
+    const installArgumentRunner = async () => await Mine.attachToElementContinuously(getTa, ta => ta.addEventListener('keydown', async event => {
+      if (!isModifierFree(event)) return;
+
+      if (event.key === 'Escape') return await stopAiResponse();
+
+      if (event.key === 'Enter') {
+        if (getIsResponding()) {
+          await stopAiResponse();
+        }
+
+        // handle arguments like "whats 1+1 -q"
+        const getOptionalArgumentStr = query => {
+          const pattern = / -([a-zA-Z0-9]+)$/;
+          const match = query.match(pattern);
+          return match ? match[1] : null;
+        }
+        const q = ta.value;
+        const maybeArg = getOptionalArgumentStr(q);
+        if (maybeArg) {
+          const removeTailFromString = (str, tail) => str.endsWith(tail) ? str.slice(0, -tail.length) : str;
+          let argStatements = [];
+          const argumentRunner = {
+            'q': async () => argStatements.push('respond as concisely as possible'),
+            'n': async () => argStatements.push('respond normally'),
+            'v': async () => argStatements.push('elaborate'),
+          };
+          for (let i=0;i<maybeArg.length;i++) {
+            const arg = maybeArg[i];
+            if (arg in argumentRunner) {
+              await argumentRunner[arg]();
+            }
+          }
+          const maybeArgTail = argStatements.length?('\n\nNote: '+argStatements.join('. ')):'';
+          const qModified = removeTailFromString(q, ' -'+maybeArg) + maybeArgTail;
+          Mine.updateReactTypableFormValue(ta, qModified);
+        }
+
+        Mine.qs(`[data-element-id="send-button"]`).click();
+      }
+    }));
+    await installArgumentRunner();
+
+    const initTitleSanitizerService = () => {
+      const fullAppNameReferences = ['TypingMind.com', 'TypingMind'];
+      let originalTitle = document.title;
+
+      const sanitizeTitle = (title) => {
+        let cured = fullAppNameReferences.reduce((acc, badWord) => {
+          const regex = new RegExp(badWord, 'gi');
+          return acc.replace(regex, 'TM');
+        }, title);
+        cured = cured.split(' — The #1 chat frontend UI')[0];
+        return cured;
+      };
+
+      Object.defineProperty(document, 'title', {
+        get: function() {
+          return originalTitle;
+        },
+        set: function(newTitle) {
+          const filteredTitle = sanitizeTitle(newTitle);
+          originalTitle = filteredTitle;
+          document.querySelector('title').textContent = filteredTitle;
+        },
+        configurable: true
+      });
+
+      // Sanitize the existing title on initialization
+      document.title = sanitizeTitle(originalTitle);
+    };
+    initTitleSanitizerService();
+
+    Mine.isi(`
+    .fade-color-transition {
+      transition: color 0.2s ease-in-out;
+    }
+    pre:has(>code) {
+      border: 1px solid RGBA(100,100,100,1);
+    }
+    code {
+      border-color: RGBA(100,100,100,1) !important;
+    }
+    `);
+    const selectElementText = element => {
+      const selection = window.getSelection();
+      const range = document.createRange();
+      range.selectNodeContents(element);
+      selection.removeAllRanges();
+      selection.addRange(range);
+    };
+    const processItemsTick = async () => {
+      Mine.processUnprocessedItems(
+        Mine.qsaa('code.inline'),
+        e => {
+          e.classList.add('fade-color-transition');
+          e.style.color = e.innerText?.includes(' ') ? 'gray' : Mine.getHashedStringToHex(e.innerText, getComputedStyle(e).backgroundColor);
+
+          e.addEventListener('click', () => selectElementText(e));
+        },
+        'code'
+      );
+      Mine.processUnprocessedItems(
+        Mine.qsaa('[data-element-id="ai-response"] li'),
+        e => e.addEventListener('click', ev => {
+          if (ev.offsetX >= 0) return;  // want when user clicks the number
+
+          selectElementText(e);
+        }),
+        'list'
+      );
+      Mine.processUnprocessedItems(
+        Mine.qsaa('[data-element-id="ai-response"] strong'),
+        e => e.addEventListener('click', ev => selectElementText(e)),
+        'bolded'
+      );
+      Mine.processUnprocessedItems(
+        Mine.qsaa('[data-element-id="user-message"] img, [data-element-id="ai-response"] img'),
+        e => {
+          e.addEventListener('click', () => {
+            const imageData = e.getAttribute('src');
+            if (imageData.startsWith('http')) {
+              window.open(imageData);
+              return;
+            }
+            const imageFormat = imageData.substring(5, imageData.indexOf(';')); // Extract the image format (e.g., 'image/jpeg').
+
+            fetch(imageData)
+              .then(res => res.blob())
+              .then(blob => {
+                const blobUrl = URL.createObjectURL(blob);
+                window.open(blobUrl, '_blank');
+              })
+              .catch(error => console.error('Error opening image:', error));
+          });
+          e.style.cursor = 'pointer';
+        },
+        'img'
+      );
+
+    };
+    Mine.setIntervalAndNow(processItemsTick, 1000);
+
+
+    attachMetaInfoV1();
+
+    if (document.body.clientWidth < 1000) {
+      await ensureSidebarClosed();
+    }
+
+    const [maybeMineCharKey, maybeMineCharVal] = window.location.hash.slice(1).split('=');
+    // https://www.typingmind.com/#mine_char=Pepper,q
+    if (maybeMineCharKey === 'mine_char' && maybeMineCharVal) {
+      const [maybeMineCharName, maybeMineCharMode] = maybeMineCharVal.split(',');
+      (await Mine.waitFor(() => Mine.qsaa('div:has(>button)').find(e => e.innerText.toLowerCase() === maybeMineCharName.toLowerCase()))).click();
+      if (maybeMineCharMode !== 'q') {
+        await Mine.sleep(1000);  // otherwise typingmind url hash doesnt update with chatId
+        if (maybeMineCharName.startsWith('Pepper')) {
+          Mine.CommandBarBridge.execute('🎧 Call-in');
+        }
+      }
+    }
+
+
+    class TabKeyHandler {
+      constructor(activatedCb, inactivatedCb) {
+        this.activatedCb = activatedCb;
+        this.inactivatedCb = inactivatedCb;
+        this.init();
+      }
+      init() {
+        document.addEventListener('keydown', this.handleKeyDown.bind(this));
+        document.addEventListener('keyup', this.handleKeyUp.bind(this));
+      }
+      handleKeyDown(event) {
+        if (event.key === 'Tab') {
+          event.preventDefault(); // Optional: prevent default tabbing behavior
+          this.activatedCb();
+        }
+      }
+      handleKeyUp(event) {
+        if (event.key === 'Tab') {
+          this.inactivatedCb();
+        }
+      }
+    }
+    const initTabRecording = async () => {
+      const startListening = () => Mine.qs('[data-element-id="voice-input-button"]').click();
+      const stopListening = async () => {
+        const dialogButtonEles = Mine.qsaa('[data-element-id="pop-up-modal"] button');
+
+        const showingPlaceholder = Mine.qsaa('[data-element-id="pop-up-modal"] .italic').find(e => e.innerText.toLowerCase().trim() === 'start talking...');
+        if (showingPlaceholder) {
+          Mine.qsaa('[data-headlessui-state="open"]').forEach(e => e.click());  // dismiss dialog by clicking background
+          return;
+        }
+
+        await Mine.sleep(500);
+        dialogButtonEles.find(e => e.innerText === 'Finish').click();
+        const ta = await getTa();
+        await Mine.waitFor(() => ta.value.trim().length);
+        (await Mine.waitForQs(`[data-element-id="send-button"]`)).click();
+      }
+      new TabKeyHandler(startListening, stopListening);  // recognition needs time to process from time u see the preview text
+    };
+    initTabRecording();
+
+    Mine.bindHotkey('`', document, async event => {
+      const isInTypableEle = ['INPUT', 'TEXTAREA'].includes(document.activeElement?.tagName);
+      if (event.key === '`' && !isInTypableEle) {
+        (await getSidebarToggleEle()).click();
+      }
+    });
+    Mine.bindHotkey('Escape', document, async e => {
+      await stopAiResponse();
+    });
+
+    const mine_query = Mine.getQueryParam('mine_query');
+    if (mine_query) {
+      const ta = await getTa();
+      Mine.updateReactTypableFormValue(ta, mine_query);
+      Mine.qs(`[data-element-id="send-button"]`).click();
+    }
+
+    const createWorkerExecutor = () => {
+      const workerScript = `
+        self.onmessage = (e) => {
+          const logs = [];
+          self.console.log = (...args) => logs.push(args.join(' '));
+          try {
+            (new Function(e.data))();
+            self.postMessage(logs);
+          } catch (error) {
+            self.postMessage({ error: error.message });
+          }
+        };
+      `;
+
+      const blob = new Blob([workerScript], { type: 'application/javascript' });
+      const blobUrl = URL.createObjectURL(blob);
+      const worker = new Worker(blobUrl);
+
+      return {
+        execute: (code) => new Promise((resolve, reject) => {
+          worker.onmessage = (e) => {
+            if (e.data.error) {
+              reject(e.data.error);
+            } else {
+              resolve(e.data.join('\n'));
+            }
+            worker.terminate();
+            URL.revokeObjectURL(blobUrl);
+          };
+
+          worker.onerror = (e) => {
+            reject(e.message);
+            worker.terminate();
+            URL.revokeObjectURL(blobUrl);
+          };
+
+          worker.postMessage(code);
+        }),
+        terminate: () => {
+          worker.terminate();
+          URL.revokeObjectURL(blobUrl);
+        }
+      };
+    };
+
+    const runCode = async (code) => {
+      const executor = createWorkerExecutor();
+      try {
+        const output = await executor.execute(code);
+        return output;
+      } catch (error) {
+        throw error;
+      } finally {
+        executor.terminate();
+      }
+    };
+    Mine.puic(() => Mine.qsaa(`[data-element-id="response-block"]:has([d="${verticalMoreIconPath}"]) code`), async codeEle => {
+      const code = codeEle.innerText.trim();
+      const unsafeKeywords = ['.createElement', '<script', '<html'];
+      const isMaybeUnsafe = unsafeKeywords.some(kw => code.includes(kw));
+      if (isMaybeUnsafe) return;
+
+      const codeLines = code.split('\n');
+      let lastLine = codeLines[codeLines.length-1];
+      if (lastLine.startsWith('let ') || lastLine.startsWith('const ') || lastLine.match(/^[a-zA-Z0-9]+\s?=/)) {
+        const lastVar = lastLine.split('=')[0].split(' ').filter(c => !!c.trim()).pop();
+        lastLine = `console.log(${lastVar})`;
+        codeLines.push(lastLine);
+      }
+      if (lastLine.startsWith('console.log(')) {
+        const codeOutputClassname = 'mine_code_output';
+        let ans;
+        try {
+          ans = await runCode(codeLines.join('\n'));
+        } catch(e) {
+          const isReferenceErr = e.toString().startsWith('ReferenceError:') || e.toString().split('\n')[0].trim().endsWith(' is not defined');
+          if (isReferenceErr) {  // if reference error, then need previous codes too
+            try {
+              const allCodes = [...codeEle.closest('[data-element-id="response-block"]').querySelectorAll(`code:not(.${codeOutputClassname})`)];
+              const prevCodes = [];
+              for (const curCodeEle of allCodes) {
+                if (curCodeEle === codeEle) break;
+                prevCodes.push(curCodeEle.innerText);
+              }
+              const netCode = prevCodes.join('\n') +'\n\n'+ codeLines.join('\n');
+              ans = await runCode(netCode);
+            } catch(e) {
+              // possible oddities in AI code
+            }
+          }
+        }
+        if (ans) {
+          const outEle = document.createElement('code');
+          outEle.classList.add(codeOutputClassname);
+          outEle.style = `font-size: 12.25px; display: block; font-style: italic; color: gray; border-top: 1px solid gray; margin-top: 10px; opacity: 0; transition: opacity 0.2s ease-in-out;`;
+          outEle.innerHTML = `${ans}`;
+          codeEle.after(outEle);
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              outEle.style.opacity = 1;
+            });
+          });
+        } else {
+          console.log('no ans', codeLines.join('\n'));
+        }
+      }
+    });
+
+    installNotesV2();
+    window.addEventListener('beforeunload', async e => {
+      await stopAiResponse();  // if AI is typing, it will pause and get saved
+    });
+  };
+
+  const installNotesV2 = async () => {
+    const myDiv = document.createElement('div');
+    myDiv.innerHTML = `
+  <style>
+    .mine_notes:not(:placeholder-shown) {
+      border-color: green;
+
+      right: -2px;
+      height: calc(100vh - 60px - 100px);
+    }
+    .mine_notes:hover {
+      opacity: 1;
+    }
+    .mine_notes:focus {
+      opacity: 1;
+
+      right: -2px;
+
+      outline: none !important;
+      box-shadow: none !important;
+    }
+    .mine_notes {
+      transition: all 0.2s ease;
+      cursor: pointer;
+      opacity: 0.2;
+      line-height: 1.1em;
+      padding: 7px;
+      position: fixed;
+      right: -12.9%;
+      top: 60px;
+      background: rgb(39, 39, 42);
+      color: white;
+      width: 15%;
+      border-radius: 10px 0 0 10px;
+      border-width: 2px;
+      height: 36px;
+      resize: none;
+    }
+  </style>
+  <textarea class="mine_notes" placeholder="📝 Notes..." title="[M] Notepad"></textarea>
+    `;
+    document.body.append(myDiv);
+
+    const ta = myDiv.querySelector('.mine_notes');
+    ta.value = localStorage.getItem('mine_notes') || '';
+    ta.addEventListener('input', () => localStorage.setItem('mine_notes', textarea.value));
+  };
+
+  const wipeChatHotkey = () => {
+    // also tried pulling out the context button and storing that pointer on load (doesnt work when mac screen locked)
+
+    // CMD+OPT+J
+    document.dispatchEvent(new KeyboardEvent('keydown', {
+      key: 'j',
+      code: 'KeyJ',
+      metaKey: true,
+      altKey: true,
+      bubbles: true,
+      cancelable: true
+    }));
+  };
+
+  const maybeWipeChat = async () => {
+    document.body.style.opacity = 0.1;
+    await closeSide();
+    const wipeChat = async () => {
+      const ta = await getTa();
+      const oldValue = ta.value;
+      Mine.updateReactTypableFormValue(ta, '');
+
+      wipeChatHotkey();
+
+      Mine.updateReactTypableFormValue(ta, oldValue);
+    };
+
+    // works great but has some wierd unideal by typingmind where it asks for lisence
+    // const SCRATCHPAD_CHAT_ID = 'i78A8Ws0wE';
+    // if (window.location.hash === `#chat=${SCRATCHPAD_CHAT_ID}`) {
+    //   await wipeChat();
+    // }
+
+    const wipeQueryKey = 'mine_wipe';
+    if (Mine.getQueryParam(wipeQueryKey) === 'true') {
+      // document.body.style.opacity = 0.1;
+      await wipeChat();
+
+      // await Mine.sleep(500);
+      // prevent some wierd unideal by typingmind where it asks for lisence
+      // const newUrl = new URL(window.location.href);
+      // newUrl.searchParams.delete(wipeQueryKey);
+      // window.location = newUrl.href;
+      // return;
+    }
+    document.body.style.opacity = 1;
+  };
+  maybeWipeChat().then(main);
+  window.addEventListener('resize', ensureSidebarClosed);
+
 })();
