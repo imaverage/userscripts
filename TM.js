@@ -1037,7 +1037,6 @@
   const getIsSideBarOpen = () => Mine.qs('#navbar')?.getBoundingClientRect().left === 0;
 
 
-  alert('c');
   const main = async () => {
     const verticalMoreIconPath = `M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z`;
     const stopIconPath = `M400 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48z`;
@@ -1193,9 +1192,7 @@
       fixDesktopUx().then();
     }
 
-    alert('e');
     const isModifierFree = ev => !ev.altKey && !ev.ctrlKey && !ev.metaKey && !ev.shiftKey;
-    alert('f');
     const fixScrollingAndHotkeys = async () => {
       const originalScrollTo = window.scrollTo;
       window.scrollTo = (...args) => {
@@ -1237,9 +1234,7 @@
         }
       });
     };
-    alert('g');
     if (!isMobile) setTimeout(fixScrollingAndHotkeys, 500);
-    alert('h');
 
     const installArgumentRunner = async () => {
       const postProcessTaBeforeSubmit = async () => {
@@ -1273,11 +1268,9 @@
         Mine.qs(`[data-element-id="send-button"]`).click();
       };
       if (isMobile) {
-        alert('attaching to send btn');
         await Mine.attachToElementContinuously(
           async () => await Mine.waitForQs('[data-element-id="send-button"]', {recheckIntervalMs: 1000, timeoutMs: Infinity}),
           async b => {
-            alert('got it');
             b.style.background = 'green';
             b.addEventListener('touchstart', async () => {
               await postProcessTaBeforeSubmit();
@@ -1703,5 +1696,7 @@
     };
     maybeWipeChat().then(main);
     window.addEventListener('resize', ensureSidebarClosed);
+  } else {
+    main();
   }
 })();
