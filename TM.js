@@ -1422,29 +1422,30 @@ body {
     }
 
 
-    class TabKeyHandler {
-      constructor(activatedCb, inactivatedCb) {
-        this.activatedCb = activatedCb;
-        this.inactivatedCb = inactivatedCb;
-        this.init();
-      }
-      init() {
-        document.addEventListener('keydown', this.handleKeyDown.bind(this));
-        document.addEventListener('keyup', this.handleKeyUp.bind(this));
-      }
-      handleKeyDown(event) {
-        if (event.key === 'Tab') {
-          event.preventDefault(); // Optional: prevent default tabbing behavior
-          this.activatedCb();
+
+    const installTabWalkieTalkie = async () => {
+      class TabKeyHandler {
+        constructor(activatedCb, inactivatedCb) {
+          this.activatedCb = activatedCb;
+          this.inactivatedCb = inactivatedCb;
+          this.init();
+        }
+        init() {
+          document.addEventListener('keydown', this.handleKeyDown.bind(this));
+          document.addEventListener('keyup', this.handleKeyUp.bind(this));
+        }
+        handleKeyDown(event) {
+          if (event.key === 'Tab') {
+            event.preventDefault(); // Optional: prevent default tabbing behavior
+            this.activatedCb();
+          }
+        }
+        handleKeyUp(event) {
+          if (event.key === 'Tab') {
+            this.inactivatedCb();
+          }
         }
       }
-      handleKeyUp(event) {
-        if (event.key === 'Tab') {
-          this.inactivatedCb();
-        }
-      }
-    }
-    const initTabRecording = async () => {
       const startListening = () => Mine.qs('[data-element-id="voice-input-button"]').click();
       const stopListening = async () => {
         const dialogButtonEles = Mine.qsaa('[data-element-id="pop-up-modal"] button');
@@ -1463,7 +1464,7 @@ body {
       }
       new TabKeyHandler(startListening, stopListening);  // recognition needs time to process from time u see the preview text
     };
-    initTabRecording();
+    installTabWalkieTalkie();
 
     Mine.bindHotkey('`', document, async event => {
       const isInTypableEle = ['INPUT', 'TEXTAREA'].includes(document.activeElement?.tagName);
