@@ -1269,9 +1269,11 @@ body {
         Mine.qs(`[data-element-id="send-button"]`).click();
       };
       if (isMobile) {
+        alert('attaching to send btn');
         await Mine.attachToElementContinuously(
           async () => await Mine.waitForQs('[data-element-id="send-button"]', {recheckIntervalMs: 1000, timeoutMs: Infinity}),
           async b => {
+            alert('got it');
             b.style.background = 'green';
             b.addEventListener('touchstart', async () => {
               await postProcessTaBeforeSubmit();
@@ -1281,19 +1283,20 @@ body {
             });
           },
         );
-      }
-      await Mine.attachToElementContinuously(getTa, ta => ta.addEventListener('keydown', async event => {
-        if (!isModifierFree(event)) return;
-
-        if (event.key === 'Escape') return await stopAiResponse();
-
-        if (event.key === 'Enter') {
-          if (getIsResponding()) {
-            await stopAiResponse();
+      } else {
+        await Mine.attachToElementContinuously(getTa, ta => ta.addEventListener('keydown', async event => {
+          if (!isModifierFree(event)) return;
+  
+          if (event.key === 'Escape') return await stopAiResponse();
+  
+          if (event.key === 'Enter') {
+            if (getIsResponding()) {
+              await stopAiResponse();
+            }
+            await postProcessTaBeforeSubmit();
           }
-          await postProcessTaBeforeSubmit();
-        }
-      }));
+        }));
+      }
     };
     await installArgumentRunner();
 
