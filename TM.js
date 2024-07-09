@@ -1697,6 +1697,6 @@
     maybeWipeChat().then(main);
     window.addEventListener('resize', ensureSidebarClosed);
   } else {
-    main();
+    await main();
   }
 })();
