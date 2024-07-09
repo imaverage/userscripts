@@ -1571,7 +1571,10 @@ body {
       }
     });
 
-    installNotesV2();
+    if (!isMobile) {
+      installNotesV2();
+    }
+    
     window.addEventListener('beforeunload', async e => {
       await stopAiResponse();  // if AI is typing, it will pause and get saved
     });
