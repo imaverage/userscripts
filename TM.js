@@ -212,9 +212,7 @@ body {
       },
     );
   };
-  if (isMobile) {
-    attachMetaInfoV1();
-  }
+  attachMetaInfoV1();
 
   const installMemoryPluginV1 = async () => {
     const api = {
