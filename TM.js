@@ -845,11 +845,6 @@ body {
 
 
 
-  // This code should be placed in the script of your top-most window
-  const getStopButton = () => Mine.qsaa('button').find(e => e.innerText === 'Stop');
-  const isAiTyping = () => !!getStopButton();
-
-
   // in https://cdn.jsdelivr.net/gh/imaverage/userscripts@main/TM2.js as well (TM# might change)
   Mine.isi(`
   [data-element-id="message-input"] .pt-2 {
