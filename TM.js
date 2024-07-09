@@ -1238,6 +1238,12 @@ body {
     setTimeout(fixScrollingAndHotkeys, 500);
 
     const installArgumentRunner = async () => {
+      const argumentRunner = {
+        'q': async () => argStatements.push('respond as concisely as possible'),
+        'n': async () => argStatements.push('respond normally'),
+        'v': async () => argStatements.push('elaborate'),
+      };
+    
       const postProcessTaBeforeSubmit = async () => {
         if (getIsResponding()) {
           await stopAiResponse();
@@ -1255,11 +1261,6 @@ body {
         if (maybeArg) {
           const removeTailFromString = (str, tail) => str.endsWith(tail) ? str.slice(0, -tail.length) : str;
           let argStatements = [];
-          const argumentRunner = {
-            'q': async () => argStatements.push('respond as concisely as possible'),
-            'n': async () => argStatements.push('respond normally'),
-            'v': async () => argStatements.push('elaborate'),
-          };
           for (let i=0;i<maybeArg.length;i++) {
             const arg = maybeArg[i];
             if (arg in argumentRunner) {
