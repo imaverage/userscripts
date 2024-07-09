@@ -1235,7 +1235,9 @@ body {
         }
       });
     };
-    setTimeout(fixScrollingAndHotkeys, 500);
+    if (!isMobile) {
+      setTimeout(fixScrollingAndHotkeys, 500);
+    }
 
     alert('1');
     const installArgumentRunner = async () => {
