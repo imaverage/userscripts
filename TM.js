@@ -1264,6 +1264,7 @@
           const maybeArgTail = argStatements.length?('\n\nNote: '+argStatements.join('. ')):'';
           const qModified = removeTailFromString(q, ' -'+maybeArg) + maybeArgTail;
           Mine.updateReactTypableFormValue(ta, qModified);
+          ta.scrollTo({top: ta.scrollHeight, behavior: 'smooth'});
         }
         Mine.qs(`[data-element-id="send-button"]`).click();
       };
