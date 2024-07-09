@@ -1466,15 +1466,17 @@ body {
     };
     installTabWalkieTalkie();
 
-    Mine.bindHotkey('`', document, async event => {
-      const isInTypableEle = ['INPUT', 'TEXTAREA'].includes(document.activeElement?.tagName);
-      if (event.key === '`' && !isInTypableEle) {
-        (await getSidebarToggleEle()).click();
-      }
-    });
-    Mine.bindHotkey('Escape', document, async e => {
-      await stopAiResponse();
-    });
+    if (!isMobile) {
+      Mine.bindHotkey('`', document, async event => {
+        const isInTypableEle = ['INPUT', 'TEXTAREA'].includes(document.activeElement?.tagName);
+        if (event.key === '`' && !isInTypableEle) {
+          (await getSidebarToggleEle()).click();
+        }
+      });
+      Mine.bindHotkey('Escape', document, async e => {
+        await stopAiResponse();
+      });
+    }
 
     const mine_query = Mine.getQueryParam('mine_query');
     if (mine_query) {
