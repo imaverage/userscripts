@@ -463,6 +463,7 @@
       const newVal = ta.value?`${ta.value}\n\n${textToAppend}`:textToAppend;
       Mine.updateReactTypableFormValue(ta, newVal);
       Mine.qs('button:has([d="M12 7.59 7.05 2.64 5.64 4.05 12 10.41l6.36-6.36-1.41-1.41L12 7.59zM5.64 19.95l1.41 1.41L12 16.41l4.95 4.95 1.41-1.41L12 13.59l-6.36 6.36z"])')?.click();
+      ta.blur();  // seems to focus if its the first action you take after loading
       ta.scrollTo({top: ta.scrollHeight, behavior: 'smooth'});
       if (doSubmit) {
         (await getSendButton()).click();
