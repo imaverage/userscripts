@@ -1271,13 +1271,15 @@ body {
           Mine.updateReactTypableFormValue(ta, qModified);
         }
       };
-      await Mine.attachToElementContinuously(
-        async () => await Mine.waitForQs('[data-element-id="send-button"]', {recheckIntervalMs: 500, timeoutMs: Infinity}),
-        async b => b.addEventListener('touchend', async () => {
-          Mine.updateReactTypableFormValue(await getTa(), Math.random());
-          await postProcessTaBeforeSubmit();
-        }),
-      );
+      if (isMobile) {
+        await Mine.attachToElementContinuously(
+          async () => await Mine.waitForQs('[data-element-id="send-button"]', {recheckIntervalMs: 500, timeoutMs: Infinity}),
+          async b => b.addEventListener('touchend', async () => {
+            Mine.updateReactTypableFormValue(await getTa(), Math.random());
+            await postProcessTaBeforeSubmit();
+          }),
+        );
+      }
       await Mine.attachToElementContinuously(getTa, ta => ta.addEventListener('keydown', async event => {
         if (!isModifierFree(event)) return;
 
