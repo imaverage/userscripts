@@ -9,7 +9,7 @@
   const getChatIndexedDbValue = async urlChatValue => await Mine.getIndexedDbValue(`CHAT_${urlChatValue}`, 'keyval-store', 'keyval');
   const getStopButton = () => Mine.qsaa('button').find(e => e.innerText === 'Stop');
   const isAiTyping = () => !!getStopButton();
-  const isMobile = () => /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
   Mine.quietQs(`[data-element-id="pinned-characters-container"]`);
   Mine.isi(`
