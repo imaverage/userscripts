@@ -1010,7 +1010,6 @@ body {
     }
   };
 
-  const getChatIndexedDbValue = async urlChatValue => await Mine.getIndexedDbValue(`CHAT_${urlChatValue}`, 'keyval-store', 'keyval');
   const getIsResponding = () => !!Mine.qs(`[data-element-id="response-block"]:not(:has([id^="message-timestamp-"]))`);
   const getSidebarToggleEle = async () => await Mine.waitFor(() => Mine.qsaa('button').find(e => e.innerText === 'Open sidebar'));
   const getTa = async () => await Mine.waitForQs('#chat-input-textbox');
@@ -1042,95 +1041,6 @@ body {
     setTimeout(unhideSidebar, 300);
   };
   const getIsSideBarOpen = () => Mine.qs('#navbar')?.getBoundingClientRect().left === 0;
-  const attachMetaInfoV1 = async () => {
-    const infoIconPath = `M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z`;
-    const getContextSize = async () => {
-      const chatId = window.location.hash.split('chat=')[1];
-      if (!chatId) return null;
-
-      const inf = await getChatIndexedDbValue(chatId);
-      const contextSize = inf.chatParams.contextLimit;
-      return contextSize;
-    };
-    const getMsgEles = () => Mine.qsaa(`[data-element-id="response-block"]`);
-    const updateInfoButton = async () => {
-      const infoButton = Mine.qsaa('[data-element-id="current-chat-title"] button').reverse()[0];
-      if (!infoButton) return;
-
-      const ID = '__mine_info_div';
-      const getMyInfoEle = () => Mine.qs(`#${ID}`);
-
-      const maybeMyInfoDiv = getMyInfoEle();
-      if (!maybeMyInfoDiv) {
-        const newEle = document.createElement('div');
-        newEle.id = ID;
-        newEle.style.opacity = '0';
-        newEle.style.transition = 'opacity 0.2s';
-        infoButton.parentNode.insertBefore(newEle, infoButton);
-        newEle.offsetWidth;  // trigger css reflow
-        newEle.style.opacity = '1';
-      }
-
-      const myInfoDiv = maybeMyInfoDiv || getMyInfoEle();
-      const msgEles = getMsgEles();
-      let msgCount = msgEles.length;
-
-      const latestContextClearEle = Mine.qsaa('[data-element-id="clear-context-divider"]').pop();
-      const getAreElementsInThisOrder = (eleA, eleB) => eleB.compareDocumentPosition(eleA) & Node.DOCUMENT_POSITION_PRECEDING;
-      if (latestContextClearEle && msgEles.length) {
-        const lastMsgEle = msgEles.slice(-1)[0];
-        if (getAreElementsInThisOrder(lastMsgEle, latestContextClearEle)) {
-          msgCount = 0;
-        }
-        else {
-          const indexAfterContextClear = msgEles.findIndex(msgEle => getAreElementsInThisOrder(latestContextClearEle, msgEle));
-          msgCount = msgCount-indexAfterContextClear+1;
-        }
-      }
-
-      const cxtSize = await getContextSize();
-      const metaMsg = `${msgCount} / <span style='${msgCount >= cxtSize ? 'color:red;' : ''};'>${cxtSize} mcxt</span>`;
-      myInfoDiv.innerHTML = metaMsg;
-    };
-    const updateContextDivider = async () => {
-      if (isAiTyping()) return;
-
-      Mine.qsaa('.firstLookbackMessage.visible').forEach(e => {
-        e.classList.remove('firstLookbackMessage');
-        e.classList.remove('visible');
-      });
-
-      const msgElesRev = getMsgEles().reverse();
-      const contextSize = Number(await getContextSize());
-      if (contextSize <= msgElesRev.length) {
-        const contextLookbackTailMsg = msgElesRev[contextSize-1];
-        const targetMsgEle = contextLookbackTailMsg.closest('[data-element-id="response-block"]').parentElement;
-        if (targetMsgEle) {
-          targetMsgEle.classList.add('firstLookbackMessage');
-          targetMsgEle.classList.add('visible');
-        }
-      }
-    };
-    const refreshCurrentChatMeta = async () => {
-      // TODO: hide info button in this case
-      const chatId = window.location.hash.split('chat=')[1];
-      if (!chatId) return;
-      const inf = await getChatIndexedDbValue(chatId);
-      if (!inf) return;
-
-      await updateInfoButton();
-      await updateContextDivider();
-    };
-
-    // TODO: wipe above stuff too that isnt used anymore
-    // Mine.attachToElementContinuously(
-    //   async () => await Mine.waitForQs('[data-element-id="chat-space-middle-part"]', {recheckIntervalMs: 500, timeoutMs: Infinity}),
-    //   targetRootEle => {
-    //     refreshCurrentChatMeta();
-    //     Mine.addEventListenerForSubtreeAddOrRemove(targetRootEle, refreshCurrentChatMeta);
-    //   },
-    // );
-  };
 
 
   const main = async () => {
