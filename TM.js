@@ -1239,10 +1239,6 @@ body {
 
     const installArgumentRunner = async () => {
       const postProcessTaBeforeSubmit = async () => {
-        if (getIsResponding()) {
-          await stopAiResponse();
-        }
-
         // handle arguments like "whats 1+1 -q"
         const getOptionalArgumentStr = query => {
           const pattern = / -([a-zA-Z0-9]+)$/;
@@ -1270,7 +1266,7 @@ body {
           const qModified = removeTailFromString(q, ' -'+maybeArg) + maybeArgTail;
           Mine.updateReactTypableFormValue(ta, qModified);
         }
-        setTimeout(() => Mine.qs(`[data-element-id="send-button"]`).click(), 0);
+        Mine.qs(`[data-element-id="send-button"]`).click();
       };
       if (isMobile) {
         await Mine.attachToElementContinuously(
@@ -1286,6 +1282,9 @@ body {
         if (event.key === 'Escape') return await stopAiResponse();
 
         if (event.key === 'Enter') {
+          if (getIsResponding()) {
+            await stopAiResponse();
+          }
           await postProcessTaBeforeSubmit();
         }
       }));
