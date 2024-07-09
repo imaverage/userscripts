@@ -10,7 +10,6 @@
   const isAiTyping = () => !!getStopButton();
   const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
-  alert('top');
   Mine.quietQs(`[data-element-id="pinned-characters-container"]`);
   Mine.isi(`
     [id="elements-in-action-buttons"] button {
@@ -812,7 +811,6 @@
   };
   if (isMobile) installCustomToolButtons();
 
-  alert('b');
 
 
 
@@ -1039,6 +1037,7 @@
   const getIsSideBarOpen = () => Mine.qs('#navbar')?.getBoundingClientRect().left === 0;
 
 
+  alert('c');
   const main = async () => {
     const verticalMoreIconPath = `M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z`;
     const stopIconPath = `M400 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48z`;
@@ -1239,6 +1238,7 @@
     };
     if (!isMobile) setTimeout(fixScrollingAndHotkeys, 500);
 
+    alert('d');
     const installArgumentRunner = async () => {
       const postProcessTaBeforeSubmit = async () => {
         // handle arguments like "whats 1+1 -q"
