@@ -1271,9 +1271,15 @@ body {
       if (isMobile) {
         await Mine.attachToElementContinuously(
           async () => await Mine.waitForQs('[data-element-id="send-button"]', {recheckIntervalMs: 1000, timeoutMs: Infinity}),
-          async b => b.addEventListener('touchstart', async () => {
-            await postProcessTaBeforeSubmit();
-          }),
+          async b => {
+            b.style.background = 'green';
+            b.addEventListener('touchstart', async () => {
+              await postProcessTaBeforeSubmit();
+            });
+            b.addEventListener('touchend', async () => {
+              await postProcessTaBeforeSubmit();
+            });
+          },
         );
       }
       await Mine.attachToElementContinuously(getTa, ta => ta.addEventListener('keydown', async event => {
