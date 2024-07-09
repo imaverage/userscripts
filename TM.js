@@ -844,160 +844,158 @@ body {
 
 
 
-
-  // in https://cdn.jsdelivr.net/gh/imaverage/userscripts@main/TM2.js as well (TM# might change)
-  Mine.isi(`
-  [data-element-id="message-input"] .pt-2 {
-    padding-top: 0;
+  if (!isMobile) {
+    Mine.isi(`
+    [data-element-id="message-input"] .pt-2 {
+      padding-top: 0;
+    }
+    [data-element-id="chat-space-end-part"] {
+      padding-bottom: 5px;
+    }
+  
+    div:has(> div > img[src="/logo.png"]) {
+      display: none;
+    }
+    .prose {
+      background: rgb(39, 39, 42);
+      border-radius: 16px;
+      padding: 10px;
+      color: white;
+    }
+    /* my avatar */
+    [data-element-id="response-block"]:has([data-element-id="user-message"]) [data-element-id="chat-avatar-container"] {
+      display: none;
+    }
+  
+    div:has(>.bg-blue-500) {
+      display: flex;
+      justify-content: flex-end;
+    }
+    div > button:has(.user-avatar) {
+      visibility: hidden;
+    }
+  
+    body {
+      background: rgb(16,17,17) !important;
+    }
+    .response-block:hover {
+      background: none !important;
+    }
+  
+    /* might need to separate these two */
+    .response-block li,
+    .response-block p
+    {
+      border-radius: 5px;
+      margin: 2px;
+      padding-left: 2px;
+      padding-right: 2px;
+    }
+  
+    .response-block li, .response-block li *
+    .response-block p, .response-block p *
+    {
+      color: white;
+      transition: color 0.1s ease-in-out;
+    }
+    .response-block li:hover, .response-block li:hover *,
+    .response-block p:hover, .response-block p:hover *
+    {
+      color: hotpink;
+      transition: color 0s;
+    }
+  
+    .response-block li ul {
+      margin-top: 0;
+    }
+    .response-block li:nth-child(even), .response-block p:nth-child(even) {
+      background-color: RGBA(0,0,0,0.3);
+    }
+    `);
+    /*
+    textarea.my_notes {
+      position: absolute;
+      top: 56px;
+      right: -1px;
+      width: 273px;
+      border: 1px solid dimgray;
+      height: calc(100% - 56px);
+      background: transparent;
+      border-radius: 10px 0 0 10px;
+    }
+    */
+    Mine.quietQs(`a[href="https://custom.typingmind.com"]`);
+    Mine.isi(`form[action="https://codepen.io/pen/define"] {display: none !important;}`);
+  
+    // for voice calls support
+    Mine.isi(`[data-element-id="response-block"] div:has(>audio):has(button), [data-element-id="response-block"] div:has(>[data-element-id="in-message-play-button"]) {display: none;}`);
+  
+    Mine.isi(`
+    [data-element-id="ai-characters-system-instruction-input"] {
+      height: 300px;
+    }
+  
+  
+    /* voice recognition dialog */
+    [data-element-id="pop-up-modal"]:has(option[value="en-AU"]) {
+      right: 10px;
+      top: 100px;
+      position: absolute;
+      zoom: 0.7;
+    }
+  
+    .enter-to-send {
+      display: none;
+    }
+  
+    [data-headlessui-state] button {
+      border-radius: 10px;
+    }
+  
+    .firstLookbackMessage:before {
+      margin-bottom: 10px;
+      content: "——— context lookback starts ———";
+      opacity: 0;
+      display: block;
+      text-align: center;
+      color: gray;
+      font-style: italic;
+      transition: opacity 0.25s ease-in-out;
+    }
+    .firstLookbackMessage.visible:before {
+      opacity: 0.5;
+    }
+  
+  
+    /* pretty tables */
+    table {
+      padding: 2px;
+    }
+    thead th:first-child {
+      border-top-left-radius: 10px;
+    }
+    thead th:last-child {
+      border-top-right-radius: 10px;
+    }
+    table thead {
+      background-color: rgba(0, 0, 0, 0.2);
+    }
+    table tr td:first-child {
+      background-color: rgba(0, 0, 0, 0.2);
+    }
+  
+    table tr:hover {
+      background-color: rgba(0, 0, 0, 0.4) !important;
+    }
+    table tr:nth-child(even) {
+      background-color: rgba(0, 0, 0, 0.1);
+    }
+    table tr th:first-child,
+    table tr td:first-child {
+      padding: 10px;
+    }
+    `);
   }
-  [data-element-id="chat-space-end-part"] {
-    padding-bottom: 5px;
-  }
-
-  div:has(> div > img[src="/logo.png"]) {
-    display: none;
-  }
-  .prose {
-    background: rgb(39, 39, 42);
-    border-radius: 16px;
-    padding: 10px;
-    color: white;
-  }
-  /* my avatar */
-  [data-element-id="response-block"]:has([data-element-id="user-message"]) [data-element-id="chat-avatar-container"] {
-    display: none;
-  }
-
-  div:has(>.bg-blue-500) {
-    display: flex;
-    justify-content: flex-end;
-  }
-  div > button:has(.user-avatar) {
-    visibility: hidden;
-  }
-
-  body {
-    background: rgb(16,17,17) !important;
-  }
-  .response-block:hover {
-    background: none !important;
-  }
-
-  /* might need to separate these two */
-  .response-block li,
-  .response-block p
-  {
-    border-radius: 5px;
-    margin: 2px;
-    padding-left: 2px;
-    padding-right: 2px;
-  }
-
-  .response-block li, .response-block li *
-  .response-block p, .response-block p *
-  {
-    color: white;
-    transition: color 0.1s ease-in-out;
-  }
-  .response-block li:hover, .response-block li:hover *,
-  .response-block p:hover, .response-block p:hover *
-  {
-    color: hotpink;
-    transition: color 0s;
-  }
-
-  .response-block li ul {
-    margin-top: 0;
-  }
-  .response-block li:nth-child(even), .response-block p:nth-child(even) {
-    background-color: RGBA(0,0,0,0.3);
-  }
-  `);
-  /*
-  textarea.my_notes {
-    position: absolute;
-    top: 56px;
-    right: -1px;
-    width: 273px;
-    border: 1px solid dimgray;
-    height: calc(100% - 56px);
-    background: transparent;
-    border-radius: 10px 0 0 10px;
-  }
-  */
-
-  Mine.quietQs(`a[href="https://custom.typingmind.com"]`);
-  Mine.isi(`form[action="https://codepen.io/pen/define"] {display: none !important;}`);
-
-  // for voice calls support
-  Mine.isi(`[data-element-id="response-block"] div:has(>audio):has(button), [data-element-id="response-block"] div:has(>[data-element-id="in-message-play-button"]) {display: none;}`);
-
-  Mine.isi(`
-  [data-element-id="ai-characters-system-instruction-input"] {
-    height: 300px;
-  }
-
-
-  /* voice recognition dialog */
-  [data-element-id="pop-up-modal"]:has(option[value="en-AU"]) {
-    right: 10px;
-    top: 100px;
-    position: absolute;
-    zoom: 0.7;
-  }
-
-  .enter-to-send {
-    display: none;
-  }
-
-  [data-headlessui-state] button {
-    border-radius: 10px;
-  }
-
-  .firstLookbackMessage:before {
-    margin-bottom: 10px;
-    content: "——— context lookback starts ———";
-    opacity: 0;
-    display: block;
-    text-align: center;
-    color: gray;
-    font-style: italic;
-    transition: opacity 0.25s ease-in-out;
-  }
-  .firstLookbackMessage.visible:before {
-    opacity: 0.5;
-  }
-
-
-  /* pretty tables */
-  table {
-    padding: 2px;
-  }
-  thead th:first-child {
-    border-top-left-radius: 10px;
-  }
-  thead th:last-child {
-    border-top-right-radius: 10px;
-  }
-  table thead {
-    background-color: rgba(0, 0, 0, 0.2);
-  }
-  table tr td:first-child {
-    background-color: rgba(0, 0, 0, 0.2);
-  }
-
-  table tr:hover {
-    background-color: rgba(0, 0, 0, 0.4) !important;
-  }
-  table tr:nth-child(even) {
-    background-color: rgba(0, 0, 0, 0.1);
-  }
-  table tr th:first-child,
-  table tr td:first-child {
-    padding: 10px;
-  }
-  `);
-
 
   Mine.isi(`.transition {transition-duration: 0s !important;}`);
   const ensureSidebarClosed = async () => {
@@ -1189,12 +1187,14 @@ body {
     display: none;
   }
     `.trim();
-    const fixUx = async () => {
+    const fixDesktopUx = async () => {
       Mine.isi(css);
       // document.body.style.setProperty('background-color', 'rgb(16,17,17)', 'important');
       // await closeSide();
     };
-    fixUx().then();
+    if (!isMobile) {
+      fixDesktopUx().then();
+    }
 
     const isModifierFree = ev => !ev.altKey && !ev.ctrlKey && !ev.metaKey && !ev.shiftKey;
     const fixScrollingAndHotkeys = async () => {
