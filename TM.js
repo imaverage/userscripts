@@ -1652,40 +1652,41 @@ body {
     }));
   };
 
-  const maybeWipeChat = async () => {
-    document.body.style.opacity = 0.1;
-    await closeSide();
-    const wipeChat = async () => {
-      const ta = await getTa();
-      const oldValue = ta.value;
-      Mine.updateReactTypableFormValue(ta, '');
-
-      wipeChatHotkey();
-
-      Mine.updateReactTypableFormValue(ta, oldValue);
+  if (!isMobile) {
+    const maybeWipeChat = async () => {
+      document.body.style.opacity = 0.1;
+      await closeSide();
+      const wipeChat = async () => {
+        const ta = await getTa();
+        const oldValue = ta.value;
+        Mine.updateReactTypableFormValue(ta, '');
+  
+        wipeChatHotkey();
+  
+        Mine.updateReactTypableFormValue(ta, oldValue);
+      };
+  
+      // works great but has some wierd unideal by typingmind where it asks for lisence
+      // const SCRATCHPAD_CHAT_ID = 'i78A8Ws0wE';
+      // if (window.location.hash === `#chat=${SCRATCHPAD_CHAT_ID}`) {
+      //   await wipeChat();
+      // }
+  
+      const wipeQueryKey = 'mine_wipe';
+      if (Mine.getQueryParam(wipeQueryKey) === 'true') {
+        // document.body.style.opacity = 0.1;
+        await wipeChat();
+  
+        // await Mine.sleep(500);
+        // prevent some wierd unideal by typingmind where it asks for lisence
+        // const newUrl = new URL(window.location.href);
+        // newUrl.searchParams.delete(wipeQueryKey);
+        // window.location = newUrl.href;
+        // return;
+      }
+      document.body.style.opacity = 1;
     };
-
-    // works great but has some wierd unideal by typingmind where it asks for lisence
-    // const SCRATCHPAD_CHAT_ID = 'i78A8Ws0wE';
-    // if (window.location.hash === `#chat=${SCRATCHPAD_CHAT_ID}`) {
-    //   await wipeChat();
-    // }
-
-    const wipeQueryKey = 'mine_wipe';
-    if (Mine.getQueryParam(wipeQueryKey) === 'true') {
-      // document.body.style.opacity = 0.1;
-      await wipeChat();
-
-      // await Mine.sleep(500);
-      // prevent some wierd unideal by typingmind where it asks for lisence
-      // const newUrl = new URL(window.location.href);
-      // newUrl.searchParams.delete(wipeQueryKey);
-      // window.location = newUrl.href;
-      // return;
-    }
-    document.body.style.opacity = 1;
-  };
-  maybeWipeChat().then(main);
-  window.addEventListener('resize', ensureSidebarClosed);
-
+    maybeWipeChat().then(main);
+    window.addEventListener('resize', ensureSidebarClosed);
+  }
 })();
