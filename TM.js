@@ -1270,7 +1270,7 @@ body {
           const qModified = removeTailFromString(q, ' -'+maybeArg) + maybeArgTail;
           Mine.updateReactTypableFormValue(ta, qModified);
         }
-        Mine.qs(`[data-element-id="send-button"]`).click();
+        setTimeout(() => Mine.qs(`[data-element-id="send-button"]`).click(), 0);
       };
       if (isMobile) {
         await Mine.attachToElementContinuously(
