@@ -1238,10 +1238,44 @@ body {
     setTimeout(fixScrollingAndHotkeys, 500);
 
     const installArgumentRunner = async () => {
+      const postProcessTaBeforeSubmit = async () => {
+        if (getIsResponding()) {
+          await stopAiResponse();
+        }
+
+        // handle arguments like "whats 1+1 -q"
+        const getOptionalArgumentStr = query => {
+          const pattern = / -([a-zA-Z0-9]+)$/;
+          const match = query.match(pattern);
+          return match ? match[1] : null;
+        }
+        const ta = await getTa();
+        const q = ta.value;
+        const maybeArg = getOptionalArgumentStr(q);
+        if (maybeArg) {
+          const removeTailFromString = (str, tail) => str.endsWith(tail) ? str.slice(0, -tail.length) : str;
+          let argStatements = [];
+          const argumentRunner = {
+            'q': async () => argStatements.push('respond as concisely as possible'),
+            'n': async () => argStatements.push('respond normally'),
+            'v': async () => argStatements.push('elaborate'),
+          };
+          for (let i=0;i<maybeArg.length;i++) {
+            const arg = maybeArg[i];
+            if (arg in argumentRunner) {
+              await argumentRunner[arg]();
+            }
+          }
+          const maybeArgTail = argStatements.length?('\n\nNote: '+argStatements.join('. ')):'';
+          const qModified = removeTailFromString(q, ' -'+maybeArg) + maybeArgTail;
+          Mine.updateReactTypableFormValue(ta, qModified);
+        }
+      };
       await Mine.attachToElementContinuously(
         async () => await Mine.waitForQs('[data-element-id="send-button"]', {recheckIntervalMs: 500, timeoutMs: Infinity}),
         async b => b.addEventListener('touchend', async () => {
           Mine.updateReactTypableFormValue(await getTa(), Math.random());
+          await postProcessTaBeforeSubmit();
         }),
       );
       await Mine.attachToElementContinuously(getTa, ta => ta.addEventListener('keydown', async event => {
@@ -1250,36 +1284,7 @@ body {
         if (event.key === 'Escape') return await stopAiResponse();
 
         if (event.key === 'Enter') {
-          if (getIsResponding()) {
-            await stopAiResponse();
-          }
-
-          // handle arguments like "whats 1+1 -q"
-          const getOptionalArgumentStr = query => {
-            const pattern = / -([a-zA-Z0-9]+)$/;
-            const match = query.match(pattern);
-            return match ? match[1] : null;
-          }
-          const q = ta.value;
-          const maybeArg = getOptionalArgumentStr(q);
-          if (maybeArg) {
-            const removeTailFromString = (str, tail) => str.endsWith(tail) ? str.slice(0, -tail.length) : str;
-            let argStatements = [];
-            const argumentRunner = {
-              'q': async () => argStatements.push('respond as concisely as possible'),
-              'n': async () => argStatements.push('respond normally'),
-              'v': async () => argStatements.push('elaborate'),
-            };
-            for (let i=0;i<maybeArg.length;i++) {
-              const arg = maybeArg[i];
-              if (arg in argumentRunner) {
-                await argumentRunner[arg]();
-              }
-            }
-            const maybeArgTail = argStatements.length?('\n\nNote: '+argStatements.join('. ')):'';
-            const qModified = removeTailFromString(q, ' -'+maybeArg) + maybeArgTail;
-            Mine.updateReactTypableFormValue(ta, qModified);
-          }
+          await postProcessTaBeforeSubmit();
 
           Mine.qs(`[data-element-id="send-button"]`).click();
         }
