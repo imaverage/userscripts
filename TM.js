@@ -1237,6 +1237,7 @@ body {
     };
     setTimeout(fixScrollingAndHotkeys, 500);
 
+    alert('1');
     const installArgumentRunner = async () => {
       const postProcessTaBeforeSubmit = async () => {
         // handle arguments like "whats 1+1 -q"
@@ -1268,7 +1269,6 @@ body {
         }
         Mine.qs(`[data-element-id="send-button"]`).click();
       };
-      alert('preattach');
       if (isMobile) {
         alert('attaching to send btn');
         await Mine.attachToElementContinuously(
