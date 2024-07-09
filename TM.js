@@ -1273,7 +1273,7 @@ body {
       };
       if (isMobile) {
         await Mine.attachToElementContinuously(
-          async () => await Mine.waitForQs('[data-element-id="send-button"]', {recheckIntervalMs: 500, timeoutMs: Infinity}),
+          async () => await Mine.waitForQs('[data-element-id="send-button"]', {recheckIntervalMs: 1000, timeoutMs: Infinity}),
           async b => b.addEventListener('touchend', async () => {
             Mine.updateReactTypableFormValue(await getTa(), Math.random());
             await postProcessTaBeforeSubmit();
