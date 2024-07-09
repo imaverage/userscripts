@@ -1268,6 +1268,7 @@ body {
         }
         Mine.qs(`[data-element-id="send-button"]`).click();
       };
+      alert('preattach');
       if (isMobile) {
         alert('attaching to send btn');
         await Mine.attachToElementContinuously(
