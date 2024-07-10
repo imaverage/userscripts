@@ -12,6 +12,11 @@
 
   Mine.quietQs(`[data-element-id="pinned-characters-container"]`);
   Mine.isi(`
+    /* context limit reached button is in here */
+    .post-message-content {
+      display: none;
+    }
+
     [id="elements-in-action-buttons"] button {
       scale: 0.8;
     }
