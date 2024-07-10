@@ -1275,6 +1275,7 @@
           async b => {
             b.addEventListener('touchend', async () => {
               await postProcessTaBeforeSubmit();
+              (await getTa()).blur();
             });
           },
         );
