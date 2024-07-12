@@ -1715,10 +1715,10 @@
       });
       dialogPinnedMsgs.forEach(dialogPinnedMsg => dialogPinnedMsg.addEventListener('click', async () => {
         const targetInnerText = dialogPinnedMsg.innerText;
-        await Mine.waitFor(() => !Mine.qs('[data-element-id="pop-up-modal"]'));
         const maybeTargetNormalMsg = Mine.qsaa('[data-element-id="response-block"]').filter(e2 => e2 !== dialogPinnedMsg).find(e2 => e2.innerText === targetInnerText);
         if (!maybeTargetNormalMsg) return;
 
+        await Mine.waitFor(() => !Mine.qs('[data-element-id="pop-up-modal"]'));
         maybeTargetNormalMsg.scrollIntoView({behavior: 'smooth'});
       }));
     });
