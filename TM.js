@@ -1713,8 +1713,9 @@
         const eles = Mine.qsaa(`[data-element-id="pop-up-modal"] [data-element-id="response-block"]`);
         return eles.length ? eles : null;
       });
-      dialogPinnedMsgs.forEach(dialogPinnedMsg => dialogPinnedMsg.addEventListener('click', () => {
+      dialogPinnedMsgs.forEach(dialogPinnedMsg => dialogPinnedMsg.addEventListener('click', async () => {
         const targetInnerText = dialogPinnedMsg.innerText;
+        await Mine.waitFor(() => !Mine.qs('[data-element-id="pop-up-modal"]'));
         const maybeTargetNormalMsg = Mine.qsaa('[data-element-id="response-block"]').filter(e2 => e2 !== dialogPinnedMsg).find(e2 => e2.innerText === targetInnerText);
         if (!maybeTargetNormalMsg) return;
 
