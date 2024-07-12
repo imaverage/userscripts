@@ -1724,9 +1724,10 @@
         if (!maybeTargetNormalMsg) return;
 
         await Mine.waitFor(() => !Mine.qs('[data-element-id="pop-up-modal"]'));
+        await Mine.sleep(1000);
         maybeTargetNormalMsg.scrollIntoView({behavior: 'smooth'});
       }));
     });
   };
-  // installPinnedMsgScroller();  // looks like its already implemented in TM
+  if (isMobile) installPinnedMsgScroller();  // looks like its already implemented in TM, but mobile is wonky
 })();
