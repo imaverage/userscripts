@@ -1728,5 +1728,5 @@
       }));
     });
   };
-  installPinnedMsgScroller();
+  // installPinnedMsgScroller();  // looks like its already implemented in TM
 })();
