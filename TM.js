@@ -1707,7 +1707,7 @@
   const installPinnedMsgScroller = async () => {
     const bindOnSelectorClick = async (qs, cb) => {
       // TODO: just have a global handler rather than a new one for each?
-      document.body.addEventListener('click', async e => {
+      document.body.addEventListener('touchend', async e => {
         const targetEle = e.target.closest(qs);
         if (!targetEle) return;
         await cb(targetEle);
@@ -1718,7 +1718,7 @@
         const eles = Mine.qsaa(`[data-element-id="pop-up-modal"] [data-element-id="response-block"]`);
         return eles.length ? eles : null;
       });
-      dialogPinnedMsgs.forEach(dialogPinnedMsg => dialogPinnedMsg.addEventListener('click', async () => {
+      dialogPinnedMsgs.forEach(dialogPinnedMsg => dialogPinnedMsg.addEventListener('touchend', async () => {
         const targetInnerText = dialogPinnedMsg.innerText;
         const maybeTargetNormalMsg = Mine.qsaa('[data-element-id="response-block"]').filter(e2 => e2 !== dialogPinnedMsg).find(e2 => e2.innerText === targetInnerText);
         if (!maybeTargetNormalMsg) return;
