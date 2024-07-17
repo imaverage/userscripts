@@ -481,7 +481,7 @@
       return await appendTaText(quotedResp, isLongPressed);
     };
     const commands = {
-      'elaborate': quoteReplyWith('elaborate'),
+      'elab': quoteReplyWith('elaborate'),
       '?': quoteReplyWith('?'),
       '👍🏻': quoteReplyWith('👍🏻'),
       '👎🏻': quoteReplyWith('👎🏻'),
