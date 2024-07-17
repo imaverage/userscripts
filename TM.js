@@ -491,7 +491,7 @@
         if (!reply) return false;
   
         const quoteReplyFn = quoteReplyWith(reply);
-        return await quoteReplyFn();
+        return await quoteReplyFn({selectedText, isLongPressed});
       },
     };
   
