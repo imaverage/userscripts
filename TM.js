@@ -490,8 +490,8 @@
         const reply = prompt(`> ${selectedText}`);
         if (!reply) return false;
   
-        const quotedResp = getQuoteResponseMerge(selectedText, reply);
-        return await appendTaText(quotedResp, isLongPressed);
+        const quoteReplyFn = quoteReplyWith(reply);
+        return await quoteReplyFn();
       },
     };
   
