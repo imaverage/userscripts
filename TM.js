@@ -475,23 +475,17 @@
       }
       return true;
     };
+
+    const quoteReplyWith = text => async ({selectedText, isLongPressed}) => {
+      const quotedResp = getQuoteResponseMerge(selectedText, text);
+      return await appendTaText(quotedResp, isLongPressed);
+    };
     const commands = {
-      'elaborate': async ({selectedText, isLongPressed}) => {
-        const quotedResp = getQuoteResponseMerge(selectedText, 'elaborate');
-        return await appendTaText(quotedResp, isLongPressed);
-      },
-      '👍🏻': async ({selectedText, isLongPressed}) => {
-        const quotedResp = getQuoteResponseMerge(selectedText, '👍🏻');
-        return await appendTaText(quotedResp, isLongPressed);
-      },
-      '👎🏻': async ({selectedText, isLongPressed}) => {
-        const quotedResp = getQuoteResponseMerge(selectedText, '👎🏻');
-        return await appendTaText(quotedResp, isLongPressed);
-      },
-      '♥️': async ({selectedText, isLongPressed}) => {
-        const quotedResp = getQuoteResponseMerge(selectedText, '♥️');
-        return await appendTaText(quotedResp, isLongPressed);
-      },
+      'elaborate': quoteReplyWith('elaborate'),
+      '?': quoteReplyWith('?'),
+      '👍🏻': quoteReplyWith('👍🏻'),
+      '👎🏻': quoteReplyWith('👎🏻'),
+      '♥️': quoteReplyWith('♥️'),
       '“”': async ({selectedText, isLongPressed}) => {
         const reply = prompt(`> ${selectedText}`);
         if (!reply) return false;
