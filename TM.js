@@ -1851,7 +1851,7 @@
       const targetMsg = allMessagesBeforeCurMsg.reverse().find(msg => msg.innerText.includes(quoteBody));
       if (!targetMsg) return;
       
-      highlightElementText(targetEle, quoteBody);
+      highlightElementText(targetMsg, quoteBody);
       targetMsg.scrollIntoView({behavior: 'smooth'});
     });
     // TODO: make this more performant. checks everything every time.
