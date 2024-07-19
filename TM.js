@@ -1335,18 +1335,22 @@
           },
         );
       } else {
-        await Mine.attachToElementContinuously(getTa, ta => ta.addEventListener('keydown', async event => {
-          if (!isModifierFree(event)) return;
-  
-          if (event.key === 'Escape') return await stopAiResponse();
-  
-          if (event.key === 'Enter') {
-            if (getIsResponding()) {
-              await stopAiResponse();
+        await Mine.attachToElementContinuously(getTa, ta => {
+          // happens at least when u switch chats
+          ta.addEventListener('keydown', async event => {
+            if (!isModifierFree(event)) return;
+    
+            if (event.key === 'Escape') return await stopAiResponse();
+    
+            if (event.key === 'Enter') {
+              if (getIsResponding()) {
+                await stopAiResponse();
+              }
+              await postProcessTaBeforeSubmit();
             }
-            await postProcessTaBeforeSubmit();
-          }
-        }));
+          });
+          quotifyAllMessagesIdempotently();
+        });
       }
     };
     await installArgumentRunner();
@@ -1857,8 +1861,10 @@
     // TODO: make this more performant. checks everything every time.
     bindOnSelectorClick(`[data-element-id="send-button"]`, async () => {
       await Mine.sleep(500);  // TODO: could be tighter
-      Mine.qsaa(`[data-element-id="user-message"] div`).forEach(quotifyIdempotently);
+      quotifyAllMessagesIdempotently();
     });
+  };
+  const quotifyAllMessagesIdempotently = async () => {
     await Mine.waitForQs('[data-element-id="user-message"]', {recheckIntervalMs: 100, timeoutMs: Infinity}).catch(() => null).then(ele => {
       if (!ele) return;
       Mine.qsaa(`[data-element-id="user-message"] div`).forEach(quotifyIdempotently);
