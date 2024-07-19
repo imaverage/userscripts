@@ -1349,7 +1349,7 @@
               await postProcessTaBeforeSubmit();
             }
           });
-          quotifyAllMessagesIdempotently();
+          setTimeout(quotifyAllMessagesIdempotently, 1000);  // in case mobile takes a while to load new
         });
       }
     };
