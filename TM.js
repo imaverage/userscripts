@@ -1785,7 +1785,7 @@
   if (isMobile) installPinnedMsgScroller();  // looks like its already implemented in TM, but mobile is wonky
 
   const highlightElementText = (element, text) => {
-    if (!element || !text) return;
+    if (!element || !text) return null;
   
     const highlightMark = (range) => {
       const mark = document.createElement('mark');
@@ -1793,8 +1793,10 @@
       mark.style.borderRadius = '3px';
       mark.style.color = 'black';
       range.surroundContents(mark);
+      return mark;
     };
   
+    let createdMark = null;
     const highlightTextInNode = (node) => {
       const nodeText = node.textContent;
       const index = nodeText.indexOf(text);  // Case-sensitive search
@@ -1803,7 +1805,7 @@
         const range = document.createRange();
         range.setStart(node, index);
         range.setEnd(node, index + text.length);
-        highlightMark(range);
+        createdMark = highlightMark(range);
         return true;
       }
       return false;
@@ -1823,6 +1825,7 @@
     };
   
     walkNodes(element);
+    return createdMark;
   };  
   const installQuotability = async () => {
     Mine.isi(`
@@ -1840,8 +1843,8 @@
       const targetMsg = allMessagesBeforeCurMsg.reverse().find(msg => msg.innerText.includes(quoteBody));
       if (!targetMsg) return;
       
-      highlightElementText(targetMsg, quoteBody);
-      targetMsg.scrollIntoView({behavior: 'smooth'});
+      const maybeCreatedHighlight = highlightElementText(targetMsg, quoteBody);
+      (maybeCreatedHighlight ?? targetMsg).scrollIntoView({behavior: 'smooth'});
     });
     // TODO: make this more performant. checks everything every time.
     bindOnSelectorClick(`[data-element-id="send-button"]`, async () => {
@@ -1862,7 +1865,7 @@
         }
         return line; // Return original line if not a quote
       });
-      
+
       element.innerHTML = processedLines.join('\n');
     }
     await Mine.waitForQs('[data-element-id="user-message"]', {recheckIntervalMs: 100, timeoutMs: Infinity}).catch(() => null).then(ele => {
