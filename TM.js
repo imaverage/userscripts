@@ -535,7 +535,7 @@
       '?': quoteReplyWith('?'),
       '👍🏻': quoteReplyWith('👍🏻'),
       '👎🏻': quoteReplyWith('👎🏻'),
-      '♥️': quoteReplyWith('♥️'),
+      '❤️ ': quoteReplyWith('❤️ '),
       '“”': async ({selectedText, isLongPressed}) => {
         const reply = prompt(`> ${selectedText}`);
         if (!reply) return false;
