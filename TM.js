@@ -1785,7 +1785,8 @@
   
     const highlightMark = (range) => {
       const mark = document.createElement('mark');
-      mark.style.backgroundColor = 'yellow';
+      mark.style.backgroundColor = 'orange';
+      mark.style.borderRadius = '3px';
       mark.style.color = 'black';
       range.surroundContents(mark);
     };
