@@ -671,6 +671,7 @@
           if (top < 10) {
             top = 10;
           }
+          top += 5;  // so its not directly where the mouse was
     
           popover.style.left = `${left}px`;
           popover.style.top = `${top}px`;
