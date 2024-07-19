@@ -508,7 +508,11 @@
   const installSelectionPopovers = async () => {
     const getTa = async () => await Mine.waitForQs('#chat-input-textbox');
     const getSendButton = async () => await Mine.waitForQs(`[data-element-id="send-button"]`);
-    const getQuoteResponseMerge = (quote, response) => `> ${quote.trim()}\n${response}`;
+    const getQuoteResponseMerge = (quote, response) => {
+      const mapEachLine = (blob, cb) => blob.split('\n').map(cb).join('\n');
+      const quoteCured = mapEachLine(quote.trim(), l => `> ${l}`);
+      return `> ${quoteCured}\n${response}`;
+    };
     const appendTaText = async (textToAppend, doSubmit) => {
       const ta = await getTa();
       const newVal = ta.value?`${ta.value}\n\n${textToAppend}`:textToAppend;
@@ -1267,8 +1271,8 @@
             const sel = document.getSelection()?.toString();
             if (!sel) return;
 
-            const selLines = sel.split('\n').filter(l => !!l.length).map(l => `> ${l}`);
-            const newMsg = selLines.join('\n');
+            const mapEachLine = (blob, cb) => blob.split('\n').map(cb).join('\n');
+            const newMsg = mapEachLine(sel, line => `> ${line}`);
 
             const replyWithStatement = async statement => {
               const taEle = await getTa();
