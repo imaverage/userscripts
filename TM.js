@@ -1811,6 +1811,10 @@
       const targetMsg = allMessagesBeforeCurMsg.reverse().find(msg => msg.innerText.includes(e.innerText.substring(1).trim()));
       targetMsg.scrollIntoView({behavior: 'smooth'});
     });
+    // TODO: make this more performant
+    bindOnSelectorClick(`[data-element-id="send-button"]`, () => {
+      Mine.qsaa(`[data-element-id="user-message"] div`).forEach(quotifyIdempotently);
+    });  
   };
   installQuotability();
 })();
