@@ -617,16 +617,6 @@
   .popover-button:active {
     background-color: var(--popover-active);
   }
-
-  .popover-button:not(:last-child)::after {
-    content: '';
-    position: absolute;
-    right: 0;
-    top: 20%;
-    height: 60%;
-    width: 1px;
-    background-color: var(--popover-border);
-  }
     `;
     document.head.appendChild(style);
   
