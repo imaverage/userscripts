@@ -1815,7 +1815,7 @@
     bindOnSelectorClick(`[data-element-id="send-button"]`, () => {
       Mine.qsaa(`[data-element-id="user-message"] div`).forEach(quotifyIdempotently);
     });  
-    await Mine.waitForQs('[data-element-id="user-message"]', {recheckIntervalMs: 100}).catch(() => null).then(ele => {
+    await Mine.waitForQs('[data-element-id="user-message"]', {recheckIntervalMs: 100, timeoutMs: Infinity}).catch(() => null).then(ele => {
       if (!ele) return;
       Mine.qsaa(`[data-element-id="user-message"] div`).forEach(quotifyIdempotently);
     });
