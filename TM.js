@@ -508,7 +508,7 @@
   const installSelectionPopovers = async () => {
     const getTa = async () => await Mine.waitForQs('#chat-input-textbox');
     const getSendButton = async () => await Mine.waitForQs(`[data-element-id="send-button"]`);
-    const getQuoteResponseMerge = (quote, response) => `> ${quote}\n${response}`;
+    const getQuoteResponseMerge = (quote, response) => `> ${quote.trim()}\n${response}`;
     const appendTaText = async (textToAppend, doSubmit) => {
       const ta = await getTa();
       const newVal = ta.value?`${ta.value}\n\n${textToAppend}`:textToAppend;
