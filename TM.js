@@ -616,6 +616,7 @@
 
   .popover-button:active {
     background-color: var(--popover-active);
+    border-radius: 6px;
   }
     `;
     document.head.appendChild(style);
