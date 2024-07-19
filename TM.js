@@ -1779,4 +1779,29 @@
     });
   };
   if (isMobile) installPinnedMsgScroller();  // looks like its already implemented in TM, but mobile is wonky
+
+  const installQuotability = async () => {
+    Mine.isi(`
+.mineQuote {
+  font-style: italic;
+  opacity: 0.3;
+  cursor: pointer;
+}
+`);
+    const quotify = (element) => {
+      const lines = element.innerHTML.split('\n');
+      const processedLines = lines.map(line => {
+        if (line.trim().startsWith('&gt; ') || line.trim().startsWith('> ')) {
+          // Ensure '>' is properly encoded
+          const encodedLine = line.replace(/^>\s/, '&gt; ').replace(/&gt;\s/, '&gt; ');
+          return `<span class="mine_quote">${encodedLine}</span>`;
+        }
+        return line; // Return original line if not a quote
+      });
+      
+      element.innerHTML = processedLines.join('\n');
+    }
+    Mine.qsaa(`[data-element-id="user-message"] div`).forEach(quotify);
+  };
+  installQuotability();
 })();
