@@ -1288,7 +1288,7 @@
             if (!sel) return;
 
             const mapEachLine = (blob, cb) => blob.split('\n').map(cb).join('\n');
-            const newMsg = mapEachLine(sel, line => `> ${line}`);
+            const newMsg = mapEachLine(sel.trim(), line => `> ${line}`);
 
             const replyWithStatement = async statement => {
               const taEle = await getTa();
