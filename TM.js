@@ -1788,7 +1788,9 @@
   cursor: pointer;
 }
 `);
-    const quotify = (element) => {
+    const quotifyIdempotently = (element) => {
+      if (element.querySelector('.mineQuote')) return;
+
       const lines = element.innerHTML.split('\n');
       const processedLines = lines.map(line => {
         if (line.trim().startsWith('&gt; ') || line.trim().startsWith('> ')) {
@@ -1801,7 +1803,10 @@
       
       element.innerHTML = processedLines.join('\n');
     }
-    Mine.qsaa(`[data-element-id="user-message"] div`).forEach(quotify);
+    Mine.qsaa(`[data-element-id="user-message"] div`).forEach(quotifyIdempotently);
+    bindOnSelectorClick(`.mine_quote`, async e => {
+
+    });
   };
   installQuotability();
 })();
