@@ -1780,6 +1780,45 @@
   };
   if (isMobile) installPinnedMsgScroller();  // looks like its already implemented in TM, but mobile is wonky
 
+  const highlightElementText = (element, text) => {
+    if (!element || !text) return;
+  
+    const highlightMark = (range) => {
+      const mark = document.createElement('mark');
+      mark.style.backgroundColor = 'yellow';
+      mark.style.color = 'black';
+      range.surroundContents(mark);
+    };
+  
+    const highlightTextInNode = (node) => {
+      const nodeText = node.textContent;
+      const index = nodeText.toLowerCase().indexOf(text.toLowerCase());
+      
+      if (index >= 0) {
+        const range = document.createRange();
+        range.setStart(node, index);
+        range.setEnd(node, index + text.length);
+        highlightMark(range);
+        return true;
+      }
+      return false;
+    };
+  
+    const walkNodes = (node) => {
+      if (node.nodeType === Node.TEXT_NODE) {
+        return highlightTextInNode(node);
+      } else if (node.nodeType === Node.ELEMENT_NODE && node.childNodes) {
+        for (let i = 0; i < node.childNodes.length; i++) {
+          if (walkNodes(node.childNodes[i])) {
+            return true;
+          }
+        }
+      }
+      return false;
+    };
+  
+    walkNodes(element);
+  }  
   const installQuotability = async () => {
     Mine.isi(`
 .mine_quote {
@@ -1807,8 +1846,11 @@
       const curMsg = e.closest('[data-element-id="user-message"]');
       const allMessages = Mine.qsaa(`[data-element-id="ai-response"], [data-element-id="user-message"]`);
       const allMessagesBeforeCurMsg = Array.from(allMessages).filter(msg => msg.compareDocumentPosition(curMsg) & Node.DOCUMENT_POSITION_FOLLOWING);
-      const targetMsg = allMessagesBeforeCurMsg.reverse().find(msg => msg.innerText.includes(e.innerText.substring(1).trim()));
+      const quoteBody = e.innerText.substring(1).trim();
+      const targetMsg = allMessagesBeforeCurMsg.reverse().find(msg => msg.innerText.includes(quoteBody));
       if (!targetMsg) return;
+      
+      highlightElementText(targetEle, quoteBody);
       targetMsg.scrollIntoView({behavior: 'smooth'});
     });
     // TODO: make this more performant. checks everything every time.
