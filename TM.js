@@ -1780,7 +1780,7 @@
   };
   if (isMobile) installPinnedMsgScroller();  // looks like its already implemented in TM, but mobile is wonky
 
-  const highlight = (element, text) => {
+  const highlightElementText = (element, text) => {
     if (!element || !text) return;
   
     const highlightMark = (range) => {
