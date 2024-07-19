@@ -1787,25 +1787,35 @@
   const highlightElementText = (element, text) => {
     if (!element || !text) return null;
   
-    const highlightMark = (range) => {
+    const createMark = () => {
       const mark = document.createElement('mark');
       mark.style.backgroundColor = 'orange';
       mark.style.borderRadius = '3px';
       mark.style.color = 'black';
-      range.surroundContents(mark);
       return mark;
     };
   
-    let createdMark = null;
+    let foundMark = null;
+  
     const highlightTextInNode = (node) => {
       const nodeText = node.textContent;
       const index = nodeText.indexOf(text);  // Case-sensitive search
       
       if (index >= 0) {
+        // Check if the text is already wrapped in a mark
+        if (node.parentElement && node.parentElement.tagName === 'MARK' && 
+            node.parentElement.textContent === text) {
+          foundMark = node.parentElement;
+          return true;
+        }
+  
         const range = document.createRange();
         range.setStart(node, index);
         range.setEnd(node, index + text.length);
-        createdMark = highlightMark(range);
+        
+        const mark = createMark();
+        range.surroundContents(mark);
+        foundMark = mark;
         return true;
       }
       return false;
@@ -1814,10 +1824,18 @@
     const walkNodes = (node) => {
       if (node.nodeType === Node.TEXT_NODE) {
         return highlightTextInNode(node);
-      } else if (node.nodeType === Node.ELEMENT_NODE && node.childNodes) {
-        for (let i = 0; i < node.childNodes.length; i++) {
-          if (walkNodes(node.childNodes[i])) {
-            return true;
+      } else if (node.nodeType === Node.ELEMENT_NODE) {
+        // Check if this element is already a mark with the exact text
+        if (node.tagName === 'MARK' && node.textContent === text) {
+          foundMark = node;
+          return true;
+        }
+  
+        if (node.childNodes) {
+          for (let i = 0; i < node.childNodes.length; i++) {
+            if (walkNodes(node.childNodes[i])) {
+              return true;
+            }
           }
         }
       }
@@ -1825,7 +1843,7 @@
     };
   
     walkNodes(element);
-    return createdMark;
+    return foundMark;
   };  
   const installQuotability = async () => {
     Mine.isi(`
@@ -1843,8 +1861,8 @@
       const targetMsg = allMessagesBeforeCurMsg.reverse().find(msg => msg.innerText.includes(quoteBody));
       if (!targetMsg) return;
       
-      const maybeCreatedHighlight = highlightElementText(targetMsg, quoteBody);
-      (maybeCreatedHighlight ?? targetMsg).scrollIntoView({behavior: 'smooth'});
+      const maybeHighlight = highlightElementText(targetMsg, quoteBody);
+      (maybeHighlight ?? targetMsg).scrollIntoView({behavior: 'smooth'});
     });
     // TODO: make this more performant. checks everything every time.
     bindOnSelectorClick(`[data-element-id="send-button"]`, async () => {
