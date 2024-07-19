@@ -1808,6 +1808,7 @@
       const allMessages = Mine.qsaa(`[data-element-id="ai-response"], [data-element-id="user-message"]`);
       const allMessagesBeforeCurMsg = Array.from(allMessages).filter(msg => msg.compareDocumentPosition(curMsg) & Node.DOCUMENT_POSITION_FOLLOWING);
       const targetMsg = allMessagesBeforeCurMsg.reverse().find(msg => msg.innerText.includes(e.innerText.substring(1).trim()));
+      if (!targetMsg) return;
       targetMsg.scrollIntoView({behavior: 'smooth'});
     });
     // TODO: make this more performant. checks everything every time.
