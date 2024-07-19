@@ -14,6 +14,28 @@
     return element.scrollHeight - element.scrollTop <= element.clientHeight + threshold +1;
   };
 
+  // TODO: do i need uninstallers?
+  const globalSelectorClickEventHandlers = new Map();
+  const bindOnSelectorClick = (qs, cb) => {
+    const isInstalled = globalSelectorClickEventHandlers.size > 0;
+    if (!isInstalled) {
+      const clickProxyEventName = isMobile ? 'touchend' : 'click';
+      document.body.addEventListener(clickProxyEventName, async (e) => {
+        for (const [selector, handlers] of globalSelectorClickEventHandlers) {
+          const targetEle = e.target.closest(selector);
+          if (targetEle) {
+            handlers.forEach(handler => handler(targetEle));
+          }
+        }
+      });
+    }
+    
+    if (!globalSelectorClickEventHandlers.has(qs)) {
+      globalSelectorClickEventHandlers.set(qs, new Set());
+    }
+    globalSelectorClickEventHandlers.get(qs).add(cb);
+  };
+
   // scrolling
   const originalScrollTo = window.scrollTo;
   let allowJsScrolling = true;
@@ -32,6 +54,8 @@
   const turnOffJsScrolling = () => allowJsScrolling = false;
   const turnOnJsScrolling = () => allowJsScrolling = true;
 
+
+  // main
   Mine.quietQs(`[data-element-id="pinned-characters-container"]`);
   Mine.isi(`
     /* context limit reached button is in here */
@@ -1720,27 +1744,6 @@
     await main();
   }
 
-  // TODO: do i need uninstallers?
-  const globalSelectorClickEventHandlers = new Map();
-  const bindOnSelectorClick = (qs, cb) => {
-    const isInstalled = globalSelectorClickEventHandlers.size > 0;
-    if (!isInstalled) {
-      const clickProxyEventName = isMobile ? 'touchend' : 'click';
-      document.body.addEventListener(clickProxyEventName, async (e) => {
-        for (const [selector, handlers] of globalSelectorClickEventHandlers) {
-          const targetEle = e.target.closest(selector);
-          if (targetEle) {
-            handlers.forEach(handler => handler(targetEle));
-          }
-        }
-      });
-    }
-    
-    if (!globalSelectorClickEventHandlers.has(qs)) {
-      globalSelectorClickEventHandlers.set(qs, new Set());
-    }
-    globalSelectorClickEventHandlers.get(qs).add(cb);
-  };
   bindOnSelectorClick(`[data-element-id="send-button"]`, () => {
     // allows for slow quote replied type convos
     if (!getIsChatScrolledToNearBottom(300)) {
