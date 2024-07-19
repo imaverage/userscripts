@@ -1780,7 +1780,7 @@
   };
   if (isMobile) installPinnedMsgScroller();  // looks like its already implemented in TM, but mobile is wonky
 
-  const highlightElementText = (element, text) => {
+  const highlight = (element, text) => {
     if (!element || !text) return;
   
     const highlightMark = (range) => {
@@ -1793,7 +1793,7 @@
   
     const highlightTextInNode = (node) => {
       const nodeText = node.textContent;
-      const index = nodeText.toLowerCase().indexOf(text.toLowerCase());
+      const index = nodeText.indexOf(text);  // Case-sensitive search
       
       if (index >= 0) {
         const range = document.createRange();
@@ -1819,7 +1819,7 @@
     };
   
     walkNodes(element);
-  }  
+  };  
   const installQuotability = async () => {
     Mine.isi(`
 .mine_quote {
