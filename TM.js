@@ -1782,14 +1782,14 @@
 
   const installQuotability = async () => {
     Mine.isi(`
-.mineQuote {
+.mine_quote {
   font-style: italic;
   color: gray;
   cursor: pointer;
 }
 `);
     const quotifyIdempotently = (element) => {
-      if (element.querySelector('.mineQuote')) return;
+      if (element.querySelector('.mine_quote')) return;
 
       const lines = element.innerHTML.split('\n');
       const processedLines = lines.map(line => {
