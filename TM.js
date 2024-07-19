@@ -612,11 +612,11 @@
     margin: 0 2px;
     cursor: pointer;
     transition: background-color 0.1s;
+    border-radius: 6px;
   }
 
   .popover-button:active {
     background-color: var(--popover-active);
-    border-radius: 6px;
   }
     `;
     document.head.appendChild(style);
