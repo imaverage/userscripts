@@ -1872,8 +1872,6 @@
   };
   const quotifyAllMessagesIdempotently = async () => {
     const quotifyIdempotently = (element) => {
-      if (element.querySelector('.mine_quote')) return;
-
       const lines = element.innerHTML.split('\n');
       const processedLines = lines.map(line => {
         if (line.trim().startsWith('&gt; ') || line.trim().startsWith('> ')) {
