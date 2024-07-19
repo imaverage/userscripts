@@ -1720,6 +1720,27 @@
     await main();
   }
 
+  const globalSelectorClickEventHandlers = new Map();
+  // TODO: do i need uninstallers?
+  const bindOnSelectorClick = (qs, cb) => {
+    const isInstalled = globalSelectorClickEventHandlers.size > 0;
+    if (!isInstalled) {
+      const clickProxyEventName = isMobile ? 'touchend' : 'click';
+      document.body.addEventListener(clickProxyEventName, async (e) => {
+        for (const [selector, handlers] of globalSelectorClickEventHandlers) {
+          const targetEle = e.target.closest(selector);
+          if (targetEle) {
+            handlers.forEach(handler => handler(targetEle));
+          }
+        }
+      });
+    }
+    
+    if (!globalSelectorClickEventHandlers.has(qs)) {
+      globalSelectorClickEventHandlers.set(qs, new Set());
+    }
+    globalSelectorClickEventHandlers.get(qs).add(cb);
+  };
   const bindOnSelectorClick = async (qs, cb) => {
     // TODO: just have a global handler rather than a new one for each?
     const clickProxyEventName = isMobile ? 'touchend' : 'click';
