@@ -511,7 +511,7 @@
     const getQuoteResponseMerge = (quote, response) => {
       const mapEachLine = (blob, cb) => blob.split('\n').map(cb).join('\n');
       const quoteCured = mapEachLine(quote.trim(), l => `> ${l}`);
-      return `> ${quoteCured}\n${response}`;
+      return `${quoteCured}\n${response}`;
     };
     const appendTaText = async (textToAppend, doSubmit) => {
       const ta = await getTa();
