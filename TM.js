@@ -1832,21 +1832,6 @@
   cursor: pointer;
 }
 `);
-    const quotifyIdempotently = (element) => {
-      if (element.querySelector('.mine_quote')) return;
-
-      const lines = element.innerHTML.split('\n');
-      const processedLines = lines.map(line => {
-        if (line.trim().startsWith('&gt; ') || line.trim().startsWith('> ')) {
-          // Ensure '>' is properly encoded
-          const encodedLine = line.replace(/^>\s/, '&gt; ').replace(/&gt;\s/, '&gt; ');
-          return `<span class="mine_quote">${encodedLine}</span>`;
-        }
-        return line; // Return original line if not a quote
-      });
-      
-      element.innerHTML = processedLines.join('\n');
-    }
     bindOnSelectorClick(`.mine_quote`, async e => {
       const curMsg = e.closest('[data-element-id="user-message"]');
       const allMessages = Mine.qsaa(`[data-element-id="ai-response"], [data-element-id="user-message"]`);
@@ -1865,6 +1850,21 @@
     });
   };
   const quotifyAllMessagesIdempotently = async () => {
+    const quotifyIdempotently = (element) => {
+      if (element.querySelector('.mine_quote')) return;
+
+      const lines = element.innerHTML.split('\n');
+      const processedLines = lines.map(line => {
+        if (line.trim().startsWith('&gt; ') || line.trim().startsWith('> ')) {
+          // Ensure '>' is properly encoded
+          const encodedLine = line.replace(/^>\s/, '&gt; ').replace(/&gt;\s/, '&gt; ');
+          return `<span class="mine_quote">${encodedLine}</span>`;
+        }
+        return line; // Return original line if not a quote
+      });
+      
+      element.innerHTML = processedLines.join('\n');
+    }
     await Mine.waitForQs('[data-element-id="user-message"]', {recheckIntervalMs: 100, timeoutMs: Infinity}).catch(() => null).then(ele => {
       if (!ele) return;
       Mine.qsaa(`[data-element-id="user-message"] div`).forEach(quotifyIdempotently);
