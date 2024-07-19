@@ -1756,7 +1756,7 @@
 
   bindOnSelectorClick(`[data-element-id="send-button"]`, () => {
     // allows for slow quote replied type convos
-    if (!getIsChatScrolledToNearBottom(300)) {
+    if (!getIsChatScrolledToNearBottom(500)) {
       turnOffJsScrolling();
       setTimeout(turnOnJsScrolling, 3000);
     }
