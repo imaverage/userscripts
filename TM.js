@@ -1803,7 +1803,6 @@
       
       element.innerHTML = processedLines.join('\n');
     }
-    Mine.qsaa(`[data-element-id="user-message"] div`).forEach(quotifyIdempotently);
     bindOnSelectorClick(`.mine_quote`, async e => {
       const curMsg = e.closest('[data-element-id="user-message"]');
       const allMessages = Mine.qsaa(`[data-element-id="ai-response"], [data-element-id="user-message"]`);
@@ -1815,6 +1814,8 @@
     bindOnSelectorClick(`[data-element-id="send-button"]`, () => {
       Mine.qsaa(`[data-element-id="user-message"] div`).forEach(quotifyIdempotently);
     });  
+    await Mine.waitForQs('[data-element-id="user-message"]', {recheckIntervalMs: 100}).catch(() => null);
+    Mine.qsaa(`[data-element-id="user-message"] div`).forEach(quotifyIdempotently);
   };
   installQuotability();
 })();
