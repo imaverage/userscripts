@@ -706,6 +706,12 @@
       }
     });
   
+    document.addEventListener('scroll', (e) => {
+      if (!popover.contains(e.target)) {
+        hidePopover();
+      }
+    });
+  
     document.addEventListener('touchstart', (e) => {
       if (!popover.contains(e.target)) {
         hidePopover();
