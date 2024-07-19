@@ -1805,7 +1805,11 @@
     }
     Mine.qsaa(`[data-element-id="user-message"] div`).forEach(quotifyIdempotently);
     bindOnSelectorClick(`.mine_quote`, async e => {
-
+      const curMsg = e.closest('[data-element-id="user-message"]');
+      const allMessages = Mine.qsaa(`[data-element-id="ai-response"], [data-element-id="user-message"]`);
+      const allMessagesBeforeCurMsg = Array.from(allMessages).filter(msg => msg.compareDocumentPosition(curMsg) & Node.DOCUMENT_POSITION_FOLLOWING);
+      const targetMsg = allMessagesBeforeCurMsg.reverse().find(msg => msg.innerText.includes(e.innerText.substring(1).trim()));
+      targetMsg.scrollIntoView({behavior: 'smooth'});
     });
   };
   installQuotability();
