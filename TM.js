@@ -1784,7 +1784,7 @@
     Mine.isi(`
 .mineQuote {
   font-style: italic;
-  opacity: 0.3;
+  color: gray;
   cursor: pointer;
 }
 `);
