@@ -1720,8 +1720,8 @@
     await main();
   }
 
-  const globalSelectorClickEventHandlers = new Map();
   // TODO: do i need uninstallers?
+  const globalSelectorClickEventHandlers = new Map();
   const bindOnSelectorClick = (qs, cb) => {
     const isInstalled = globalSelectorClickEventHandlers.size > 0;
     if (!isInstalled) {
@@ -1741,15 +1741,6 @@
     }
     globalSelectorClickEventHandlers.get(qs).add(cb);
   };
-  const bindOnSelectorClick = async (qs, cb) => {
-    // TODO: just have a global handler rather than a new one for each?
-    const clickProxyEventName = isMobile ? 'touchend' : 'click';
-    document.body.addEventListener(clickProxyEventName, async e => {
-      const targetEle = e.target.closest(qs);
-      if (!targetEle) return;
-      await cb(targetEle);
-    });
-  }
   bindOnSelectorClick(`[data-element-id="send-button"]`, () => {
     // allows for slow quote replied type convos
     if (!getIsChatScrolledToNearBottom(300)) {
