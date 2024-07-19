@@ -567,7 +567,7 @@
     position: fixed;
     background-color: var(--popover-bg);
     border-radius: 6px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    box-shadow: 0 8px 19px rgba(0,0,0,0.6);
     padding: 2px;
     z-index: 1000;
     border: 1px solid var(--popover-border);
