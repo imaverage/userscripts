@@ -1805,7 +1805,7 @@
   
     const createMark = () => {
       const mark = document.createElement('mark');
-      mark.style.backgroundColor = 'orange';
+      mark.style.backgroundColor = 'mediumslateblue';
       mark.style.borderRadius = '3px';
       mark.style.color = 'black';
       return mark;
