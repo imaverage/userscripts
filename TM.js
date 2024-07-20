@@ -1364,7 +1364,7 @@
               await postProcessTaBeforeSubmit();
             }
           });
-          // setTimeout(quotifyAllMessagesIdempotently, 1000);  // in case mobile takes a while to load new
+          // setTimeout(quotifyAllMessagesIdempotently, 1000);  // in case mobile takes a while to load new. flaky on mobile.
         });
       }
     };
