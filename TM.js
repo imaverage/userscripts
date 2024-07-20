@@ -1908,7 +1908,6 @@
       quotifyAllMessagesIdempotently();
     });
   };
-
   const quotifyAllMessagesIdempotently = async () => {
     const quotifyIdempotently = (element) => {
       const lines = element.innerHTML.split('\n');
