@@ -1282,20 +1282,27 @@
       document.addEventListener('keyup', async ev => {
         if (!(isModifierFree(ev) && ev.target.tagName.toLowerCase() === 'body')) return;
 
-        const keyMap = {
-          k: async () => {
-            const msgEles = Mine.qsaa('[data-element-id="ai-response"], [data-element-id="user-message"]');
-            const getFirstWithTopVisibleElement = () => {
-              return msgEles.find(el => {
-                const rect = el.getBoundingClientRect();
-                return rect.top >= 0 && rect.top < window.innerHeight;
-              });
-            };
+        const navigateMessages = (direction) => {
+          const msgEles = Mine.qsaa('[data-element-id="ai-response"], [data-element-id="user-message"]');
+          let currentIndex = msgEles.findIndex(el => {
+            const rect = el.getBoundingClientRect();
+            return rect.top >= 0 && rect.top < window.innerHeight;
+          });
+        
+          if (currentIndex === -1) currentIndex = 0;
+        
+          if (direction === 'up') {
+            currentIndex = (currentIndex - 1 + msgEles.length) % msgEles.length;
+          } else {
+            currentIndex = (currentIndex + 1) % msgEles.length;
+          }
+        
+          msgEles[currentIndex]?.scrollIntoView({behavior: 'smooth'});
+        };
 
-            const firstWithTopVisible = getFirstWithTopVisibleElement();
-            const maybeTargetEle = firstWithTopVisible || msgEles[0];
-            maybeTargetEle?.scrollIntoView({behavior: 'smooth'});
-          },
+        const keyMap = {
+          k: () => navigateMessages('up'),
+          j: () => navigateMessages('down'),
           q: async () => {
             const sel = document.getSelection()?.toString();
             if (!sel) return;
