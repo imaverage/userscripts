@@ -13,6 +13,7 @@
     const element = Mine.qs('html');
     return element.scrollHeight - element.scrollTop <= element.clientHeight + threshold +1;
   };
+  const mapEachNonEmptyLine = (blob, cb) => blob.split('\n').filter(l => !!l.trim()).map(cb).join('\n');
 
   // TODO: do i need uninstallers?
   const globalSelectorClickEventHandlers = new Map();
@@ -509,8 +510,7 @@
     const getTa = async () => await Mine.waitForQs('#chat-input-textbox');
     const getSendButton = async () => await Mine.waitForQs(`[data-element-id="send-button"]`);
     const getQuoteResponseMerge = (quote, response) => {
-      const mapEachLine = (blob, cb) => blob.split('\n').map(cb).join('\n');
-      const quoteCured = mapEachLine(quote.trim(), l => `> ${l}`);
+      const quoteCured = mapEachNonEmptyLine(quote.trim(), l => `> ${l}`);
       return `${quoteCured}\n${response}`;
     };
     const appendTaText = async (textToAppend, doSubmit) => {
@@ -1287,8 +1287,7 @@
             const sel = document.getSelection()?.toString();
             if (!sel) return;
 
-            const mapEachLine = (blob, cb) => blob.split('\n').map(cb).join('\n');
-            const newMsg = mapEachLine(sel.trim(), line => `> ${line}`);
+            const newMsg = mapEachNonEmptyLine(sel.trim(), line => `> ${line}`);
 
             const replyWithStatement = async statement => {
               const taEle = await getTa();
