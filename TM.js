@@ -1882,7 +1882,7 @@
     });
     // TODO: make this more performant. checks everything every time.
     bindOnSelectorClick(`[data-element-id="send-button"]`, async () => {
-      await Mine.sleep(500);  // TODO: could be tighter
+      await Mine.sleep(100);  // TODO: could be tighter
       quotifyAllMessagesIdempotently();
     });
   };
