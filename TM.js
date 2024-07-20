@@ -1364,11 +1364,34 @@
               await postProcessTaBeforeSubmit();
             }
           });
-          setTimeout(quotifyAllMessagesIdempotently, 1000);  // in case mobile takes a while to load new
+          // setTimeout(quotifyAllMessagesIdempotently, 1000);  // in case mobile takes a while to load new
         });
       }
     };
-    await installArgumentRunner();
+    installArgumentRunner();
+
+    const installUrlChangeListener = async () => {
+      const originalPushState = history.pushState;
+      const originalReplaceState = history.replaceState;
+
+      history.pushState = function() {
+        originalPushState.apply(this, arguments);
+        handleUrlChange();
+      };
+
+      history.replaceState = function() {
+        originalReplaceState.apply(this, arguments);
+        handleUrlChange();
+      };
+
+      window.addEventListener('popstate', handleUrlChange);
+
+      function handleUrlChange() {
+        // window.location.href;
+        setTimeout(quotifyAllMessagesIdempotently, 1000);
+      }
+    };
+    installUrlChangeListener();
 
     const initTitleSanitizerService = () => {
       const fullAppNameReferences = ['TypingMind.com', 'TypingMind'];
