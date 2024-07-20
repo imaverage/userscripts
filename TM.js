@@ -1374,7 +1374,6 @@
       const originalPushState = history.pushState;
       const originalReplaceState = history.replaceState;
     
-    
       history.pushState = function() {
         originalPushState.apply(this, arguments);
         handleUrlChange();
