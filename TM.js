@@ -1370,21 +1370,26 @@
     };
     installArgumentRunner();
 
-    const bindOnSpaUrlChange = async (handleUrlChange) => {
-      const originalPushState = history.pushState;
-      const originalReplaceState = history.replaceState;
-    
-      history.pushState = function() {
-        originalPushState.apply(this, arguments);
-        handleUrlChange();
-      };
-    
-      history.replaceState = function() {
-        originalReplaceState.apply(this, arguments);
-        handleUrlChange();
-      };
-    
-      window.addEventListener('popstate', handleUrlChange);
+    const onSpaUrlChangeCallbacks = [];
+    const bindOnSpaUrlChange = async (callback) => {
+      if (!onSpaUrlChangeCallbacks.length) {
+        const originalPushState = history.pushState;
+        const originalReplaceState = history.replaceState;
+      
+        const handleUrlChangeCallbacks = () => onSpaUrlChangeCallbacks.forEach(onSpaUrlChangeCallback => onSpaUrlChangeCallback());
+        history.pushState = function() {
+          originalPushState.apply(this, arguments);
+          handleUrlChangeCallbacks();
+        };
+      
+        history.replaceState = function() {
+          originalReplaceState.apply(this, arguments);
+          handleUrlChangeCallbacks();
+        };
+        window.addEventListener('popstate', handleUrlChangeCallbacks);
+      }
+
+      onSpaUrlChangeCallbacks.push(callback);
     };
     bindOnSpaUrlChange(() => setTimeout(quotifyAllMessagesIdempotently, 1000));  // give some time for DOM to reflect new url
 
