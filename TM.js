@@ -1284,16 +1284,17 @@
 
         const keyMap = {
           k: async () => {
-            const getFirstVisibleElement = () => {
-              const elements = Mine.qsaa('[data-element-id="ai-response"], [data-element-id="user-message"]');
-              return elements.find(el => {
+            const msgEles = Mine.qsaa('[data-element-id="ai-response"], [data-element-id="user-message"]');
+            const getFirstWithTopVisibleElement = () => {
+              return msgEles.find(el => {
                 const rect = el.getBoundingClientRect();
                 return rect.top >= 0 && rect.top < window.innerHeight;
               });
             };
-            
-            const firstVisible = getFirstVisibleElement();
-            firstVisible.scrollIntoView({behavior: 'smooth'});
+
+            const firstWithTopVisible = getFirstWithTopVisibleElement();
+            const maybeTargetEle = firstWithTopVisible || msgEles[0];
+            maybeTargetEle?.scrollIntoView({behavior: 'smooth'});
           },
           q: async () => {
             const sel = document.getSelection()?.toString();
