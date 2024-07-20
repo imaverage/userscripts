@@ -1759,7 +1759,7 @@
 
     const ta = myDiv.querySelector('.mine_notes');
     ta.value = localStorage.getItem('mine_notes') || '';
-    ta.addEventListener('input', () => localStorage.setItem('mine_notes', textarea.value));
+    ta.addEventListener('input', () => localStorage.setItem('mine_notes', ta.value));
   };
 
   const wipeChatHotkey = () => {
