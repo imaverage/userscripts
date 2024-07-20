@@ -1370,27 +1370,24 @@
     };
     installArgumentRunner();
 
-    const installUrlChangeListener = async () => {
+    const bindOnSpaUrlChange = async (handleUrlChange) => {
       const originalPushState = history.pushState;
       const originalReplaceState = history.replaceState;
-
+    
+    
       history.pushState = function() {
         originalPushState.apply(this, arguments);
         handleUrlChange();
       };
-
+    
       history.replaceState = function() {
         originalReplaceState.apply(this, arguments);
         handleUrlChange();
       };
-
+    
       window.addEventListener('popstate', handleUrlChange);
-
-      function handleUrlChange() {
-        setTimeout(quotifyAllMessagesIdempotently, 1000);
-      }
     };
-    installUrlChangeListener();
+    bindOnSpaUrlChange(() => setTimeout(quotifyAllMessagesIdempotently, 1000));  // give some time for DOM to reflect new url
 
     const initTitleSanitizerService = () => {
       const fullAppNameReferences = ['TypingMind.com', 'TypingMind'];
