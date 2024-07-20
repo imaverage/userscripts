@@ -1387,7 +1387,6 @@
       window.addEventListener('popstate', handleUrlChange);
 
       function handleUrlChange() {
-        // window.location.href;
         setTimeout(quotifyAllMessagesIdempotently, 1000);
       }
     };
