@@ -1283,6 +1283,18 @@
         if (!(isModifierFree(ev) && ev.target.tagName.toLowerCase() === 'body')) return;
 
         const keyMap = {
+          k: async () => {
+            const getFirstVisibleElement = () => {
+              const elements = Mine.qsaa('[data-element-id="ai-response"], [data-element-id="user-message"]');
+              return elements.find(el => {
+                const rect = el.getBoundingClientRect();
+                return rect.top >= 0 && rect.top < window.innerHeight;
+              });
+            };
+            
+            const firstVisible = getFirstVisibleElement();
+            firstVisible.scrollIntoView({behavior: 'smooth'});
+          },
           q: async () => {
             const sel = document.getSelection()?.toString();
             if (!sel) return;
