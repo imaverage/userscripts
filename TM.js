@@ -2010,7 +2010,7 @@
       document.head.appendChild(link);
       document.body.appendChild(link.cloneNode());
     };
-    setTimeout(() => changeFavicon('https://i.ibb.co/RYF63zM/image-14.png'), 3000);
+    setTimeout(() => changeFavicon('https://i.ibb.co/RYF63zM/image-14.png'), 5000);
   };
   installFavico();
 })();
