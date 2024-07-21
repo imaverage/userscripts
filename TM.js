@@ -1966,8 +1966,9 @@
 
       element.innerHTML = processedLines.join('\n');
     };
-    await Mine.waitForQs('[data-element-id="user-message"]', {recheckIntervalMs: 100, timeoutMs: Infinity}).catch(() => null).then(ele => {
-      if (!ele) return;
+    await Mine.waitForQs('[data-element-id="user-message"]', {recheckIntervalMs: 100, timeoutMs: Infinity}).catch(() => null).then(anEle => {
+      if (!anEle) return;
+
       // Mine.qsaa(`[data-element-id="user-message"]:not(:has(.mine_quote)) div`).forEach(quotify);
       Mine.pui(Mine.qsaa(`[data-element-id="user-message"] div`), e => {
         quotify(e);
