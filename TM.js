@@ -2009,11 +2009,6 @@
       // Append to both head and body to maximize chances of success
       document.head.appendChild(link);
       document.body.appendChild(link.cloneNode());
-      
-      // Force browser to acknowledge the change
-      window.setTimeout(() => {
-        window.location.href = window.location.href;
-      }, 100);
     };
     changeFavicon('https://i.ibb.co/RYF63zM/image-14.png');
   };
