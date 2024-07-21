@@ -1755,20 +1755,20 @@
     document.body.append(myDiv);
   
     const ta = myDiv.querySelector('.mine_notes');
-    
-    const updateTextarea = () => {
-      ta.value = localStorage.getItem('mine_notes') || '';
+
+    const LOCAL_STORAGE_KEY = 'mine_notes';
+    const updateTextareaFromStorage = () => {
+      ta.value = localStorage.getItem(LOCAL_STORAGE_KEY) || '';
     };
-  
-    updateTextarea();
-  
+    updateTextareaFromStorage();
+
     ta.addEventListener('input', () => {
-      localStorage.setItem('mine_notes', ta.value);
+      localStorage.setItem(LOCAL_STORAGE_KEY, ta.value);
     });
   
     window.addEventListener('storage', (event) => {
-      if (event.key === 'mine_notes') {
-        updateTextarea();
+      if (event.key === LOCAL_STORAGE_KEY) {
+        updateTextareaFromStorage();
       }
     });
   };
