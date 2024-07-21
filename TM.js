@@ -1717,51 +1717,62 @@
   const installNotesV2 = async () => {
     const myDiv = document.createElement('div');
     myDiv.innerHTML = `
-  <style>
-    .mine_notes:not(:placeholder-shown) {
-      border-color: green;
-
-      right: -2px;
-      height: calc(100vh - 60px - 100px);
-    }
-    .mine_notes:hover {
-      opacity: 1;
-    }
-    .mine_notes:focus {
-      opacity: 1;
-
-      right: -2px;
-
-      outline: none !important;
-      box-shadow: none !important;
-    }
-    .mine_notes {
-      transition: all 0.2s ease;
-      cursor: pointer;
-      opacity: 0.2;
-      line-height: 1.1em;
-      padding: 7px;
-      position: fixed;
-      right: -12.9%;
-      top: 60px;
-      background: rgb(39, 39, 42);
-      color: white;
-      width: 15%;
-      border-radius: 10px 0 0 10px;
-      border-width: 2px;
-      height: 36px;
-      resize: none;
-    }
-  </style>
-  <textarea class="mine_notes" placeholder="📝 Notes..." title="[M] Notepad"></textarea>
+    <style>
+      .mine_notes:not(:placeholder-shown) {
+        border-color: green;
+        right: -2px;
+        height: calc(100vh - 60px - 100px);
+      }
+      .mine_notes:hover {
+        opacity: 1;
+      }
+      .mine_notes:focus {
+        opacity: 1;
+        right: -2px;
+        outline: none !important;
+        box-shadow: none !important;
+      }
+      .mine_notes {
+        transition: all 0.2s ease;
+        cursor: pointer;
+        opacity: 0.2;
+        line-height: 1.1em;
+        padding: 7px;
+        position: fixed;
+        right: -12.9%;
+        top: 60px;
+        background: rgb(39, 39, 42);
+        color: white;
+        width: 15%;
+        border-radius: 10px 0 0 10px;
+        border-width: 2px;
+        height: 36px;
+        resize: none;
+      }
+    </style>
+    <textarea class="mine_notes" placeholder="📝 Notes..." title="[M] Notepad"></textarea>
     `;
     document.body.append(myDiv);
-
+  
     const ta = myDiv.querySelector('.mine_notes');
-    ta.value = localStorage.getItem('mine_notes') || '';
-    ta.addEventListener('input', () => localStorage.setItem('mine_notes', ta.value));
+    
+    const updateTextarea = () => {
+      ta.value = localStorage.getItem('mine_notes') || '';
+    };
+  
+    updateTextarea();
+  
+    ta.addEventListener('input', () => {
+      localStorage.setItem('mine_notes', ta.value);
+    });
+  
+    window.addEventListener('storage', (event) => {
+      if (event.key === 'mine_notes') {
+        updateTextarea();
+      }
+    });
   };
-
+  
   const wipeChatHotkey = () => {
     // also tried pulling out the context button and storing that pointer on load (doesnt work when mac screen locked)
 
