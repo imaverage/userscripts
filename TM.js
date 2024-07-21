@@ -1290,8 +1290,9 @@
       document.addEventListener('keyup', async ev => {
         if (!(isModifierFree(ev) && ev.target.tagName.toLowerCase() === 'body')) return;
 
+        const getAllChatMessages = () => Mine.qsaa('[data-element-id="ai-response"], [data-element-id="user-message"]');
         const navigateMessages = (direction) => {
-          const msgEles = Mine.qsaa('[data-element-id="ai-response"], [data-element-id="user-message"]');
+          const msgEles = getAllChatMessages();
           let currentIndex = msgEles.findIndex(el => {
             const rect = el.getBoundingClientRect();
             return rect.top >= 0 && rect.top < window.innerHeight;
@@ -1311,7 +1312,7 @@
         const keyMap = {
           k: () => navigateMessages('up'),
           j: () => navigateMessages('down'),
-          l: () => Mine.qsaa('[data-element-id="ai-response"], [data-element-id="user-message"]').pop()?.scrollIntoView({behavior: 'smooth'}),
+          l: () => getAllChatMessages().pop()?.scrollIntoView({behavior: 'smooth'}),
           q: async () => {
             const sel = document.getSelection()?.toString();
             if (!sel) return;
