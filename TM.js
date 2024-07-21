@@ -1311,6 +1311,7 @@
         const keyMap = {
           k: () => navigateMessages('up'),
           j: () => navigateMessages('down'),
+          l: () => Mine.qsaa('[data-element-id="ai-response"], [data-element-id="user-message"]').pop()?.scrollIntoView({behavior: 'smooth'}),
           q: async () => {
             const sel = document.getSelection()?.toString();
             if (!sel) return;
