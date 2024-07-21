@@ -1981,10 +1981,12 @@
 
       // Mine.qsaa(`[data-element-id="user-message"]:not(:has(.mine_quote)) div`).forEach(quotify);
       // TODO: always do the last one, else you miss updating it if u "edit" the message rather than send a new one
-      Mine.pui(Mine.qsaa(`[data-element-id="user-message"] div`), e => {
+      const eles = Mine.qsaa(`[data-element-id="user-message"] div`);
+      const processEle = e => {
         quotify(e);
         tripleQuotify(e);
-      }, 'enrich');
+      };
+      Mine.pui(eles, processEle, 'enrich');
     });
   };
   installQuotability();
