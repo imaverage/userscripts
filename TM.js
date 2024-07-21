@@ -1980,13 +1980,13 @@
       if (!anEle) return;
 
       // Mine.qsaa(`[data-element-id="user-message"]:not(:has(.mine_quote)) div`).forEach(quotify);
-      // TODO: always do the last one, else you miss updating it if u "edit" the message rather than send a new one
       const eles = Mine.qsaa(`[data-element-id="user-message"] div`);
       const processEle = e => {
         quotify(e);
         tripleQuotify(e);
       };
       Mine.pui(eles, processEle, 'enrich');
+      processEle(eles.pop());  // always do the last one, else you miss updating it if u "edit" the message rather than send a new one. last is always expected to be unprocessed
     });
   };
   installQuotability();
