@@ -1979,7 +1979,6 @@
     await Mine.waitForQs('[data-element-id="user-message"]', {recheckIntervalMs: 100, timeoutMs: Infinity}).catch(() => null).then(anEle => {
       if (!anEle) return;
 
-      // Mine.qsaa(`[data-element-id="user-message"]:not(:has(.mine_quote)) div`).forEach(quotify);
       const eles = Mine.qsaa(`[data-element-id="user-message"] div`);
       const processEle = e => {
         quotify(e);
