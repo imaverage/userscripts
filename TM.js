@@ -1768,7 +1768,7 @@
 
     const saveWithDebounce = Mine.debounce(() => {
       localStorage.setItem(LOCAL_STORAGE_KEY, ta.value);
-      requestAnimationFrame(() => ta.style.borderColor = '';);
+      requestAnimationFrame(() => ta.style.borderColor = '');
     }, 300);
     ta.addEventListener('input', () => {
       ta.style.borderColor = 'orange';
