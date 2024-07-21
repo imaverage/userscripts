@@ -1384,7 +1384,6 @@
               await postProcessTaBeforeSubmit();
             }
           });
-          // setTimeout(quotifyAllMessagesIdempotently, 1000);  // in case mobile takes a while to load new. flaky on mobile.
         });
       }
     };
@@ -1411,7 +1410,7 @@
 
       onSpaUrlChangeCallbacks.push(callback);
     };
-    bindOnSpaUrlChange(() => setTimeout(quotifyAllMessagesIdempotently, 1000));  // give some time for DOM to reflect new url
+    bindOnSpaUrlChange(() => setTimeout(enrichAllMessagesIdempotently, 1000));  // give some time for DOM to reflect new url
 
     const initTitleSanitizerService = () => {
       const fullAppNameReferences = ['TypingMind.com', 'TypingMind'];
@@ -1921,6 +1920,9 @@
   color: gray;
   cursor: pointer;
 }
+.mine_triple_quote {
+  color: gray;
+}
 `);
     bindOnSelectorClick(`.mine_quote`, async e => {
       const curMsg = e.closest('[data-element-id="user-message"]');
@@ -1936,11 +1938,11 @@
     // TODO: make this more performant. checks everything every time.
     bindOnSelectorClick(`[data-element-id="send-button"]`, async () => {
       await Mine.sleep(100);  // TODO: could be tighter
-      quotifyAllMessagesIdempotently();
+      enrichAllMessagesIdempotently();
     });
   };
-  const quotifyAllMessagesIdempotently = async () => {
-    const quotifyIdempotently = (element) => {
+  const enrichAllMessagesIdempotently = async () => {
+    const quotify = (element) => {
       const lines = element.innerHTML.split('\n');
       const processedLines = lines.map(line => {
         if (line.trim().startsWith('&gt; ') || line.trim().startsWith('> ')) {
@@ -1948,14 +1950,29 @@
           const encodedLine = line.replace(/^>\s/, '&gt; ').replace(/&gt;\s/, '&gt; ');
           return `<span class="mine_quote">${encodedLine}</span>`;
         }
-        return line; // Return original line if not a quote
+        return line;
       });
 
       element.innerHTML = processedLines.join('\n');
-    }
+    };
+    const tripleQuotify = (element) => {
+      const lines = element.innerHTML.split('\n');
+      const processedLines = lines.map(line => {
+        if (line.trim() === '"""') {
+          return `<span class="mine_triple_quote">${line}</span>`;
+        }
+        return line;
+      });
+
+      element.innerHTML = processedLines.join('\n');
+    };
     await Mine.waitForQs('[data-element-id="user-message"]', {recheckIntervalMs: 100, timeoutMs: Infinity}).catch(() => null).then(ele => {
       if (!ele) return;
-      Mine.qsaa(`[data-element-id="user-message"]:not(:has(.mine_quote)) div`).forEach(quotifyIdempotently);
+      // Mine.qsaa(`[data-element-id="user-message"]:not(:has(.mine_quote)) div`).forEach(quotify);
+      Mine.pui(Mine.qsaa(`[data-element-id="user-message"] div`), e => {
+        quotify(e);
+        tripleQuotify(e);
+      }, 'enrich');
     });
   };
   installQuotability();
