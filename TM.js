@@ -1429,7 +1429,7 @@
       const sanitizeTitle = (title) => {
         let cured = fullAppNameReferences.reduce((acc, badPhrase) => {
           const regex = new RegExp('( - )?'+badPhrase, 'gi');
-          return acc.replace(regex, 'TM');
+          return acc.replace(regex, '');
         }, title);
         cured = cured.split(' — The #1 chat frontend UI')[0];
         return cured;
