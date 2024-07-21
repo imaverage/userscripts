@@ -1432,6 +1432,10 @@
           return acc.replace(regex, '');
         }, title);
         cured = cured.split(' — The #1 chat frontend UI')[0];
+
+        // if empty, chrome will show app domain
+        if (!cured.trim()) cured = 'TM';
+
         return cured;
       };
 
