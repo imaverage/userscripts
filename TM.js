@@ -77,6 +77,13 @@
       margin-bottom: 0;
     }
 
+    [data-element-id="chat-avatar-container"] {
+      display: none;
+    }
+    [data-element-id="response-block"] {
+      padding-left: 0.5rem;
+    }
+
     @media (max-width: 767px) {
       /* cant use message-index- bc thats doesnt covery typing state */  
       div:has(>[data-element-id="response-block"]) {
@@ -88,10 +95,6 @@
       }
       [data-element-id="response-block"] {
         padding-left: 0;
-      }
-
-      [data-element-id="chat-avatar-container"] {
-        display: none;
       }
 
       /* model name snippet */
