@@ -1427,8 +1427,8 @@
       let originalTitle = document.title;
 
       const sanitizeTitle = (title) => {
-        let cured = fullAppNameReferences.reduce((acc, badWord) => {
-          const regex = new RegExp(badWord, 'gi');
+        let cured = fullAppNameReferences.reduce((acc, badPhrase) => {
+          const regex = new RegExp('( - )?'+badPhrase, 'gi');
           return acc.replace(regex, 'TM');
         }, title);
         cured = cured.split(' — The #1 chat frontend UI')[0];
