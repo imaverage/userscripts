@@ -8,7 +8,7 @@
     clearTimeout(_debounceTimer);
     _debounceTimer = setTimeout(() => cb(...args), optDelayMs);
     return _debounceTimer;
-  };    
+  };
 
   const getChatIndexedDbValue = async urlChatValue => await Mine.getIndexedDbValue(`CHAT_${urlChatValue}`, 'keyval-store', 'keyval');
   const getStopButton = () => Mine.qsaa('button').find(e => e.innerText === 'Stop');
