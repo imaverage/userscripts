@@ -2000,6 +2000,8 @@
   installQuotability();
 
   const installFavico = () => {
+    const favicon_normal = 'https://i.ibb.co/hLZVQdK/image-15-1.png';
+    const favicon_badged = 'https://i.ibb.co/XJnJv5p/image-18.png';
     const changeFavicon = (iconUrl) => {
       // Remove existing favicons
       Array.from(document.querySelectorAll("link[rel*='icon']")).forEach(el => el.remove());
@@ -2014,7 +2016,25 @@
       document.head.appendChild(link);
       document.body.appendChild(link.cloneNode());
     };
-    setTimeout(() => changeFavicon('https://i.ibb.co/hLZVQdK/image-15-1.png'), 5000);
+    setTimeout(() => changeFavicon(favicon_normal), 5000);  // https://i.ibb.co/XJnJv5p/image-18.png for notifications pending
+
+    let checkInterval;
+    const isThereNewMsg = () => document.title.startsWith('(*) ');
+    const checkForNewMsg = () => new Promise(resolve => {
+      let count = 0;
+      checkInterval = setInterval(() => {
+        if (isThereNewMsg() || ++count === 60) {
+          clearInterval(checkInterval);
+          resolve(isThereNewMsg());
+        }
+      }, 1000);
+    });
+    window.addEventListener('blur', () => checkForNewMsg().then(hasNewMsg => hasNewMsg?changeFavicon(favicon_badged):null));
+    window.addEventListener('focus', () => {
+      clearInterval(checkInterval);
+      checkInterval = null;
+      changeFavicon(favicon_normal);
+    });
   };
   installFavico();
 })();
