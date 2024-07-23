@@ -278,9 +278,8 @@
     if (primary.includes('?')) return;
 
     setTimeout(() => {
-      if (window.location.href !== primary) {
-        window.location.href = primary;
-      }
+      if (window.location.href === primary) return;
+      window.location.href = primary;
     }, 1000);
   };
   installHrefFixer();
