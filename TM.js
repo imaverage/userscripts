@@ -280,8 +280,10 @@
 
     setTimeout(() => {
       if (window.location.href === initialUrl) return;
-      if (getAllChatMessages().length) {
+      const allChatMsgs = getAllChatMessages();
+      if (allChatMsgs.length) {
         window.location.href = initialUrl;
+        allChatMsgs.pop()?.scrollIntoView({behavior: 'smooth'});
       }
     }, 1000);
   };
