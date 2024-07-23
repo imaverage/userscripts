@@ -273,6 +273,18 @@
   };
   attachMetaInfoV1();
 
+  const installHrefFixer = () => {
+    const primary = window.locatio.href;
+    if (primary.includes('?')) return;
+
+    setTimeout(() => {
+      if (window.location.href !== primary) {
+        window.location.href = primary;
+      }
+    }, 1000);
+  };
+  installHrefFixer();
+  
   const installMemoryPluginV1 = async () => {
     const api = {
       SEARCH: async ({queries, lookbackDays}) => {
