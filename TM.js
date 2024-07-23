@@ -2016,11 +2016,11 @@
       document.head.appendChild(link);
       document.body.appendChild(link.cloneNode());
     };
-    setTimeout(() => changeFavicon(favicon_normal), 5000);  // https://i.ibb.co/XJnJv5p/image-18.png for notifications pending
+    setTimeout(() => changeFavicon(favicon_normal), 5000);
 
     let checkInterval;
     const isThereNewMsg = () => document.title.startsWith('(*) ');
-    const checkForNewMsg = () => new Promise(resolve => {
+    const checkForNewMsgInBackgroundedTab = () => new Promise(resolve => {
       let count = 0;
       checkInterval = setInterval(() => {
         if (isThereNewMsg() || ++count === 60) {
@@ -2029,7 +2029,7 @@
         }
       }, 1000);
     });
-    window.addEventListener('blur', () => checkForNewMsg().then(hasNewMsg => hasNewMsg?changeFavicon(favicon_badged):null));
+    window.addEventListener('blur', () => checkForNewMsgInBackgroundedTab().then(hasNewMsg => hasNewMsg?changeFavicon(favicon_badged):null));
     window.addEventListener('focus', () => {
       clearInterval(checkInterval);
       checkInterval = null;
