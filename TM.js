@@ -274,12 +274,12 @@
   attachMetaInfoV1();
 
   const installHrefFixer = () => {
-    const primary = window.location.href;
-    if (primary.includes('?')) return;
+    const initialUrl = window.location.href;
+    if (initialUrl.includes('?')) return;
 
     setTimeout(() => {
-      if (window.location.href === primary) return;
-      window.location.href = primary;
+      if (window.location.href === initialUrl) return;
+      window.location.href = initialUrl;
     }, 1000);
   };
   installHrefFixer();
