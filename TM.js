@@ -274,7 +274,7 @@
   attachMetaInfoV1();
 
   const installHrefFixer = () => {
-    const primary = window.locatio.href;
+    const primary = window.location.href;
     if (primary.includes('?')) return;
 
     setTimeout(() => {
