@@ -2004,7 +2004,7 @@
     const favicon_badged = 'https://i.ibb.co/XJnJv5p/image-18.png';
     const changeFavicon = (iconUrl) => {
       // Remove existing favicons
-      Array.from(document.querySelectorAll("link[rel*='icon']")).forEach(el => el.remove());
+      Array.from(Mine.qsaa("link[rel*='icon']")).forEach(el => el.remove());
       
       // Create new favicon link
       const link = document.createElement('link');
