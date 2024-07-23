@@ -19,6 +19,7 @@
     return element.scrollHeight - element.scrollTop <= element.clientHeight + threshold +1;
   };
   const mapEachNonEmptyLine = (blob, cb) => blob.split('\n').filter(l => !!l.trim()).map(cb).join('\n');
+  const getAllChatMessages = () => Mine.qsaa('[data-element-id="ai-response"], [data-element-id="user-message"]');
 
   // TODO: do i need uninstallers?
   const globalSelectorClickEventHandlers = new Map();
@@ -279,7 +280,9 @@
 
     setTimeout(() => {
       if (window.location.href === initialUrl) return;
-      window.location.href = initialUrl;
+      if (getAllChatMessages().length) {
+        window.location.href = initialUrl;
+      }
     }, 1000);
   };
   installHrefFixer();
@@ -1301,7 +1304,6 @@
       document.addEventListener('keyup', async ev => {
         if (!(isModifierFree(ev) && ev.target.tagName.toLowerCase() === 'body')) return;
 
-        const getAllChatMessages = () => Mine.qsaa('[data-element-id="ai-response"], [data-element-id="user-message"]');
         const navigateMessages = (direction) => {
           const msgEles = getAllChatMessages();
           let currentIndex = msgEles.findIndex(el => {
