@@ -1745,7 +1745,6 @@
     myDiv.innerHTML = `
     <style>
       .mine_notes:not(:placeholder-shown) {
-        border-color: green;
         right: -2px;
         height: calc(100vh - 60px - 100px);
       }
@@ -1790,7 +1789,7 @@
 
     const saveWithDebounce = Mine.debounce(() => {
       localStorage.setItem(LOCAL_STORAGE_KEY, ta.value);
-      requestAnimationFrame(() => ta.style.borderColor = '');
+      requestAnimationFrame(() => ta.style.borderColor = 'green');
     }, 500);
     ta.addEventListener('input', () => {
       ta.style.borderColor = 'orange';
