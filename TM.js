@@ -277,7 +277,7 @@
   const installAutoScrollDownOnLoad = () => {
     setTimeout(() => {
       const allChatMsgs = getAllChatMessages();
-      allChatMsgs.pop()?.scrollIntoView({behavior: 'smooth'});
+      // allChatMsgs.pop()?.scrollIntoView({behavior: 'smooth'});  // maybe already hap natively?
     }, 1000);
   };
   installAutoScrollDownOnLoad();
