@@ -274,20 +274,13 @@
   };
   attachMetaInfoV1();
 
-  const installHrefFixer = () => {
-    const initialUrl = window.location.href;
-    if (initialUrl.includes('?')) return;
-
+  const installAutoScrollDownOnLoad = () => {
     setTimeout(() => {
-      if (window.location.href === initialUrl) return;
       const allChatMsgs = getAllChatMessages();
-      if (allChatMsgs.length) {
-        window.location.href = initialUrl;
-        allChatMsgs.pop()?.scrollIntoView({behavior: 'smooth'});
-      }
+      allChatMsgs.pop()?.scrollIntoView({behavior: 'smooth'});
     }, 1000);
   };
-  installHrefFixer();
+  installAutoScrollDownOnLoad();
   
   const installMemoryPluginV1 = async () => {
     const api = {
