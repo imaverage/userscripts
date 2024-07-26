@@ -2032,7 +2032,6 @@
           checkInterval = null;
         }
         changeFavicon(favicon_normal);
-        setTimeout(() => changeFavicon(favicon_normal), 1000);
       }
     });
   };
