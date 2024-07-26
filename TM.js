@@ -2095,7 +2095,7 @@ ${qss.map(qs => `.fullscreen-active ${qs}`).join(',\n')} {
   opacity: 0;
   pointer-events: none;
 }
-${qss.filter(qs => qs !== `#elements-in-action-buttons`).map(qs => `.fullscreen-hide ${qs}`).join(',\n')} {
+${qss.filter(qs => [`.hide-when-print.sticky`, `#elements-in-action-buttons`].includes(qs)).map(qs => `.fullscreen-hide ${qs}`).join(',\n')} {
   display: none !important;
 }
     `;
