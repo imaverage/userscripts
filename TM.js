@@ -2021,15 +2021,23 @@
         }
       }, 1000);
     });
-    window.addEventListener('blur', () => {
-      changeFavicon(favicon_normal);
-      checkForNewMsgInBackgroundedTab().then(hasNewMsg => hasNewMsg?changeFavicon(favicon_badged):null);
-    });
-    window.addEventListener('focus', () => {
-      clearInterval(checkInterval);
-      checkInterval = null;
-      changeFavicon(favicon_normal);
-      setTimeout(() => changeFavicon(favicon_normal), 1000);
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        // Tab lost focus
+        changeFavicon(favicon_normal);
+        checkForNewMsgInBackgroundedTab().then(hasNewMsg => 
+          hasNewMsg ? changeFavicon(favicon_badged) : null
+        );
+      } else {
+        // Tab regained focus
+        if (checkInterval) {
+          clearInterval(checkInterval);
+          checkInterval = null;
+        }
+        changeFavicon(favicon_normal);
+        // Double-check to ensure favicon is reset
+        setTimeout(() => changeFavicon(favicon_normal), 1000);
+      }
     });
   };
   installFavico();
