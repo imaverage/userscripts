@@ -2020,8 +2020,8 @@
       }, 1000);
     });
     document.addEventListener('visibilitychange', () => {
-      const isHidden = document.hidden;
-      if (isHidden) {
+      const isNowHidden = document.hidden;
+      if (isNowHidden) {
         changeFavicon(favicon_normal);
         checkForNewMsgInBackgroundedTab().then(hasNewMsg => 
           hasNewMsg ? changeFavicon(favicon_badged) : null
