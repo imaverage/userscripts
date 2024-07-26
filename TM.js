@@ -2144,6 +2144,7 @@
   };
   if (isMobile) installToggleHideStuffOnDblTap();
 
+  // TODO: doesnt seem to work
   const installStatusStyle = () => {
     document.addEventListener('visibilitychange', () => {
       if (!document.hidden) {
