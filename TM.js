@@ -2106,7 +2106,7 @@
         Mine.qs('#elements-in-action-buttons'),
         Mine.qs('[data-element-id="upload-document-button"]'),
         Mine.qs('[data-element-id="voice-input-button"]'),
-        // Mine.qs('[data-element-id="input-row"] > .relative.justify-center')
+        // Mine.qs('[data-element-id="input-row"] > .relative.justify-center')  // takes send button out with it
       ];
       elements.forEach(element => fadeElement(element, isActive));
       
