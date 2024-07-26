@@ -2080,9 +2080,7 @@
 
     let isFullscreen = false;
     let unisi;
-    bindOnSelectorDblTap('[data-element-id="chat-space-middle-part"]', (ele, ev) => {
-      if (ev.target.closest('[data-element-id="user-message"]') || ev.target.closest('[data-element-id="ai-response"]')) return;
-    
+    const toggleFullscreen = () => {
       const durationMs = 200;
       const qss = [
         `[data-element-id="upload-document-button"]`,
@@ -2119,6 +2117,12 @@
       }
     
       isFullscreen = !isFullscreen;
+    };
+    if (isMobile) toggleFullscreen();
+    bindOnSelectorDblTap('[data-element-id="chat-space-middle-part"]', (ele, ev) => {
+      if (ev.target.closest('[data-element-id="user-message"]') || ev.target.closest('[data-element-id="ai-response"]')) return;
+    
+      toggleFullscreen();
     });
   };
   if (isMobile) installToggleHideStuffOnDblTap();
