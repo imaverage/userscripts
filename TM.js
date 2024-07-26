@@ -2068,7 +2068,7 @@
         } else {
           editButtonContainer.style.setProperty('display', 'flex', 'important');
         }
-    }
+      }
       lastTapTime = currentTime;
     }, false);
   };
