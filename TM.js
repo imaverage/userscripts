@@ -2046,9 +2046,10 @@
   installFavico();
 
   const installHideEditToolbarUntilDblTap = () => {
-    Mine.isi(`div:has(>[data-element-id="edit-message-button"]) {display: none !important;}`);
+    const msgEditToolbarEleQs = `div:has(>[data-element-id="edit-message-button"])`;
+    Mine.hideQs(msgEditToolbarEleQs);
     Mine.isi(`.forceShowEditToolbar {display: flex !important;}`);
-    
+
     let lastTapTime = 0;
     document.body.addEventListener('touchend', (event) => {
       const responseBlock = event.target.closest('[data-element-id="response-block"]');
@@ -2060,7 +2061,7 @@
       if (isDblTap) {
         event.preventDefault();
 
-        const editButtonContainer = responseBlock.querySelector('div:has(> [data-element-id="edit-message-button"])');
+        const editButtonContainer = responseBlock.querySelector(msgEditToolbarEleQs);
         editButtonContainer?.classList.toggle('forceShowEditToolbar');
       }
       lastTapTime = currentTime;
