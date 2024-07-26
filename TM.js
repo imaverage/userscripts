@@ -2143,4 +2143,19 @@
     toggleFullscreen();
   };
   if (isMobile) installToggleHideStuffOnDblTap();
+
+  const installStatusStyle = () => {
+    const metaTags = [
+      { name: 'apple-mobile-web-app-capable', content: 'yes' },
+      { name: 'apple-mobile-web-app-status-bar-style', content: 'black-translucent' }
+    ];
+  
+    metaTags.forEach(({ name, content }) => {
+      const meta = document.createElement('meta');
+      meta.name = name;
+      meta.content = content;
+      document.head.appendChild(meta);
+    });
+  };
+  if (isMobile) installStatusStyle();
 })();
