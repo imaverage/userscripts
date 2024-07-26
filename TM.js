@@ -878,7 +878,7 @@
         const t = await Mine.waitForQs(`#elements-in-action-buttons`);
         if (!t) return null;
         return t.children.length?t:null;
-      }, {timeoutMs: Infinity, recheckIntervalMs: 1000}),  // TODO: possible performance hit like when scrolling
+      }, {timeoutMs: Infinity, recheckIntervalMs: 1000}),  // warn: possible performance hit like when scrolling
       async targetEle => {
         const firstBtn = [...targetEle.querySelectorAll('button')].find(btn => getComputedStyle(btn).display !== 'none');
         const b = document.createElement('button');
