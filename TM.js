@@ -2065,7 +2065,7 @@
       }, false);
     };
 
-    const msgEditToolbarEleQs = `div:has(>[data-element-id="edit-message-button"])`;
+    const msgEditToolbarEleQs = `div:has(>[data-element-id="more-actions-menu-button"])`;
     Mine.hideQs(msgEditToolbarEleQs);
     bindOnSelectorDblTap('[data-element-id="response-block"]', responseBlock => {
       const editButtonContainer = responseBlock.querySelector(msgEditToolbarEleQs);
