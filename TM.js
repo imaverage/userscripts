@@ -883,7 +883,7 @@
         const firstBtn = [...targetEle.querySelectorAll('button')].find(btn => getComputedStyle(btn).display !== 'none');
         const b = document.createElement('button');
         b.innerHTML = '↑';
-        b.className = `inline-flex items-center justify-center rounded-md px-2 py-1.5 text-sm shadow-md bg-white dark:bg-zinc-900 dark:text-white dark:border-zinc-400 text-black border border-gray-300 transition-all group font-semibold text-xs hover:scale-105`;
+        b.className = `inline-flex items-center justify-center rounded-md px-3 py-2 shadow-md bg-blue-600 text-white hover:bg-blue-500 transition-all active:bg-blue-600 group font-semibold text-xs hover:scale-105 border border-transparent`;
         b.style.verticalAlign = 'bottom';
         b.style.opacity = '0';
         b.style.transition = 'opacity 0.1s ease-in-out';
