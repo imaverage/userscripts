@@ -2080,46 +2080,50 @@
 
     let isFullscreen = false;
     let unisi;
+    
+    const fullscreenStyles = `
+      .hide-when-print.sticky,
+      #elements-in-action-buttons,
+      [data-element-id="upload-document-button"],
+      [data-element-id="voice-input-button"] {
+        opacity: 1;
+        transition: opacity 200ms ease-in-out;
+      }
+      .fullscreen-active .hide-when-print.sticky,
+      .fullscreen-active #elements-in-action-buttons,
+      .fullscreen-active [data-element-id="upload-document-button"],
+      .fullscreen-active [data-element-id="voice-input-button"] {
+        opacity: 0;
+        pointer-events: none;
+      }
+      .fullscreen-hide .hide-when-print.sticky,
+      .fullscreen-hide #elements-in-action-buttons,
+      .fullscreen-hide [data-element-id="upload-document-button"],
+      .fullscreen-hide [data-element-id="voice-input-button"] {
+        display: none !important;
+      }
+    `;
     bindOnSelectorDblTap('[data-element-id="chat-space-middle-part"]', (ele, ev) => {
       if (ev.target.closest('[data-element-id="user-message"]') || ev.target.closest('[data-element-id="ai-response"]')) return;
-
-      const durationMs = 200;
-      const fadeElement = (element, isFullScreen) => {
-        element.style.transition = `opacity ${durationMs}ms ease-in-out`;
-
-        if (isFullScreen) {
-          element.style.opacity = '0';
-          setTimeout(() => {
-            element.style.display = 'none';
-          }, durationMs);
-        } else {
-          element.style.opacity = '0';
-          element.style.display = '';
-          // Force a reflow to ensure the display change takes effect
-          element.offsetHeight;
-          setTimeout(() => {
-            element.style.opacity = '1';
-          }, 10);
-        }
+    
+      if (!unisi) {
+        unisi = Mine.isi(fullscreenStyles);
       }
 
       if (isFullscreen) {
-        unisi();
-      }
-      const elementsToHide = [
-        Mine.qs('.hide-when-print.sticky'),
-        Mine.qs('#elements-in-action-buttons'),
-        Mine.qs('[data-element-id="upload-document-button"]'),
-        Mine.qs('[data-element-id="voice-input-button"]'),
-        // Mine.qs('[data-element-id="input-row"] > .relative.justify-center')  // takes send button out with it
-      ];
-      elementsToHide.forEach(element => fadeElement(element, !isFullscreen));
-      if (!isFullscreen) {
+        // Exiting fullscreen
+        document.body.classList.remove('fullscreen-hide');
+        // Force a reflow
+        document.body.offsetHeight;
+        document.body.classList.remove('fullscreen-active');
+      } else {
+        // Entering fullscreen
+        document.body.classList.add('fullscreen-active');
         setTimeout(() => {
-          unisi = Mine.isi(`#elements-in-action-buttons {display: none !important;}`);
-        }, durationMs);
+          document.body.classList.add('fullscreen-hide');
+        }, 200);
       }
-
+    
       isFullscreen = !isFullscreen;
     });
   };
