@@ -2081,10 +2081,12 @@
     let isFullscreen = false;
     let unisi;
     const qss = [
-      `.hide-when-print.sticky`,
-      `#elements-in-action-buttons`,  // display none causes dom shifts
       `[data-element-id="upload-document-button"]`,
       `[data-element-id="voice-input-button"]`,
+
+      // display none causes dom shifts
+      `.hide-when-print.sticky`,
+      `#elements-in-action-buttons`,
     ];
     const fullscreenStyles = `
 ${qss.join(',\n')} {
