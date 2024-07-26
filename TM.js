@@ -2106,14 +2106,14 @@
       if (isFullscreen) {
         unisi();
       }
-      const elements = [
+      const elementsToHide = [
         Mine.qs('.hide-when-print.sticky'),
         Mine.qs('#elements-in-action-buttons'),
         Mine.qs('[data-element-id="upload-document-button"]'),
         Mine.qs('[data-element-id="voice-input-button"]'),
         // Mine.qs('[data-element-id="input-row"] > .relative.justify-center')  // takes send button out with it
       ];
-      elements.forEach(element => fadeElement(element, isFullscreen));
+      elementsToHide.forEach(element => fadeElement(element, isFullscreen));
       if (!isFullscreen) {
         setTimeout(() => {
           unisi = Mine.isi(`#elements-in-action-buttons {display: none !important;}`);
