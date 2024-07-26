@@ -2118,12 +2118,12 @@
     
       isFullscreen = !isFullscreen;
     };
-    if (isMobile) toggleFullscreen();
     bindOnSelectorDblTap('[data-element-id="chat-space-middle-part"]', (ele, ev) => {
       if (ev.target.closest('[data-element-id="user-message"]') || ev.target.closest('[data-element-id="ai-response"]')) return;
     
       toggleFullscreen();
     });
+    toggleFullscreen();
   };
   if (isMobile) installToggleHideStuffOnDblTap();
 })();
