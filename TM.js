@@ -2159,7 +2159,6 @@
       }
     });
   
-    // Force the meta tag on page load
     const capable = document.createElement('meta');
     capable.name = 'apple-mobile-web-app-capable';
     capable.content = 'yes';
