@@ -1373,12 +1373,12 @@
       } else {
         await Mine.attachToElementContinuously(getTa, ta => {
           // happens at least when u switch chats
-          ta.addEventListener('keydown', async event => {
-            if (!isModifierFree(event)) return;
+          ta.addEventListener('keydown', async e => {
+            if (!isModifierFree(e)) return;
 
-            if (event.key === 'Escape') return await stopAiResponse();
+            if (e.key === 'Escape') return await stopAiResponse();
 
-            if (event.key === 'Enter') {
+            if (e.key === 'Enter') {
               if (getIsResponding()) {
                 await stopAiResponse();
               }
