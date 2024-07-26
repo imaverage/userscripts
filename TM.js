@@ -2145,17 +2145,32 @@
   if (isMobile) installToggleHideStuffOnDblTap();
 
   const installStatusStyle = () => {
-    const metaTags = [
-      { name: 'apple-mobile-web-app-capable', content: 'yes' },
-      { name: 'apple-mobile-web-app-status-bar-style', content: 'black-translucent' }
-    ];
-  
-    metaTags.forEach(({ name, content }) => {
-      const meta = document.createElement('meta');
-      meta.name = name;
-      meta.content = content;
-      document.head.appendChild(meta);
-    });
+    const forceStatusBarStyle = () => {
+      document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) {
+          const meta = document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]');
+          if (meta) {
+            meta.content = 'black-translucent';
+          } else {
+            const newMeta = document.createElement('meta');
+            newMeta.name = 'apple-mobile-web-app-status-bar-style';
+            newMeta.content = 'black-translucent';
+            document.head.appendChild(newMeta);
+          }
+        }
+      });
+    
+      // Force the meta tag on page load
+      const capable = document.createElement('meta');
+      capable.name = 'apple-mobile-web-app-capable';
+      capable.content = 'yes';
+      document.head.appendChild(capable);
+    
+      const statusStyle = document.createElement('meta');
+      statusStyle.name = 'apple-mobile-web-app-status-bar-style';
+      statusStyle.content = 'black-translucent';
+      document.head.appendChild(statusStyle);
+    };
   };
   if (isMobile) installStatusStyle();
 })();
