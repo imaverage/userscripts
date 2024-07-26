@@ -2150,9 +2150,9 @@
     const existingMetaTags = document.querySelectorAll('meta[name^="apple-"]');
     existingMetaTags.forEach(tag => tag.remove());
   
-    // Remove existing apple-touch-icon link
-    const existingTouchIcon = document.querySelector('link[rel="apple-touch-icon"]');
-    if (existingTouchIcon) existingTouchIcon.remove();
+    // // Remove existing apple-touch-icon link
+    // const existingTouchIcon = document.querySelector('link[rel="apple-touch-icon"]');
+    // if (existingTouchIcon) existingTouchIcon.remove();
   
     // Add new meta tags
     const metaTags = [
