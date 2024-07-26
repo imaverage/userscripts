@@ -882,7 +882,7 @@
       },
     );
   };
-  if (isMobile) installCustomToolButtons();
+  // if (isMobile) installCustomToolButtons();  // attachment is not reliable
 
 
 
