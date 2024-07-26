@@ -2082,9 +2082,32 @@
     bindOnSelectorDblTap('[data-element-id="chat-space-middle-part"]', (ele, ev) => {
       if (ev.target.closest('[data-element-id="user-message"]') || ev.target.closest('[data-element-id="ai-response"]')) return;
 
-      Mine.qs(`.hide-when-print.sticky`).style.display = isActive?'none':'';
-      Mine.qs(`#elements-in-action-buttons`).style.display = isActive?'none':'';
-      Mine.qs(`[data-element-id="input-row"] > .relative.justify-center`).style.display = isActive?'none':'';
+      const fadeElement = (element, isActive) => {
+        const durationMs = 300;
+        element.style.transition = `opacity ${durationMs}ms ease-in-out`;
+
+        if (isActive) {
+          element.style.opacity = '0';
+          setTimeout(() => {
+            element.style.display = 'none';
+          }, durationMs);
+        } else {
+          element.style.opacity = '0';
+          element.style.display = '';
+          // Force a reflow to ensure the display change takes effect
+          element.offsetHeight;
+          setTimeout(() => {
+            element.style.opacity = '1';
+          }, 10);
+        }
+      }
+      const elements = [
+        Mine.qs('.hide-when-print.sticky'),
+        Mine.qs('#elements-in-action-buttons'),
+        Mine.qs('[data-element-id="input-row"] > .relative.justify-center')
+      ];
+      elements.forEach(element => fadeElement(element, isActive));
+      
       isActive = !isActive;
     });
   };
