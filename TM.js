@@ -2044,4 +2044,27 @@
     });
   };
   installFavico();
+
+  const installHideEditToolbarUntilDblTap = () => {
+    Mine.isi(`div:has(>[data-element-id="edit-message-button"]) {display: none !important;}`);
+    Mine.isi(`.forceShowEditToolbar {display: flex !important;}`);
+    
+    let lastTapTime = 0;
+    document.body.addEventListener('touchend', (event) => {
+      const responseBlock = event.target.closest('[data-element-id="response-block"]');
+      if (!responseBlock) return;
+    
+      const currentTime = new Date().getTime();
+      const tapDurationMs = currentTime - lastTapTime;
+      const isDblTap = tapDurationMs > 0 && tapDurationMs < 300;
+      if (isDblTap) {
+        event.preventDefault();
+
+        const editButtonContainer = responseBlock.querySelector('div:has(> [data-element-id="edit-message-button"])');
+        editButtonContainer?.classList.toggle('forceShowEditToolbar');
+      }
+      lastTapTime = currentTime;
+    }, false);    
+  };
+  if (isMobile) installHideEditToolbarUntilDblTap();
 })();
