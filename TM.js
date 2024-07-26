@@ -2150,10 +2150,6 @@
     const existingMetaTags = document.querySelectorAll('meta[name^="apple-"]');
     existingMetaTags.forEach(tag => tag.remove());
   
-    // // Remove existing apple-touch-icon link
-    // const existingTouchIcon = document.querySelector('link[rel="apple-touch-icon"]');
-    // if (existingTouchIcon) existingTouchIcon.remove();
-  
     // Add new meta tags
     const metaTags = [
       { name: 'apple-mobile-web-app-capable', content: 'yes' },
@@ -2166,13 +2162,7 @@
       meta.content = content;
       document.head.appendChild(meta);
     });
-  
-    // Add apple-touch-icon
-    const linkIcon = document.createElement('link');
-    linkIcon.rel = 'apple-touch-icon';
-    linkIcon.href = 'path/to/your/icon.png'; // Replace with your icon path
-    document.head.appendChild(linkIcon);
-  
+    
     // Re-apply on visibility change
     document.addEventListener('visibilitychange', () => {
       if (!document.hidden) {
