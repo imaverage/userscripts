@@ -2109,18 +2109,13 @@
         unisi = Mine.isi(fullscreenStyles);
       }
 
-      if (isFullscreen) {
-        // Exiting fullscreen
+      if (isFullscreen) {  // Exit fullscreen
         document.body.classList.remove('fullscreen-hide');
-        // Force a reflow
         document.body.offsetHeight;
         document.body.classList.remove('fullscreen-active');
-      } else {
-        // Entering fullscreen
+      } else {  // Enter fullscreen
         document.body.classList.add('fullscreen-active');
-        setTimeout(() => {
-          document.body.classList.add('fullscreen-hide');
-        }, durationMs);
+        setTimeout(() => document.body.classList.add('fullscreen-hide'), durationMs);
       }
     
       isFullscreen = !isFullscreen;
