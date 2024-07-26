@@ -1377,7 +1377,6 @@
             if (!isModifierFree(e)) return;
 
             if (e.key === 'Escape') return await stopAiResponse();
-
             if (e.key === 'Enter') {
               if (getIsResponding()) {
                 await stopAiResponse();
