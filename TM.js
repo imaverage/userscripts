@@ -2104,7 +2104,9 @@
       const elements = [
         Mine.qs('.hide-when-print.sticky'),
         Mine.qs('#elements-in-action-buttons'),
-        Mine.qs('[data-element-id="input-row"] > .relative.justify-center')
+        Mine.qs('[data-element-id="upload-document-button"]'),
+        Mine.qs('[data-element-id="voice-input-button"]'),
+        // Mine.qs('[data-element-id="input-row"] > .relative.justify-center')
       ];
       elements.forEach(element => fadeElement(element, isActive));
       
