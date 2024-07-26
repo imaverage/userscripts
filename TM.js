@@ -2083,7 +2083,7 @@
       if (ev.target.closest('[data-element-id="user-message"]') || ev.target.closest('[data-element-id="ai-response"]')) return;
 
       const fadeElement = (element, isActive) => {
-        const durationMs = 300;
+        const durationMs = 200;
         element.style.transition = `opacity ${durationMs}ms ease-in-out`;
 
         if (isActive) {
