@@ -2146,29 +2146,40 @@
 
   // TODO: doesnt seem to work
   const installStatusStyle = () => {
-    document.addEventListener('visibilitychange', () => {
-      if (!document.hidden) {
-        const meta = document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]');
-        if (meta) {
-          meta.content = 'black-translucent';
-        } else {
-          const newMeta = document.createElement('meta');
-          newMeta.name = 'apple-mobile-web-app-status-bar-style';
-          newMeta.content = 'black-translucent';
-          document.head.appendChild(newMeta);
-        }
-      }
+    // Remove existing Apple-specific meta tags
+    const existingMetaTags = document.querySelectorAll('meta[name^="apple-"]');
+    existingMetaTags.forEach(tag => tag.remove());
+  
+    // Remove existing apple-touch-icon link
+    const existingTouchIcon = document.querySelector('link[rel="apple-touch-icon"]');
+    if (existingTouchIcon) existingTouchIcon.remove();
+  
+    // Add new meta tags
+    const metaTags = [
+      { name: 'apple-mobile-web-app-capable', content: 'yes' },
+      { name: 'apple-mobile-web-app-status-bar-style', content: 'black-translucent' }
+    ];
+  
+    metaTags.forEach(({ name, content }) => {
+      const meta = document.createElement('meta');
+      meta.name = name;
+      meta.content = content;
+      document.head.appendChild(meta);
     });
   
-    const capable = document.createElement('meta');
-    capable.name = 'apple-mobile-web-app-capable';
-    capable.content = 'yes';
-    document.head.appendChild(capable);
+    // Add apple-touch-icon
+    const linkIcon = document.createElement('link');
+    linkIcon.rel = 'apple-touch-icon';
+    linkIcon.href = 'path/to/your/icon.png'; // Replace with your icon path
+    document.head.appendChild(linkIcon);
   
-    const statusStyle = document.createElement('meta');
-    statusStyle.name = 'apple-mobile-web-app-status-bar-style';
-    statusStyle.content = 'black-translucent';
-    document.head.appendChild(statusStyle);
+    // Re-apply on visibility change
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) {
+        const statusBarMeta = document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]');
+        if (statusBarMeta) statusBarMeta.content = 'black-translucent';
+      }
+    });
   };
   if (isMobile) installStatusStyle();
 })();
