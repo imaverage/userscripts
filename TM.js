@@ -2021,7 +2021,10 @@
         }
       }, 1000);
     });
-    window.addEventListener('blur', () => checkForNewMsgInBackgroundedTab().then(hasNewMsg => hasNewMsg?changeFavicon(favicon_badged):null));
+    window.addEventListener('blur', () => {
+      changeFavicon(favicon_normal);
+      checkForNewMsgInBackgroundedTab().then(hasNewMsg => hasNewMsg?changeFavicon(favicon_badged):null);
+    });
     window.addEventListener('focus', () => {
       clearInterval(checkInterval);
       checkInterval = null;
