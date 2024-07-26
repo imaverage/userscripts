@@ -2022,8 +2022,8 @@
       }, 1000);
     });
     document.addEventListener('visibilitychange', () => {
-      if (document.hidden) {
-        // Tab lost focus
+      const isHidden = document.hidden;
+      if (isHidden) {
         changeFavicon(favicon_normal);
         checkForNewMsgInBackgroundedTab().then(hasNewMsg => 
           hasNewMsg ? changeFavicon(favicon_badged) : null
