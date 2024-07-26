@@ -2048,21 +2048,38 @@
   installFavico();
 
   const installToggleHideStuffOnDblTap = () => {
-    const bindOnSelectorDblTap = (qs, cb) => {
+    const bindOnSelectorDblTap = (qs, cb, options = {}) => {
+      const {
+        maxTimeBetweenTaps = 300,
+        maxDistanceBetweenTaps = 20
+      } = options;
+    
       let lastTapTime = 0;
+      let lastTapX = 0;
+      let lastTapY = 0;
       document.body.addEventListener('touchend', (event) => {
         const selEle = event.target.closest(qs);
         if (!selEle) return;
-      
+    
+        const touch = event.changedTouches[0];
         const currentTime = new Date().getTime();
-        const tapDurationMs = currentTime - lastTapTime;
-        const isDblTap = tapDurationMs > 0 && tapDurationMs < 300;
+        const currentX = touch.clientX;
+        const currentY = touch.clientY;
+
+        const timeBetweenTaps = currentTime - lastTapTime;
+        const distanceBetweenTaps = Math.hypot(currentX - lastTapX, currentY - lastTapY);
+
+        const isDblTap = timeBetweenTaps > 0 && 
+                         timeBetweenTaps < maxTimeBetweenTaps &&
+                         distanceBetweenTaps < maxDistanceBetweenTaps;
         if (isDblTap) {
           event.preventDefault();
-  
           cb(selEle, event);
         }
+
         lastTapTime = currentTime;
+        lastTapX = currentX;
+        lastTapY = currentY;
       }, false);
     };
 
