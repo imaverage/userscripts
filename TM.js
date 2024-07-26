@@ -884,7 +884,8 @@
         const b = document.createElement('button');
         b.innerHTML = '↑';
         b.className = `inline-flex items-center justify-center rounded-md px-3 py-2 shadow-md bg-blue-600 text-white hover:bg-blue-500 transition-all active:bg-blue-600 group font-semibold text-xs hover:scale-105 border border-transparent`;
-        b.style.verticalAlign = 'bottom';
+        b.style.verticalAlign = 'top';
+        b.style.marginBottom = '4px';
         b.style.opacity = '0';
         b.style.transition = 'opacity 0.1s ease-in-out';
         b.addEventListener('click', async () => {
