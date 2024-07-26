@@ -2080,7 +2080,6 @@
 
     let isFullscreen = false;
     let unisi;
-    
     const fullscreenStyles = `
       .hide-when-print.sticky,
       #elements-in-action-buttons,
