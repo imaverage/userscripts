@@ -2084,10 +2084,10 @@
       if (ev.target.closest('[data-element-id="user-message"]') || ev.target.closest('[data-element-id="ai-response"]')) return;
 
       const durationMs = 200;
-      const fadeElement = (element, enable) => {
+      const fadeElement = (element, isFullScreen) => {
         element.style.transition = `opacity ${durationMs}ms ease-in-out`;
 
-        if (enable) {
+        if (isFullScreen) {
           element.style.opacity = '0';
           setTimeout(() => {
             element.style.display = 'none';
@@ -2113,7 +2113,7 @@
         Mine.qs('[data-element-id="voice-input-button"]'),
         // Mine.qs('[data-element-id="input-row"] > .relative.justify-center')  // takes send button out with it
       ];
-      elementsToHide.forEach(element => fadeElement(element, isFullscreen));
+      elementsToHide.forEach(element => fadeElement(element, !isFullscreen));
       if (!isFullscreen) {
         setTimeout(() => {
           unisi = Mine.isi(`#elements-in-action-buttons {display: none !important;}`);
