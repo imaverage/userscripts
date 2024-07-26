@@ -721,8 +721,7 @@
           range.commonAncestorContainer.nodeType === Node.TEXT_NODE
             ? range.commonAncestorContainer.parentElement
             : range.commonAncestorContainer;
-        const chatSpaceMiddlePart = Mine.qs('[data-element-id="chat-space-middle-part"]');
-        if (!chatSpaceMiddlePart.contains(targetElement)) return;
+        if (!targetElement.closest('[data-element-id="response-block"]')) return;
 
         popover.style.display = 'flex';
         popover.classList.remove('show');
