@@ -2048,7 +2048,6 @@
   const installHideEditToolbarUntilDblTap = () => {
     const msgEditToolbarEleQs = `div:has(>[data-element-id="edit-message-button"])`;
     Mine.hideQs(msgEditToolbarEleQs);
-    Mine.isi(`.forceShowEditToolbar {display: flex !important;}`);
 
     let lastTapTime = 0;
     document.body.addEventListener('touchend', (event) => {
@@ -2062,10 +2061,15 @@
         event.preventDefault();
 
         const editButtonContainer = responseBlock.querySelector(msgEditToolbarEleQs);
-        editButtonContainer?.classList.toggle('forceShowEditToolbar');
-      }
+        const currentDisplay = window.getComputedStyle(editButtonContainer).getPropertyValue('display');
+        if (currentDisplay === 'flex') {
+          editButtonContainer.style.removeProperty('display');
+        } else {
+          editButtonContainer.style.setProperty('display', 'flex', 'important');
+        }
+    }
       lastTapTime = currentTime;
-    }, false);    
+    }, false);
   };
   if (isMobile) installHideEditToolbarUntilDblTap();
 })();
