@@ -36,7 +36,7 @@
         }
       });
     }
-    
+
     if (!globalSelectorClickEventHandlers.has(qs)) {
       globalSelectorClickEventHandlers.set(qs, new Set());
     }
@@ -2050,27 +2050,32 @@
     const msgEditToolbarEleQs = `div:has(>[data-element-id="edit-message-button"])`;
     Mine.hideQs(msgEditToolbarEleQs);
 
-    let lastTapTime = 0;
-    document.body.addEventListener('touchend', (event) => {
-      const responseBlock = event.target.closest('[data-element-id="response-block"]');
-      if (!responseBlock) return;
-    
-      const currentTime = new Date().getTime();
-      const tapDurationMs = currentTime - lastTapTime;
-      const isDblTap = tapDurationMs > 0 && tapDurationMs < 300;
-      if (isDblTap) {
-        event.preventDefault();
-
-        const editButtonContainer = responseBlock.querySelector(msgEditToolbarEleQs);
-        const currentDisplay = window.getComputedStyle(editButtonContainer).getPropertyValue('display');
-        if (currentDisplay === 'flex') {
-          editButtonContainer.style.removeProperty('display');
-        } else {
-          editButtonContainer.style.setProperty('display', 'flex', 'important');
+    const bindOnSelectorDblTap = (qs, cb) => {
+      let lastTapTime = 0;
+      document.body.addEventListener('touchend', (event) => {
+        const selEle = event.target.closest(qs);
+        if (!selEle) return;
+      
+        const currentTime = new Date().getTime();
+        const tapDurationMs = currentTime - lastTapTime;
+        const isDblTap = tapDurationMs > 0 && tapDurationMs < 300;
+        if (isDblTap) {
+          event.preventDefault();
+  
+          cb(selEle);
         }
+        lastTapTime = currentTime;
+      }, false);
+    };
+    bindOnSelectorDblTap('[data-element-id="response-block"]', responseBlock => {
+      const editButtonContainer = responseBlock.querySelector(msgEditToolbarEleQs);
+      const currentDisplay = window.getComputedStyle(editButtonContainer).getPropertyValue('display');
+      if (currentDisplay === 'flex') {
+        editButtonContainer.style.removeProperty('display');
+      } else {
+        editButtonContainer.style.setProperty('display', 'flex', 'important');
       }
-      lastTapTime = currentTime;
-    }, false);
+    });
   };
   if (isMobile) installHideEditToolbarUntilDblTap();
 })();
