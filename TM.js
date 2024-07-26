@@ -2079,7 +2079,7 @@
 
     let isActive = false;
     bindOnSelectorDblTap('[data-element-id="chat-space-middle-part"]', (ele, ev) => {
-      if (ev.target !== ele) return;
+      if (ev.target.closest('[data-element-id="user-message"]') || ev.target.closest('[data-element-id="ai-response"]')) return;
 
       Mine.qs(`.hide-when-print.sticky`).style.display = isActive?'none':'';
       Mine.qs(`#elements-in-action-buttons`).style.display = isActive?'none':'';
