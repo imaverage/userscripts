@@ -2046,10 +2046,7 @@
   };
   installFavico();
 
-  const installHideEditToolbarUntilDblTap = () => {
-    const msgEditToolbarEleQs = `div:has(>[data-element-id="edit-message-button"])`;
-    Mine.hideQs(msgEditToolbarEleQs);
-
+  const installToggleHideStuffOnDblTap = () => {
     const bindOnSelectorDblTap = (qs, cb) => {
       let lastTapTime = 0;
       document.body.addEventListener('touchend', (event) => {
@@ -2062,11 +2059,14 @@
         if (isDblTap) {
           event.preventDefault();
   
-          cb(selEle);
+          cb(selEle, event);
         }
         lastTapTime = currentTime;
       }, false);
     };
+
+    const msgEditToolbarEleQs = `div:has(>[data-element-id="edit-message-button"])`;
+    Mine.hideQs(msgEditToolbarEleQs);
     bindOnSelectorDblTap('[data-element-id="response-block"]', responseBlock => {
       const editButtonContainer = responseBlock.querySelector(msgEditToolbarEleQs);
       const currentDisplay = window.getComputedStyle(editButtonContainer).getPropertyValue('display');
@@ -2076,6 +2076,15 @@
         editButtonContainer.style.setProperty('display', 'flex', 'important');
       }
     });
+
+    let isActive = false;
+    bindOnSelectorDblTap('[data-element-id="chat-space-middle-part"]', (ele, ev) => {
+      if (ev.target !== ele) return;
+
+      Mine.qs(`.hide-when-print.sticky`).style.display = isActive?'none':'';
+      Mine.qs(`#elements-in-action-buttons`).style.display = isActive?'none':'';
+      isActive = !isActive;
+    });
   };
-  if (isMobile) installHideEditToolbarUntilDblTap();
+  if (isMobile) installToggleHideStuffOnDblTap();
 })();
