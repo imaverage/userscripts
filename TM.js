@@ -2162,7 +2162,7 @@
       meta.content = content;
       document.head.appendChild(meta);
     });
-    
+
     // Re-apply on visibility change
     document.addEventListener('visibilitychange', () => {
       if (!document.hidden) {
