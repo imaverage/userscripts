@@ -2078,15 +2078,16 @@
       }
     });
 
-    let isActive = false;
+    let isFullscreen = false;
+    let unisi;
     bindOnSelectorDblTap('[data-element-id="chat-space-middle-part"]', (ele, ev) => {
       if (ev.target.closest('[data-element-id="user-message"]') || ev.target.closest('[data-element-id="ai-response"]')) return;
 
-      const fadeElement = (element, isActive) => {
+      const fadeElement = (element, enable) => {
         const durationMs = 200;
         element.style.transition = `opacity ${durationMs}ms ease-in-out`;
 
-        if (isActive) {
+        if (enable) {
           element.style.opacity = '0';
           setTimeout(() => {
             element.style.display = 'none';
@@ -2101,6 +2102,10 @@
           }, 10);
         }
       }
+
+      if (isFullscreen) {
+        unisi();
+      }
       const elements = [
         Mine.qs('.hide-when-print.sticky'),
         Mine.qs('#elements-in-action-buttons'),
@@ -2108,9 +2113,12 @@
         Mine.qs('[data-element-id="voice-input-button"]'),
         // Mine.qs('[data-element-id="input-row"] > .relative.justify-center')  // takes send button out with it
       ];
-      elements.forEach(element => fadeElement(element, isActive));
-      
-      isActive = !isActive;
+      elements.forEach(element => fadeElement(element, isFullscreen));
+      if (!isFullscreen) {
+        unisi = Mine.isi(`#elements-in-action-buttons {display: none !important;}`);
+      }
+
+      isFullscreen = !isFullscreen;
     });
   };
   if (isMobile) installToggleHideStuffOnDblTap();
