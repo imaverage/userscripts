@@ -2025,7 +2025,9 @@
       document.head.appendChild(link);
       document.body.appendChild(link.cloneNode());
     };
-    setTimeout(() => changeFavicon(favicon_normal), 5000);
+    for (let i=0; i<5; i++) {
+      setTimeout(() => changeFavicon(favicon_normal), i*1000);
+    }
 
     let checkInterval;
     const isThereNewMsg = () => document.title.startsWith('(*) ');
