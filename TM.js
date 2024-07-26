@@ -2083,8 +2083,8 @@
     bindOnSelectorDblTap('[data-element-id="chat-space-middle-part"]', (ele, ev) => {
       if (ev.target.closest('[data-element-id="user-message"]') || ev.target.closest('[data-element-id="ai-response"]')) return;
 
+      const durationMs = 200;
       const fadeElement = (element, enable) => {
-        const durationMs = 200;
         element.style.transition = `opacity ${durationMs}ms ease-in-out`;
 
         if (enable) {
