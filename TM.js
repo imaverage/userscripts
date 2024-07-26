@@ -735,34 +735,16 @@
 
     document.addEventListener('mouseup', showPopoverIfSelection);
     document.addEventListener('touchend', showPopoverIfSelection);
-
-    document.addEventListener('mousedown', (e) => {
-      if (!popover.contains(e.target)) {
-        hidePopover();
-      }
-    });
-
-    document.addEventListener('scroll', (e) => {
-      if (!popover.contains(e.target)) {
-        hidePopover();
-      }
-    });
-
-    document.addEventListener('touchstart', (e) => {
-      if (!popover.contains(e.target)) {
-        hidePopover();
-      }
-    });
-
-    popover.addEventListener('touchstart', (e) => {
-      e.preventDefault();
-    });
+    document.addEventListener('mousedown', e => !popover.contains(e.target) && hidePopover());
+    document.addEventListener('scroll', e => !popover.contains(e.target) && hidePopover());
+    document.addEventListener('touchstart', e => !popover.contains(e.target) && hidePopover());
+    popover.addEventListener('touchstart', e => e.preventDefault());
 
     const handleLongPress = (callback, duration = 500) => {
       let timer;
       let isLongPress = false;
 
-      const start = (e) => {
+      const start = e => {
         isLongPress = false;
         timer = setTimeout(() => {
           isLongPress = true;
