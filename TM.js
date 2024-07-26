@@ -1372,6 +1372,7 @@
         );
       } else {
         await Mine.attachToElementContinuously(getTa, ta => {
+          ta.placeholder = 'Enter message…';
           // happens at least when u switch chats
           ta.addEventListener('keydown', async event => {
             if (!isModifierFree(event)) return;
