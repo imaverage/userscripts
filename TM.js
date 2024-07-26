@@ -2084,6 +2084,7 @@
 
       Mine.qs(`.hide-when-print.sticky`).style.display = isActive?'none':'';
       Mine.qs(`#elements-in-action-buttons`).style.display = isActive?'none':'';
+      Mine.qs(`[data-element-id="input-row"] > .relative.justify-center`).style.display = isActive?'none':'';
       isActive = !isActive;
     });
   };
