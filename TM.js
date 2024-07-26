@@ -2115,7 +2115,9 @@
       ];
       elements.forEach(element => fadeElement(element, isFullscreen));
       if (!isFullscreen) {
-        unisi = Mine.isi(`#elements-in-action-buttons {display: none !important;}`);
+        setTimeout(() => {
+          unisi = Mine.isi(`#elements-in-action-buttons {display: none !important;}`);
+        }, durationMs);
       }
 
       isFullscreen = !isFullscreen;
