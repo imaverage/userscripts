@@ -86,7 +86,7 @@
     }
 
     @media (max-width: 767px) {
-      /* cant use message-index- bc thats doesnt covery typing state */  
+      /* cant use message-index- bc thats doesnt covery typing state */
       div:has(>[data-element-id="response-block"]) {
         padding-right: 9px;
         padding-left: 9px;
@@ -281,7 +281,7 @@
     }, 1000);
   };
   installAutoScrollDownOnLoad();
-  
+
   const installMemoryPluginV1 = async () => {
     const api = {
       SEARCH: async ({queries, lookbackDays}) => {
@@ -293,39 +293,39 @@
         return [];
       },
     };
-  
+
     const getSearchResults = async (query, lookbackDays) => {
       const dbName = 'keyval-store';
       const storeName = 'keyval';
       const results = [];
-  
+
       // Calculate the start date based on lookbackDays
       const startDate = new Date();
       startDate.setDate(startDate.getDate() - lookbackDays);
-  
+
       return new Promise((resolve, reject) => {
         const request = indexedDB.open(dbName);
-  
+
         request.onerror = event => reject(`IndexedDB error: ${event.target.error}`);
-  
+
         request.onsuccess = event => {
           const db = event.target.result;
           const transaction = db.transaction([storeName], 'readonly');
           const store = transaction.objectStore(storeName);
           const cursorRequest = store.openCursor();
-  
+
           cursorRequest.onerror = event => reject(`Cursor error: ${event.target.error}`);
-  
+
           cursorRequest.onsuccess = event => {
             const cursor = event.target.result;
             if (cursor) {
               const key = cursor.key;
               const value = cursor.value;
-  
+
               if (key.startsWith('CHAT_') && Array.isArray(value.messages)) {
                 const regex = new RegExp(`\\b${query}\\b`, 'i');
-  
-                const matchingMessages = 
+
+                const matchingMessages =
                   value
                     .messages
                     .filter(msg =>
@@ -337,13 +337,13 @@
                 // if title matches, then add first chat msg if it is recent
                 if (regex.test(value.chatTitle)) {
                   const firstMsg = value.messages.find(msg => msg.role === 'user');
-                  if (firstMsg && new Date(firstMsg.createdAt) >= startDate && 
+                  if (firstMsg && new Date(firstMsg.createdAt) >= startDate &&
                       !matchingMessages.some(msg => msg.createdAt === firstMsg.createdAt)) {
                     matchingMessages.push(firstMsg);
                   }
                 }
-  
-                const curedMsgs = 
+
+                const curedMsgs =
                   matchingMessages
                     .map(msg => ({
                       content: msg.content,
@@ -364,7 +364,7 @@
                     });
                 results.push(...curedMsgs);
               }
-  
+
               cursor.continue();
             } else {
               resolve(results);
@@ -373,44 +373,44 @@
         };
       });
     };
-  
+
     const getMemoryPluginPassword = async () => {
       const dbName = 'keyval-store';
       const storeName = 'keyval';
-  
+
       return new Promise((resolve, reject) => {
         const request = indexedDB.open(dbName);
-  
+
         request.onerror = event => reject(`IndexedDB error: ${event.target.error}`);
-  
+
         request.onsuccess = event => {
           const db = event.target.result;
           const transaction = db.transaction([storeName], 'readonly');
           const store = transaction.objectStore(storeName);
           const cursorRequest = store.openCursor();
-  
+
           cursorRequest.onerror = event => reject(`Cursor error: ${event.target.error}`);
-  
+
           cursorRequest.onsuccess = event => {
             const cursor = event.target.result;
             if (cursor) {
               const key = cursor.key;
               const value = cursor.value;
-  
+
               if (key.startsWith('CHAT_') && Array.isArray(value.messages)) {
                 const passwordMessage = value.messages.find(msg =>
                   msg.role === 'user' &&
                   typeof msg.content === 'string' &&
                   msg.content.trim().match(/^memoryPluginPassword=.+$/)
                 );
-  
+
                 if (passwordMessage) {
                   const password = passwordMessage.content.trim().split('=')[1];
                   resolve(password);
                   return;
                 }
               }
-  
+
               cursor.continue();
             } else {
               resolve(null);
@@ -420,19 +420,19 @@
       });
     };
     const memoryPluginPassword = await getMemoryPluginPassword();
-  
+
     // keep this constant between plugin and top window script
     const EncryptionLib = (() => {
       // This salt should be unique per application, but doesn't need to be secret
       const SALT = new Uint8Array([0x63, 0x72, 0x79, 0x70, 0x74, 0x6f, 0x73, 0x61, 0x6c, 0x74, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36]);
-  
+
       // Use a password that you can remember but others can't guess
       const PASSWORD = memoryPluginPassword;
-  
+
       async function deriveKey(password) {
         const encoder = new TextEncoder();
         const passwordBuffer = encoder.encode(password);
-  
+
         const keyMaterial = await window.crypto.subtle.importKey(
           'raw',
           passwordBuffer,
@@ -440,7 +440,7 @@
           false,
           ['deriveBits', 'deriveKey']
         );
-  
+
         return window.crypto.subtle.deriveKey(
           {
             name: 'PBKDF2',
@@ -454,51 +454,51 @@
           ['encrypt', 'decrypt']
         );
       }
-  
+
       async function encrypt(data) {
         const key = await deriveKey(PASSWORD);
         const encoder = new TextEncoder();
         const encodedData = encoder.encode(JSON.stringify(data));
-  
+
         const iv = window.crypto.getRandomValues(new Uint8Array(12));
         const encryptedData = await window.crypto.subtle.encrypt(
           { name: 'AES-GCM', iv: iv },
           key,
           encodedData
         );
-  
+
         return {
           iv: Array.from(iv),
           data: Array.from(new Uint8Array(encryptedData))
         };
       }
-  
+
       async function decrypt(encryptedObj) {
         const key = await deriveKey(PASSWORD);
-  
+
         const decryptedData = await window.crypto.subtle.decrypt(
           { name: 'AES-GCM', iv: new Uint8Array(encryptedObj.iv) },
           key,
           new Uint8Array(encryptedObj.data)
         );
-  
+
         return JSON.parse(new TextDecoder().decode(decryptedData));
       }
-  
+
       return {
         encrypt,
         decrypt
       };
     })();
-  
+
     window.addEventListener("message", async (event) => {
       const { encryptedData } = event.data;
       if (!encryptedData) return;
-  
+
       try {
         const decryptedData = await EncryptionLib.decrypt(encryptedData);
         const { id, func, request } = decryptedData;
-  
+
         const fail = async () => {
           const encryptedError = await EncryptionLib.encrypt({ id, error: "Function not found" });
           event.source.postMessage({ encryptedError }, "*");
@@ -556,12 +556,12 @@
       '“”': async ({selectedText, isLongPressed}) => {
         const reply = prompt(`> ${selectedText}`);
         if (!reply) return false;
-  
+
         const quoteReplyFn = quoteReplyWith(reply);
         return await quoteReplyFn({selectedText, isLongPressed});
       },
     };
-  
+
     const popover = document.createElement('div');
     popover.id = 'custom-popover';
     popover.className = 'custom-popover';
@@ -569,7 +569,7 @@
       .map(cmd => `<button class="popover-button">${cmd}</button>`)
       .join('');
     document.body.appendChild(popover);
-  
+
     const style = document.createElement('style');
     style.textContent = `
   :root {
@@ -637,11 +637,11 @@
   }
     `;
     document.head.appendChild(style);
-  
+
     let currentSelection = null;
     let isPopoverVisible = false;
-  
-  
+
+
     const hidePopover = () => {
       if (isPopoverVisible) {
         popover.classList.remove('show');
@@ -655,23 +655,23 @@
     const positionPopover = (rect) => {
       const viewportWidth = window.innerWidth;
       const viewportHeight = window.innerHeight;
-    
+
       // Delay positioning calculation
       setTimeout(() => {
         // Make popover visible but hidden for calculations
         popover.style.visibility = 'hidden';
         popover.style.display = 'flex';
-    
+
         const popoverRect = popover.getBoundingClientRect();
-    
+
         let left = rect.left + (rect.width - popoverRect.width) / 2;
         let top = rect.bottom + 10;
-    
+
         // Fallback positioning for first selection
         if (top <= 0 || top >= viewportHeight) {
           top = viewportHeight / 2;
         }
-    
+
         // Adjust position to fit within viewport
         const adjustPosition = () => {
           // Adjust horizontal position
@@ -681,7 +681,7 @@
           if (left < 10) {
             left = 10;
           }
-    
+
           // Adjust vertical position
           if (top + popoverRect.height > viewportHeight) {
             top = rect.top - popoverRect.height - 10;
@@ -690,34 +690,34 @@
             top = 10;
           }
           top += 10;  // so its not directly where the mouse was
-    
+
           popover.style.left = `${left}px`;
           popover.style.top = `${top}px`;
-    
+
           // Check if further adjustment is needed
           const newRect = popover.getBoundingClientRect();
           if (newRect.right > viewportWidth || newRect.bottom > viewportHeight) {
             adjustPosition();
           }
         };
-    
+
         adjustPosition();
-    
+
         // Make popover visible again
         popover.style.visibility = 'visible';
         popover.classList.add('show');
       }, 50); // Small delay to ensure layout is complete
     };
-    
+
     const showPopoverIfSelection = () => {
       const selection = window.getSelection();
-    
+
       if (selection.toString().length > 0 && !isPopoverVisible) {
         currentSelection = selection.toString();
         const range = selection.getRangeAt(0);
         const rect = range.getBoundingClientRect();
 
-        const targetElement = 
+        const targetElement =
           range.commonAncestorContainer.nodeType === Node.TEXT_NODE
             ? range.commonAncestorContainer.parentElement
             : range.commonAncestorContainer;
@@ -733,36 +733,36 @@
         hidePopover();
       }
     };
-  
+
     document.addEventListener('mouseup', showPopoverIfSelection);
     document.addEventListener('touchend', showPopoverIfSelection);
-  
+
     document.addEventListener('mousedown', (e) => {
       if (!popover.contains(e.target)) {
         hidePopover();
       }
     });
-  
+
     document.addEventListener('scroll', (e) => {
       if (!popover.contains(e.target)) {
         hidePopover();
       }
     });
-  
+
     document.addEventListener('touchstart', (e) => {
       if (!popover.contains(e.target)) {
         hidePopover();
       }
     });
-  
+
     popover.addEventListener('touchstart', (e) => {
       e.preventDefault();
     });
-  
+
     const handleLongPress = (callback, duration = 500) => {
       let timer;
       let isLongPress = false;
-    
+
       const start = (e) => {
         isLongPress = false;
         timer = setTimeout(() => {
@@ -770,23 +770,23 @@
           callback(true);
         }, duration);
       };
-    
+
       const cancel = () => {
         clearTimeout(timer);
       };
-    
+
       const isLongPressDetected = () => isLongPress;
-    
+
       return { start, cancel, isLongPressDetected };
     };
-    
+
     const setupButton = (button) => {
       let isTouchDevice = false;
-    
+
       const executeCommand = async (isLongPressed) => {
         const action = button.textContent.toLowerCase();
         const selectedText = currentSelection;
-    
+
         let isSuccess = false;
         if (commands[action]) {
           isSuccess = await commands[action]({ selectedText, isLongPressed });
@@ -796,40 +796,40 @@
           hidePopover();
         }
       };
-    
+
       const longPress = handleLongPress(() => executeCommand(true));
-    
+
       const handleInteraction = async (e) => {
         e.preventDefault();
         e.stopPropagation();
-    
+
         if (e.type === 'touchend') {
           isTouchDevice = true;
         }
-    
+
         // Prevent execution on 'click' event if it's a touch device
         if (e.type === 'click' && isTouchDevice) {
           return;
         }
-    
+
         longPress.cancel();
         if (!longPress.isLongPressDetected()) {
           await executeCommand(false);
         }
       };
-    
+
       button.addEventListener('touchstart', (e) => {
         e.preventDefault(); // Prevent mouse events from firing
         longPress.start(e);
       });
       button.addEventListener('touchend', handleInteraction);
       button.addEventListener('touchcancel', longPress.cancel);
-    
+
       button.addEventListener('mousedown', longPress.start);
       button.addEventListener('click', handleInteraction);
       button.addEventListener('mouseleave', longPress.cancel);
     };
-    
+
     popover.querySelectorAll('.popover-button').forEach(setupButton);
   };
   setTimeout(installSelectionPopovers, 1000);
@@ -866,7 +866,7 @@
   const installCustomToolButtons = async () => {
     const findLastElementAboveViewport = (elements) => {
       const viewportTop = window.scrollY || window.pageYOffset;
-      
+
       for (let i = elements.length - 1; i >= 0; i--) {
         const elementBottom = elements[i].getBoundingClientRect().bottom;
         if (elementBottom <= 0) return i;
@@ -940,7 +940,7 @@
     [data-element-id="chat-space-end-part"] {
       padding-bottom: 5px;
     }
-  
+
     div:has(> div > img[src="/logo.png"]) {
       display: none;
     }
@@ -954,7 +954,7 @@
     [data-element-id="response-block"]:has([data-element-id="user-message"]) [data-element-id="chat-avatar-container"] {
       display: none;
     }
-  
+
     div:has(>.bg-blue-500) {
       display: flex;
       justify-content: flex-end;
@@ -962,14 +962,14 @@
     div > button:has(.user-avatar) {
       visibility: hidden;
     }
-  
+
     body {
       background: rgb(16,17,17) !important;
     }
     .response-block:hover {
       background: none !important;
     }
-  
+
     /* might need to separate these two */
     .response-block li,
     .response-block p
@@ -979,7 +979,7 @@
       padding-left: 2px;
       padding-right: 2px;
     }
-  
+
     .response-block li, .response-block li *
     .response-block p, .response-block p *
     {
@@ -992,7 +992,7 @@
       color: hotpink;
       transition: color 0s;
     }
-  
+
     .response-block li ul {
       margin-top: 0;
     }
@@ -1014,16 +1014,16 @@
     */
     Mine.quietQs(`a[href="https://custom.typingmind.com"]`);
     Mine.isi(`form[action="https://codepen.io/pen/define"] {display: none !important;}`);
-  
+
     // for voice calls support
     Mine.isi(`[data-element-id="response-block"] div:has(>audio):has(button), [data-element-id="response-block"] div:has(>[data-element-id="in-message-play-button"]) {display: none;}`);
-  
+
     Mine.isi(`
     [data-element-id="ai-characters-system-instruction-input"] {
       height: 300px;
     }
-  
-  
+
+
     /* voice recognition dialog */
     [data-element-id="pop-up-modal"]:has(option[value="en-AU"]) {
       right: 10px;
@@ -1031,15 +1031,15 @@
       position: absolute;
       zoom: 0.7;
     }
-  
+
     .enter-to-send {
       display: none;
     }
-  
+
     [data-headlessui-state] button {
       border-radius: 10px;
     }
-  
+
     .firstLookbackMessage:before {
       margin-bottom: 10px;
       content: "——— context lookback starts ———";
@@ -1053,8 +1053,8 @@
     .firstLookbackMessage.visible:before {
       opacity: 0.5;
     }
-  
-  
+
+
     /* pretty tables */
     table {
       padding: 2px;
@@ -1071,7 +1071,7 @@
     table tr td:first-child {
       background-color: rgba(0, 0, 0, 0.2);
     }
-  
+
     table tr:hover {
       background-color: rgba(0, 0, 0, 0.4) !important;
     }
@@ -1307,15 +1307,15 @@
             const rect = el.getBoundingClientRect();
             return rect.top >= 0 && rect.top < window.innerHeight;
           });
-        
+
           if (currentIndex === -1) currentIndex = 0;
-        
+
           if (direction === 'up') {
             currentIndex = (currentIndex - 1 + msgEles.length) % msgEles.length;
           } else {
             currentIndex = (currentIndex + 1) % msgEles.length;
           }
-        
+
           msgEles[currentIndex]?.scrollIntoView({behavior: 'smooth'});
         };
 
@@ -1394,9 +1394,9 @@
           // happens at least when u switch chats
           ta.addEventListener('keydown', async event => {
             if (!isModifierFree(event)) return;
-    
+
             if (event.key === 'Escape') return await stopAiResponse();
-    
+
             if (event.key === 'Enter') {
               if (getIsResponding()) {
                 await stopAiResponse();
@@ -1414,13 +1414,13 @@
       if (!onSpaUrlChangeCallbacks.length) {
         const originalPushState = history.pushState;
         const originalReplaceState = history.replaceState;
-      
+
         const handleUrlChangeCallbacks = () => onSpaUrlChangeCallbacks.forEach(onSpaUrlChangeCallback => onSpaUrlChangeCallback());
         history.pushState = function() {
           originalPushState.apply(this, arguments);
           handleUrlChangeCallbacks();
         };
-      
+
         history.replaceState = function() {
           originalReplaceState.apply(this, arguments);
           handleUrlChangeCallbacks();
@@ -1731,7 +1731,7 @@
     if (!isMobile) {
       installNotesV2();
     }
-    
+
     window.addEventListener('beforeunload', async e => {
       await stopAiResponse();  // if AI is typing, it will pause and get saved
     });
@@ -1775,7 +1775,7 @@
     <textarea class="mine_notes" placeholder="📝 Notes..." title="[M] Notepad"></textarea>
     `;
     document.body.append(myDiv);
-  
+
     const ta = myDiv.querySelector('.mine_notes');
 
     const LOCAL_STORAGE_KEY = 'mine_notes';
@@ -1799,7 +1799,7 @@
       }
     });
   };
-  
+
   const wipeChatHotkey = () => {
     // also tried pulling out the context button and storing that pointer on load (doesnt work when mac screen locked)
 
@@ -1822,23 +1822,23 @@
         const ta = await getTa();
         const oldValue = ta.value;
         Mine.updateReactTypableFormValue(ta, '');
-  
+
         wipeChatHotkey();
-  
+
         Mine.updateReactTypableFormValue(ta, oldValue);
       };
-  
+
       // works great but has some wierd unideal by typingmind where it asks for lisence
       // const SCRATCHPAD_CHAT_ID = 'i78A8Ws0wE';
       // if (window.location.hash === `#chat=${SCRATCHPAD_CHAT_ID}`) {
       //   await wipeChat();
       // }
-  
+
       const wipeQueryKey = 'mine_wipe';
       if (Mine.getQueryParam(wipeQueryKey) === 'true') {
         // document.body.style.opacity = 0.1;
         await wipeChat();
-  
+
         // await Mine.sleep(500);
         // prevent some wierd unideal by typingmind where it asks for lisence
         // const newUrl = new URL(window.location.href);
@@ -1882,7 +1882,7 @@
 
   const highlightElementText = (element, text) => {
     if (!element || !text) return null;
-  
+
     const createMark = () => {
       const mark = document.createElement('mark');
       mark.style.backgroundColor = 'mediumslateblue';
@@ -1890,25 +1890,25 @@
       mark.style.color = 'black';
       return mark;
     };
-  
+
     let foundMark = null;
-  
+
     const highlightTextInNode = (node) => {
       const nodeText = node.textContent;
       const index = nodeText.indexOf(text);  // Case-sensitive search
-      
+
       if (index >= 0) {
         // Check if the text is already wrapped in a mark
-        if (node.parentElement && node.parentElement.tagName === 'MARK' && 
+        if (node.parentElement && node.parentElement.tagName === 'MARK' &&
             node.parentElement.textContent === text) {
           foundMark = node.parentElement;
           return true;
         }
-  
+
         const range = document.createRange();
         range.setStart(node, index);
         range.setEnd(node, index + text.length);
-        
+
         const mark = createMark();
         range.surroundContents(mark);
         foundMark = mark;
@@ -1916,7 +1916,7 @@
       }
       return false;
     };
-  
+
     const walkNodes = (node) => {
       if (node.nodeType === Node.TEXT_NODE) {
         return highlightTextInNode(node);
@@ -1926,7 +1926,7 @@
           foundMark = node;
           return true;
         }
-  
+
         if (node.childNodes) {
           for (let i = 0; i < node.childNodes.length; i++) {
             if (walkNodes(node.childNodes[i])) {
@@ -1937,10 +1937,10 @@
       }
       return false;
     };
-  
+
     walkNodes(element);
     return foundMark;
-  };  
+  };
   const installQuotability = async () => {
     Mine.isi(`
 .mine_quote {
@@ -1959,7 +1959,7 @@
       const quoteBody = e.innerText.substring(1).trim();
       const targetMsg = allMessagesBeforeCurMsg.reverse().find(msg => msg.innerText.includes(quoteBody));
       if (!targetMsg) return;
-      
+
       const maybeHighlight = highlightElementText(targetMsg, quoteBody);
       (maybeHighlight ?? targetMsg).scrollIntoView({behavior: 'smooth'});
     });
@@ -2014,13 +2014,13 @@
     const changeFavicon = (iconUrl) => {
       // Remove existing favicons
       Array.from(Mine.qsaa("link[rel*='icon']")).forEach(el => el.remove());
-      
+
       // Create new favicon link
       const link = document.createElement('link');
       link.type = 'image/x-icon';
       link.rel = 'shortcut icon';
       link.href = iconUrl;
-      
+
       // Append to both head and body to maximize chances of success
       document.head.appendChild(link);
       document.body.appendChild(link.cloneNode());
@@ -2053,14 +2053,14 @@
         maxTimeBetweenTaps = 300,
         maxDistanceBetweenTaps = 20
       } = options;
-    
+
       let lastTapTime = 0;
       let lastTapX = 0;
       let lastTapY = 0;
       document.body.addEventListener('touchend', (event) => {
         const selEle = event.target.closest(qs);
         if (!selEle) return;
-    
+
         const touch = event.changedTouches[0];
         const currentTime = new Date().getTime();
         const currentX = touch.clientX;
@@ -2069,7 +2069,7 @@
         const timeBetweenTaps = currentTime - lastTapTime;
         const distanceBetweenTaps = Math.hypot(currentX - lastTapX, currentY - lastTapY);
 
-        const isDblTap = timeBetweenTaps > 0 && 
+        const isDblTap = timeBetweenTaps > 0 &&
                          timeBetweenTaps < maxTimeBetweenTaps &&
                          distanceBetweenTaps < maxDistanceBetweenTaps;
         if (isDblTap) {
@@ -2102,7 +2102,7 @@
       const qss = [
         `[data-element-id="upload-document-button"]`,
         `[data-element-id="voice-input-button"]`,
-  
+
         // display none causes dom shifts
         `.hide-when-print.sticky`,
         `#elements-in-action-buttons`,
@@ -2132,12 +2132,12 @@
         document.body.classList.add('fullscreen-active');
         setTimeout(() => document.body.classList.add('fullscreen-hide'), durationMs);
       }
-    
+
       isFullscreen = !isFullscreen;
     };
     bindOnSelectorDblTap('[data-element-id="chat-space-middle-part"]', (ele, ev) => {
       if (ev.target.closest('[data-element-id="user-message"]') || ev.target.closest('[data-element-id="ai-response"]')) return;
-    
+
       toggleFullscreen();
     });
     toggleFullscreen();
@@ -2149,13 +2149,13 @@
     // Remove existing Apple-specific meta tags
     const existingMetaTags = document.querySelectorAll('meta[name^="apple-"]');
     existingMetaTags.forEach(tag => tag.remove());
-  
+
     // Add new meta tags
     const metaTags = [
       { name: 'apple-mobile-web-app-capable', content: 'yes' },
       { name: 'apple-mobile-web-app-status-bar-style', content: 'black-translucent' }
     ];
-  
+
     metaTags.forEach(({ name, content }) => {
       const meta = document.createElement('meta');
       meta.name = name;
