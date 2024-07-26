@@ -2080,27 +2080,24 @@
 
     let isFullscreen = false;
     let unisi;
+    const qss = [
+      `.hide-when-print.sticky`,
+      `#elements-in-action-buttons`,
+      `[data-element-id="upload-document-button"]`,
+      `[data-element-id="voice-input-button"]`,
+    ];
     const fullscreenStyles = `
-      .hide-when-print.sticky,
-      #elements-in-action-buttons,
-      [data-element-id="upload-document-button"],
-      [data-element-id="voice-input-button"] {
-        opacity: 1;
-        transition: opacity 200ms ease-in-out;
-      }
-      .fullscreen-active .hide-when-print.sticky,
-      .fullscreen-active #elements-in-action-buttons,
-      .fullscreen-active [data-element-id="upload-document-button"],
-      .fullscreen-active [data-element-id="voice-input-button"] {
-        opacity: 0;
-        pointer-events: none;
-      }
-      .fullscreen-hide .hide-when-print.sticky,
-      .fullscreen-hide #elements-in-action-buttons,
-      .fullscreen-hide [data-element-id="upload-document-button"],
-      .fullscreen-hide [data-element-id="voice-input-button"] {
-        display: none !important;
-      }
+${qss.join(',\n')} {
+  opacity: 1;
+  transition: opacity 200ms ease-in-out;
+}
+${qss.map(qs => `.fullscreen-active ${qs}`).join(',\n')} {
+  opacity: 0;
+  pointer-events: none;
+}
+${qss.map(qs => `.fullscreen-hide ${qs}`).join(',\n')} {
+  display: none !important;
+}
     `;
     bindOnSelectorDblTap('[data-element-id="chat-space-middle-part"]', (ele, ev) => {
       if (ev.target.closest('[data-element-id="user-message"]') || ev.target.closest('[data-element-id="ai-response"]')) return;
