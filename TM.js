@@ -2083,6 +2083,7 @@
     bindOnSelectorDblTap('[data-element-id="chat-space-middle-part"]', (ele, ev) => {
       if (ev.target.closest('[data-element-id="user-message"]') || ev.target.closest('[data-element-id="ai-response"]')) return;
     
+      const durationMs = 200;
       const qss = [
         `[data-element-id="upload-document-button"]`,
         `[data-element-id="voice-input-button"]`,
@@ -2094,7 +2095,7 @@
       const fullscreenStyles = `
   ${qss.join(',\n')} {
     opacity: 1;
-    transition: opacity 200ms ease-in-out;
+    transition: opacity ${durationMs}ms ease-in-out;
   }
   ${qss.map(qs => `.fullscreen-active ${qs}`).join(',\n')} {
     opacity: 0;
@@ -2119,7 +2120,7 @@
         document.body.classList.add('fullscreen-active');
         setTimeout(() => {
           document.body.classList.add('fullscreen-hide');
-        }, 200);
+        }, durationMs);
       }
     
       isFullscreen = !isFullscreen;
