@@ -2029,13 +2029,11 @@
           hasNewMsg ? changeFavicon(favicon_badged) : null
         );
       } else {
-        // Tab regained focus
         if (checkInterval) {
           clearInterval(checkInterval);
           checkInterval = null;
         }
         changeFavicon(favicon_normal);
-        // Double-check to ensure favicon is reset
         setTimeout(() => changeFavicon(favicon_normal), 1000);
       }
     });
