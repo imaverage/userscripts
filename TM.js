@@ -2125,7 +2125,7 @@
 
       isFullscreen = !isFullscreen;
     };
-    bindOnSelectorDblTap('[data-element-id="chat-space-middle-part"]', (ele, ev) => {
+    bindOnSelectorDblTap('[data-element-id="chat-space-middle-part"],#elements-in-action-buttons', (ele, ev) => {
       if (ev.target.closest('[data-element-id="user-message"]') || ev.target.closest('[data-element-id="ai-response"]')) return;
 
       toggleFullscreen();
