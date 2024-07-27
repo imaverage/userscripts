@@ -1943,7 +1943,7 @@
       (maybeHighlight ?? targetMsg).scrollIntoView({behavior: 'smooth'});
     });
     // TODO: make this more performant. checks everything every time.
-    bindOnSelectorClick(`[data-element-id="send-button"]`, async () => {
+    bindOnSelectorClick(`[data-element-id="send-button"]`, async () => {  // todo: and on press enter?
       await Mine.sleep(100);  // TODO: could be tighter
       enrichAllMessagesIdempotently();
     });
