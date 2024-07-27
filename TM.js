@@ -1344,7 +1344,6 @@
           const removeTailFromString = (str, tail) => str.endsWith(tail) ? str.slice(0, -tail.length) : str;
           let argStatements = [];
           const argumentRunner = {
-            'e': async () => argStatements.push('elaborate'),
             'q': async () => argStatements.push('respond as concisely as possible'),
             'n': async () => argStatements.push('respond normally'),
             'v': async () => argStatements.push('elaborate'),
