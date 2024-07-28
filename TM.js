@@ -1822,7 +1822,7 @@ button[data-element-id="output-settings-button"] {
 <button id="mine-collapse-resp" class="mine-menu-btn">Collapse responses</button>
 `.trim();
     menu.appendChild(newDiv);
-    menu.qs('#mine-collapse-resp').addEventListener('click', () => {
+    menu.querySelector('#mine-collapse-resp').addEventListener('click', () => {
       console.log('hi');
     });
   });
