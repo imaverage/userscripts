@@ -21,7 +21,6 @@
   const mapEachNonEmptyLine = (blob, cb) => blob.split('\n').filter(l => !!l.trim()).map(cb).join('\n');
   const getAllChatMessages = () => Mine.qsaa('[data-element-id="ai-response"], [data-element-id="user-message"]');
   const getTa = async () => await Mine.waitForQs('#chat-input-textbox');
-
   const getSendButton = async () => await Mine.waitForQs(`[data-element-id="send-button"]`);
   const appendTaText = async (textToAppend, doSubmit) => {
     const ta = await getTa();
