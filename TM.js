@@ -2145,7 +2145,8 @@ body {
     const decodeBase64 = base64 => atob(base64);
     const userQuery = decodeBase64(record.query);
     const userContext = decodeBase64(record.context);
-    console.log(submitMessage(userQuery, userContext));
+    // check timestamp as well to determine if should use it
+    console.log(userQuery, userContext);
 
     // maybe autosubmit from context
     let msg = userQuery;
