@@ -1875,7 +1875,7 @@ body {
 }
 
 .mine_quote_src:hover {
-  color: black;
+  color: black !important;
 }
 .mine_quote_src {
   background: mediumslateblue;
