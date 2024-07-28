@@ -918,12 +918,12 @@ body {
   }
   if (!isMobile) {
     Mine.isi(`
-    [data-element-id="message-input"] .pt-2 {
-      padding-top: 0;
-    }
-    [data-element-id="chat-space-end-part"] {
-      padding-bottom: 5px;
-    }
+[data-element-id="message-input"] .pt-2 {
+  padding-top: 0;
+}
+[data-element-id="chat-space-end-part"] {
+  padding-bottom: 5px;
+}
 `);
     /*
     textarea.my_notes {
