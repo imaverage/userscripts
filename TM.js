@@ -1874,11 +1874,8 @@ body {
   color: gray;
 }
 
-.mine_quote_src:hover {
-  color: black !important;
-}
 .mine_quote_src {
-  background: mediumslateblue;
+  background: darkslategray;
   border-radius: 3px;
   color: black;
   cursor: pointer;
