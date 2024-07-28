@@ -2154,20 +2154,14 @@ body {
     const timeDifference = currentTime - recordCreationTime;
     const tenSecondsInMilliseconds = 10 * 1000;
     const isRecordNew = timeDifference <= tenSecondsInMilliseconds;
-    console.log(currentTime, recordCreationTime);
     if (isRecordNew) {
-      console.log(userQuery, userContext);
-  
       let msg = userQuery;
       if (userContext) {
-        msg += `\n\nUse the following context:\n\`\`\`\n${userContext}\n\`\`\``;
+        msg += `\n\nUse the following context:\n"""\n${userContext}\n"""`;
       }
 
-      console.log(1, msg);
       const ta = await getTa();
-      console.log(1.1);
       if (!ta.value) {
-        console.log(2);
         await appendTaText(msg, true);
       }
     }
