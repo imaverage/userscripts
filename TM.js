@@ -1815,7 +1815,6 @@ button[data-element-id="output-settings-button"] {
       newDiv.innerHTML = `
   <style>
   .mine-menu-btn {
-    scale: 1 !important;
     width: 100%;
     padding-bottom: 0.5rem;
   }
