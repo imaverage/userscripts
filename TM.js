@@ -911,7 +911,7 @@ body {
   if (isMobile) {
     Mine.isi(`
 [data-element-id="chat-space-end-part"] {
-  background: transparent !important;
+  background: rgba(0,0,0,0.9) !important;
   border-radius: 6px;
 }
 `);
