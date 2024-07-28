@@ -21,6 +21,50 @@
   const mapEachNonEmptyLine = (blob, cb) => blob.split('\n').filter(l => !!l.trim()).map(cb).join('\n');
   const getAllChatMessages = () => Mine.qsaa('[data-element-id="ai-response"], [data-element-id="user-message"]');
   const getTa = async () => await Mine.waitForQs('#chat-input-textbox');
+  const getUserDefinedKeyValueFromChatHistory = async secretKeyName => {
+    if (!secretKeyName) return null;
+
+    const dbName = 'keyval-store';
+    const storeName = 'keyval';
+
+    return new Promise((resolve, reject) => {
+      const request = indexedDB.open(dbName);
+      request.onerror = event => reject(`IndexedDB error: ${event.target.error}`);
+      request.onsuccess = event => {
+        const db = event.target.result;
+        const transaction = db.transaction([storeName], 'readonly');
+        const store = transaction.objectStore(storeName);
+        const cursorRequest = store.openCursor();
+
+        cursorRequest.onerror = event => reject(`Cursor error: ${event.target.error}`);
+        cursorRequest.onsuccess = event => {
+          const cursor = event.target.result;
+          if (cursor) {
+            const key = cursor.key;
+            const value = cursor.value;
+
+            if (key.startsWith('CHAT_') && Array.isArray(value.messages)) {
+              const passwordMessage = value.messages.find(msg =>
+                msg.role === 'user' &&
+                typeof msg.content === 'string' &&
+                msg.content.trim().match(new RegExp(`^${secretKeyName}=.+$`))
+              );
+
+              if (passwordMessage) {
+                const password = passwordMessage.content.trim().split('=')[1];
+                resolve(password);
+                return;
+              }
+            }
+
+            cursor.continue();
+          } else {
+            resolve(null);
+          }
+        };
+      };
+    });
+  };
 
   // TODO: do i need uninstallers?
   const globalSelectorClickEventHandlers = new Map();
@@ -376,52 +420,7 @@ body {
       });
     };
 
-    const getMemoryPluginPassword = async () => {
-      const dbName = 'keyval-store';
-      const storeName = 'keyval';
-
-      return new Promise((resolve, reject) => {
-        const request = indexedDB.open(dbName);
-
-        request.onerror = event => reject(`IndexedDB error: ${event.target.error}`);
-
-        request.onsuccess = event => {
-          const db = event.target.result;
-          const transaction = db.transaction([storeName], 'readonly');
-          const store = transaction.objectStore(storeName);
-          const cursorRequest = store.openCursor();
-
-          cursorRequest.onerror = event => reject(`Cursor error: ${event.target.error}`);
-
-          cursorRequest.onsuccess = event => {
-            const cursor = event.target.result;
-            if (cursor) {
-              const key = cursor.key;
-              const value = cursor.value;
-
-              if (key.startsWith('CHAT_') && Array.isArray(value.messages)) {
-                const passwordMessage = value.messages.find(msg =>
-                  msg.role === 'user' &&
-                  typeof msg.content === 'string' &&
-                  msg.content.trim().match(/^memoryPluginPassword=.+$/)
-                );
-
-                if (passwordMessage) {
-                  const password = passwordMessage.content.trim().split('=')[1];
-                  resolve(password);
-                  return;
-                }
-              }
-
-              cursor.continue();
-            } else {
-              resolve(null);
-            }
-          };
-        };
-      });
-    };
-    const memoryPluginPassword = await getMemoryPluginPassword();
+    const memoryPluginPassword = await getUserDefinedKeyValueFromChatHistory('memoryPluginPassword');
 
     // keep this constant between plugin and top window script
     const EncryptionLib = (() => {
