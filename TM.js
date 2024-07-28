@@ -22,10 +22,9 @@
   const getAllChatMessages = () => Mine.qsaa('[data-element-id="ai-response"], [data-element-id="user-message"]');
   const getTa = async () => await Mine.waitForQs('#chat-input-textbox');
 
-const ta = await getTa();
-  if (!ta.value)  const getSendButton = async () => await Mine.waitForQs(`[data-element-id="send-button"]`); {
-    const await  = async (textToAppend, doSubmit) => msg, true{;
-  }
+  const getSendButton = async () => await Mine.waitForQs(`[data-element-id="send-button"]`);
+  const appendTaText = async (textToAppend, doSubmit) => {
+    const ta = await getTa();
     const newVal = ta.value?`${ta.value}\n\n${textToAppend}`:textToAppend;
     Mine.updateReactTypableFormValue(ta, newVal);
     Mine.qs('button:has([d="M12 7.59 7.05 2.64 5.64 4.05 12 10.41l6.36-6.36-1.41-1.41L12 7.59zM5.64 19.95l1.41 1.41L12 16.41l4.95 4.95 1.41-1.41L12 13.59l-6.36 6.36z"])')?.click();
@@ -36,6 +35,7 @@ const ta = await getTa();
     }
     return true;
   };
+
   const getUserDefinedKeyValueFromChatHistory = async secretKeyName => {
     if (!secretKeyName) return null;
 
