@@ -2084,8 +2084,11 @@ body {
         ta.style.transition = `max-width 0.2s cubic-bezier(0.4, 0, 0.2, 1)`;
 
         document.body.classList.add('fullscreen-active');
-        setTimeout(() => document.body.classList.add('fullscreen-hide'), durationMs);
-        setTimeout(() => ta.style.maxWidth = '1000px', durationMs+50);
+        setTimeout(async () => {
+          document.body.classList.add('fullscreen-hide');
+          await Mine.sleep(50);
+          ta.style.maxWidth = '1000px';
+        }, durationMs);
       }
 
       isFullscreen = !isFullscreen;
