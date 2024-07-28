@@ -1807,25 +1807,28 @@ button[data-element-id="output-settings-button"] {
     await main();
   }
 
-  bindOnSelectorClick(`[data-element-id="config-buttons"]`, async () => {
-    const menu = await Mine.waitForQs(`#elements-in-action-buttons [id^="headlessui-menu-items-"]`);
-    
-    const newDiv = document.createElement('div');
-    newDiv.innerHTML = `
-<style>
-.mine-menu-btn {
-  scale: 1;
-  width: 100%;
-  padding-bottom: 7px;
-}
-</style>
-<button id="mine-collapse-resp" class="mine-menu-btn">Collapse responses</button>
-`.trim();
-    menu.appendChild(newDiv);
-    menu.querySelector('#mine-collapse-resp').addEventListener('click', () => {
-      console.log('hi');
+  const installCustomConfigItems = () => {
+    bindOnSelectorClick(`[data-element-id="config-buttons"]`, async () => {
+      const menu = await Mine.waitForQs(`#elements-in-action-buttons [id^="headlessui-menu-items-"]`);
+      
+      const newDiv = document.createElement('div');
+      newDiv.innerHTML = `
+  <style>
+  .mine-menu-btn {
+    scale: 1;
+    width: 100%;
+    padding-bottom: 0.5rem;
+  }
+  </style>
+  <button id="mine-collapse-resp" class="mine-menu-btn">Collapse responses</button>
+  `.trim();
+      menu.appendChild(newDiv);
+      menu.querySelector('#mine-collapse-resp').addEventListener('click', () => {
+        console.log('hi');
+      });
     });
-  });
+  };
+  installCustomConfigItems();
   
   bindOnSelectorClick(`[data-element-id="send-button"]`, () => {
     // allows for slow quote replied type convos
