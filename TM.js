@@ -1932,22 +1932,26 @@ body {
   color: gray;
 }
 `);
-    bindOnSelectorClick(`.mine_quote`, async e => {
-      const curMsg = e.closest('[data-element-id="user-message"]');
-      const allMessages = Mine.qsaa(`[data-element-id="ai-response"], [data-element-id="user-message"]`);
-      const allMessagesBeforeCurMsg = Array.from(allMessages).filter(msg => msg.compareDocumentPosition(curMsg) & Node.DOCUMENT_POSITION_FOLLOWING);
-      const quoteBody = e.innerText.substring(1).trim();
-      const targetMsg = allMessagesBeforeCurMsg.reverse().find(msg => msg.innerText.includes(quoteBody));
-      if (!targetMsg) return;
+    bindOnSelectorClick(`.mine_quote`, async e => highlightForQuoteEle(e, true));
 
-      const maybeHighlight = highlightElementText(targetMsg, quoteBody);
-      (maybeHighlight ?? targetMsg).scrollIntoView({behavior: 'smooth'});
-    });
     // TODO: make this more performant. checks everything every time.
     bindOnSelectorClick(`[data-element-id="send-button"]`, async () => {  // todo: and on press enter?
       await Mine.sleep(100);  // TODO: could be tighter
       enrichAllMessagesIdempotently();
     });
+  };
+  const highlightForQuoteEle = (e, scrollToSrc = false) => {
+    const curMsgEle = e.closest('[data-element-id="user-message"]');
+    const allMsgEles = Mine.qsaa(`[data-element-id="ai-response"], [data-element-id="user-message"]`);
+    const allMsgElesBeforeCurMsgEle = Array.from(allMsgEles).filter(msg => msg.compareDocumentPosition(curMsgEle) & Node.DOCUMENT_POSITION_FOLLOWING);
+    const quoteBody = e.innerText.substring(1).trim();
+    const targetMsg = allMsgElesBeforeCurMsgEle.reverse().find(msg => msg.innerText.includes(quoteBody));
+    if (!targetMsg) return;
+
+    const maybeHighlight = highlightElementText(targetMsg, quoteBody);
+    if (scrollToSrc) {
+      (maybeHighlight ?? targetMsg).scrollIntoView({behavior: 'smooth'});
+    }
   };
   const enrichAllMessagesIdempotently = async () => {
     const quotify = (element) => {
@@ -1962,6 +1966,7 @@ body {
       });
 
       element.innerHTML = processedLines.join('\n');
+      [...element.querySelectorAll('.mine_quote')].forEach(highlightForQuoteEle);
     };
     const tripleQuotify = (element) => {
       const lines = element.innerHTML.split('\n');
