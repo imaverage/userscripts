@@ -877,73 +877,8 @@ body {
       ].map(t => t.toLowerCase());
       pluginItems.filter(e => unwantedPluginNames.includes(e.innerText.toLowerCase().split('\n').pop())).forEach(e => e.style.display = 'none');
     }, {mustBeExactElement: true});
-    // Mine.attachToElementContinuously(
-    //   async () => await Mine.waitFor(() => Mine.qs('[data-element-id="current-chat-title"] button[id^="headlessui-menu-button-:"][aria-haspopup="menu"]:has(.text-blue-500)')?.parentElement, {recheckIntervalMs: 500, timeoutMs: Infinity}),
-    //   targetRootEle => {
-    //     Mine.addEventListenerForSubtreeAddOrRemove(
-    //       targetRootEle,
-    //       async () => {
-    //         const unwantedPluginNames = [
-    //           "Web Search",
-    //           "Perplexity Search",
-    //           "DALL-E 3",
-    //           "Simple Calculator",
-    //           "Stable Diffusion v2 Image",
-    //           "Stable Diffusion v3 Image",
-    //           "Image Search",
-    //           "Web Page Reader",
-    //           "Market News",
-    //           "Azure AI Search",
-    //           "Render Chart",
-    //           "Render HTML",
-    //         ].map(t => t.toLowerCase());
-    //         const pluginItems = [...targetRootEle.querySelectorAll('[role="menuitem"]')];
-    //         pluginItems.filter(e => unwantedPluginNames.includes(e.innerText.toLowerCase().split('\n').pop())).forEach(e => e.style.display = 'none');
-    //     });
-    //   },
-    // );
   };
   installPluginNoiseHider();
-
-  // const installCustomToolButtons = async () => {
-  //   const findLastElementAboveViewport = (elements) => {
-  //     const viewportTop = window.scrollY || window.pageYOffset;
-
-  //     for (let i = elements.length - 1; i >= 0; i--) {
-  //       const elementBottom = elements[i].getBoundingClientRect().bottom;
-  //       if (elementBottom <= 0) return i;
-  //     }
-  //     return -1;
-  //   };
-  //   Mine.attachToElementContinuously(
-  //     async () => await Mine.waitFor(async () => {
-  //       const t = await Mine.waitForQs(`#elements-in-action-buttons`);
-  //       if (!t) return null;
-  //       return t.children.length?t:null;
-  //     }, {timeoutMs: Infinity, recheckIntervalMs: 1000}),  // warn: possible performance hit like when scrolling
-  //     async targetEle => {
-  //       const firstBtn = [...targetEle.querySelectorAll('button')].find(btn => getComputedStyle(btn).display !== 'none');
-  //       const b = document.createElement('button');
-  //       b.innerHTML = '↑';
-  //       b.className = `inline-flex items-center justify-center rounded-md px-3 py-2 shadow-md bg-blue-600 text-white hover:bg-blue-500 transition-all active:bg-blue-600 group font-semibold text-xs hover:scale-105 border border-transparent`;
-  //       b.style.verticalAlign = 'top';
-  //       b.style.marginBottom = '4px';
-  //       b.style.opacity = '0';
-  //       b.style.transition = 'opacity 0.1s ease-in-out';
-  //       b.addEventListener('click', async () => {
-  //         const eles = Mine.qsaa('[data-element-id="user-message"]');
-  //         let tei = findLastElementAboveViewport(eles);
-  //         if (tei === -1) tei = eles.length-1;  // cycle
-  //         if (tei >= 0) {
-  //           eles[tei].scrollIntoView({behavior: 'smooth'});
-  //         }
-  //       });
-  //       firstBtn.before(b);
-  //       setTimeout(() => b.style.opacity = '1', 50);
-  //     },
-  //   );
-  // };
-  // if (isMobile) installCustomToolButtons();  // attachment is not reliable
 
 
 
@@ -1359,6 +1294,7 @@ button[data-element-id="output-settings-button"] {
         (await getSendButton()).click();
       };
       if (isMobile) {
+        // TODO: make these use the bindonselector thing
         await Mine.attachToElementContinuously(
           async () => await Mine.waitForQs('[data-element-id="send-button"]', {recheckIntervalMs: 1000, timeoutMs: Infinity}),
           async b => {
