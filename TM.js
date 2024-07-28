@@ -912,7 +912,7 @@ body {
     Mine.isi(`
 [data-element-id="chat-space-end-part"] {
   background: transparent !important;
-  border-radius: 10px;
+  border-radius: 6px;
 }
 `);
   }
