@@ -1941,6 +1941,7 @@ body {
     });
   };
   installQuotability();
+  setTimeout(enrichAllMessagesIdempotently, 1000);  // for initial load
 
   const installFavico = () => {
     const favicon_normal = 'https://i.ibb.co/hLZVQdK/image-15-1.png';
