@@ -1807,7 +1807,7 @@ button[data-element-id="output-settings-button"] {
     await main();
   }
 
-  const installCustomConfigItems = () => {
+  const installCustomConfigItems = async () => {
     bindOnSelectorClick(`[data-element-id="config-buttons"]`, async () => {
       const menu = await Mine.waitForQs(`#elements-in-action-buttons [id^="headlessui-menu-items-"]`);
       
@@ -1999,7 +1999,7 @@ button[data-element-id="output-settings-button"] {
   installQuotability();
   setTimeout(enrichAllMessagesIdempotently, 1000);  // for initial load
 
-  const installFavico = () => {
+  const installFavico = async () => {
     const favicon_normal = 'https://i.ibb.co/hLZVQdK/image-15-1.png';
     const favicon_badged = 'https://i.ibb.co/XJnJv5p/image-18.png';
     const changeFavicon = (iconUrl) => {
@@ -2158,31 +2158,31 @@ button[data-element-id="output-settings-button"] {
   if (isMobile) installToggleHideStuffOnDblTap();
 
   // TODO: doesnt seem to work
-  const installIPhoneStatusBarStyle = () => {
-    // Remove existing Apple-specific meta tags
-    const existingMetaTags = Mine.qsaa('meta[name^="apple-"]');
-    existingMetaTags.forEach(tag => tag.remove());
+  // const installIPhoneStatusBarStyle = () => {
+  //   // Remove existing Apple-specific meta tags
+  //   const existingMetaTags = Mine.qsaa('meta[name^="apple-"]');
+  //   existingMetaTags.forEach(tag => tag.remove());
 
-    // Add new meta tags
-    const metaTags = [
-      { name: 'apple-mobile-web-app-capable', content: 'yes' },
-      { name: 'apple-mobile-web-app-status-bar-style', content: 'black-translucent' }
-    ];
+  //   // Add new meta tags
+  //   const metaTags = [
+  //     { name: 'apple-mobile-web-app-capable', content: 'yes' },
+  //     { name: 'apple-mobile-web-app-status-bar-style', content: 'black-translucent' }
+  //   ];
 
-    metaTags.forEach(({ name, content }) => {
-      const meta = document.createElement('meta');
-      meta.name = name;
-      meta.content = content;
-      document.head.appendChild(meta);
-    });
+  //   metaTags.forEach(({ name, content }) => {
+  //     const meta = document.createElement('meta');
+  //     meta.name = name;
+  //     meta.content = content;
+  //     document.head.appendChild(meta);
+  //   });
 
-    // Re-apply on visibility change
-    document.addEventListener('visibilitychange', () => {
-      if (!document.hidden) {
-        const statusBarMeta = document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]');
-        if (statusBarMeta) statusBarMeta.content = 'black-translucent';
-      }
-    });
-  };
-  if (isMobile) installIPhoneStatusBarStyle();
+  //   // Re-apply on visibility change
+  //   document.addEventListener('visibilitychange', () => {
+  //     if (!document.hidden) {
+  //       const statusBarMeta = document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]');
+  //       if (statusBarMeta) statusBarMeta.content = 'black-translucent';
+  //     }
+  //   });
+  // };
+  // if (isMobile) installIPhoneStatusBarStyle();
 })();
