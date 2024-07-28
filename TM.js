@@ -1812,6 +1812,7 @@ button[data-element-id="output-settings-button"] {
       const menu = await Mine.waitForQs(`#elements-in-action-buttons [id^="headlessui-menu-items-"]`);
       
       const newDiv = document.createElement('div');
+      newDiv.style = 'border-top: 1px solid rgba(255,255,255,0.15);padding-top: 10px;';
       newDiv.innerHTML = `
   <style>
   .mine-menu-btn {
@@ -1824,6 +1825,7 @@ button[data-element-id="output-settings-button"] {
       menu.appendChild(newDiv);
       menu.querySelector('#mine-collapse-resp').addEventListener('click', () => {
         console.log('hi');
+        Mine.qs('[data-element-id="config-buttons"]').click();
       });
     });
   };
