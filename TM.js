@@ -1240,9 +1240,7 @@ body {
       // document.body.style.setProperty('background-color', 'rgb(16,17,17)', 'important');
       // await closeSide();
     };
-    if (!isMobile) {
-      fixDesktopUx().then();
-    }
+    if (!isMobile) fixDesktopUx().then();
 
     const isModifierFree = ev => !ev.altKey && !ev.ctrlKey && !ev.metaKey && !ev.shiftKey;
     const fixScrollingAndHotkeys = async () => {
@@ -1686,9 +1684,7 @@ body {
       }
     });
 
-    if (!isMobile) {
-      installNotesV2();
-    }
+    if (!isMobile) installNotesV2();
 
     window.addEventListener('beforeunload', async e => {
       await stopAiResponse();  // if AI is typing, it will pause and get saved
