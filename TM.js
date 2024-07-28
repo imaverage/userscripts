@@ -1968,7 +1968,7 @@ body {
       });
 
       element.innerHTML = processedLines.join('\n');
-      [...element.querySelectorAll('.${MINE_QUOTE_CLASSNAME}')].forEach(e => highlightForQuoteEle(e));
+      [...element.querySelectorAll(`.${MINE_QUOTE_CLASSNAME}`)].forEach(e => highlightForQuoteEle(e));
     };
     const tripleQuotify = (element) => {
       const lines = element.innerHTML.split('\n');
