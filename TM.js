@@ -1766,6 +1766,7 @@ button[data-element-id="output-settings-button"] {
   }
 
   const installCustomConfigItems = async () => {
+    let uncollapseAiResponsesFn;
     bindOnSelectorClick(`[data-element-id="config-buttons"]`, async () => {
       const menu = await Mine.waitForQs(`#elements-in-action-buttons [id^="headlessui-menu-items-"]`);
       const myMenuWrapperId = `mine-config-addons`;
@@ -1781,10 +1782,16 @@ button[data-element-id="output-settings-button"] {
     padding-bottom: 0.75rem;
   }
   </style>
-  <button id="mine-collapse-resp" class="mine-menu-btn">Collapse responses</button>
+  <button id="mine-collapse-resp" class="mine-menu-btn">${uncollapseAiResponsesFn?'Uncollapse':'Collapse'} responses</button>
   `.trim();
       menu.appendChild(newDiv);
       menu.querySelector('#mine-collapse-resp').addEventListener('click', () => {
+        if (uncollapseAiResponsesFn) {
+          uncollapseAiResponsesFn();
+          uncollapseAiResponsesFn = null;
+        } else {
+          uncollapseAiResponsesFn = Mine.isi(`[data-element-id="ai-response"] {max-height: 112px;overflow: scroll;}`);
+        }
         Mine.qs('[data-element-id="config-buttons"]').click();
       });
     });
