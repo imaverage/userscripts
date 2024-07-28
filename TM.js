@@ -21,6 +21,21 @@
   const mapEachNonEmptyLine = (blob, cb) => blob.split('\n').filter(l => !!l.trim()).map(cb).join('\n');
   const getAllChatMessages = () => Mine.qsaa('[data-element-id="ai-response"], [data-element-id="user-message"]');
   const getTa = async () => await Mine.waitForQs('#chat-input-textbox');
+
+const ta = await getTa();
+  if (!ta.value)  const getSendButton = async () => await Mine.waitForQs(`[data-element-id="send-button"]`); {
+    const await  = async (textToAppend, doSubmit) => msg, true{;
+  }
+    const newVal = ta.value?`${ta.value}\n\n${textToAppend}`:textToAppend;
+    Mine.updateReactTypableFormValue(ta, newVal);
+    Mine.qs('button:has([d="M12 7.59 7.05 2.64 5.64 4.05 12 10.41l6.36-6.36-1.41-1.41L12 7.59zM5.64 19.95l1.41 1.41L12 16.41l4.95 4.95 1.41-1.41L12 13.59l-6.36 6.36z"])')?.click();
+    ta.blur();  // seems to focus if its the first action you take after loading
+    ta.scrollTo({top: ta.scrollHeight, behavior: 'smooth'});
+    if (doSubmit) {
+      (await getSendButton()).click();
+    }
+    return true;
+  };
   const getUserDefinedKeyValueFromChatHistory = async secretKeyName => {
     if (!secretKeyName) return null;
 
@@ -525,24 +540,10 @@ body {
   installMemoryPluginV1();
 
   const installSelectionPopovers = async () => {
-    const getSendButton = async () => await Mine.waitForQs(`[data-element-id="send-button"]`);
     const getQuoteResponseMerge = (quote, response) => {
       const quoteCured = mapEachNonEmptyLine(quote.trim(), l => `> ${l}`);
       return `${quoteCured}\n${response}`;
     };
-    const appendTaText = async (textToAppend, doSubmit) => {
-      const ta = await getTa();
-      const newVal = ta.value?`${ta.value}\n\n${textToAppend}`:textToAppend;
-      Mine.updateReactTypableFormValue(ta, newVal);
-      Mine.qs('button:has([d="M12 7.59 7.05 2.64 5.64 4.05 12 10.41l6.36-6.36-1.41-1.41L12 7.59zM5.64 19.95l1.41 1.41L12 16.41l4.95 4.95 1.41-1.41L12 13.59l-6.36 6.36z"])')?.click();
-      ta.blur();  // seems to focus if its the first action you take after loading
-      ta.scrollTo({top: ta.scrollHeight, behavior: 'smooth'});
-      if (doSubmit) {
-        (await getSendButton()).click();
-      }
-      return true;
-    };
-
     const quoteReplyWith = text => async ({selectedText, isLongPressed}) => {
       const quotedResp = getQuoteResponseMerge(selectedText, text);
       return await appendTaText(quotedResp, isLongPressed);
@@ -1298,7 +1299,7 @@ body {
           const qModified = removeTailFromString(q, ' -'+maybeArg) + maybeArgTail;
           Mine.updateReactTypableFormValue(ta, qModified);
         }
-        Mine.qs(`[data-element-id="send-button"]`).click();
+        (await getSendButton()).click();
       };
       if (isMobile) {
         await Mine.attachToElementContinuously(
@@ -1514,7 +1515,7 @@ body {
         dialogButtonEles.find(e => e.innerText === 'Finish').click();
         const ta = await getTa();
         await Mine.waitFor(() => ta.value.trim().length);
-        (await Mine.waitForQs(`[data-element-id="send-button"]`)).click();
+        (await getSendButton()).click();
       }
       new TabKeyHandler(startListening, stopListening);  // recognition needs time to process from time u see the preview text
     };
@@ -1536,7 +1537,7 @@ body {
     if (mine_query) {
       const ta = await getTa();
       Mine.updateReactTypableFormValue(ta, mine_query);
-      Mine.qs(`[data-element-id="send-button"]`).click();
+      (await getSendButton()).click();
     }
 
     const createWorkerExecutor = () => {
@@ -2131,30 +2132,42 @@ body {
 
 
   const installRemoteChatStarter = async () => {
-    const undim = Mine.dim(document.body);
     const jsonBinBinId = await getUserDefinedKeyValueFromChatHistory('remoteChatJsonBinBinId');
     const jsonBinXMasterKey = await getUserDefinedKeyValueFromChatHistory('remoteChatJsonBinXMasterKey');
     if (!jsonBinBinId || !jsonBinXMasterKey) return null;
-    const record = await fetch(`https://api.jsonbin.io/v3/b/${jsonBinBinId}`, {
+
+    const response = await fetch(`https://api.jsonbin.io/v3/b/${jsonBinBinId}`, {
       headers: {
         'Content-Type': 'application/json',
         'X-MASTER-KEY': jsonBinXMasterKey,
       },
-    }).then(r => r.json()).then(d => d['record']);
-
+    }).then(r => r.json());
+  
+    const record = response.record;
+    const metadata = response.metadata;
+  
     const decodeBase64 = base64 => atob(base64);
     const userQuery = decodeBase64(record.query);
     const userContext = decodeBase64(record.context);
-    // check timestamp as well to determine if should use it
-    console.log(userQuery, userContext);
+  
+    const currentTime = Date.now();
+    const recordCreationTime = new Date(metadata.createdAt).getTime();
+    const timeDifference = currentTime - recordCreationTime;
+    const tenSecondsInMilliseconds = 10 * 1000;
+    const isRecordNew = timeDifference <= tenSecondsInMilliseconds;
+    if (isRecordNew) {
+      console.log(userQuery, userContext);
+  
+      let msg = userQuery;
+      if (userContext) {
+        msg += `\n\nUse the following context:\n\`\`\`\n${userContext}\n\`\`\``;
+      }
 
-    // maybe autosubmit from context
-    let msg = userQuery;
-    if (userContext) {
-      msg += `\n\nUse the following context:\n\`\`\`\n${userContext}\n\`\`\``;
+      const ta = await getTa();
+      if (!ta.value) {
+        await appendTaText(msg, true);
+      }
     }
-
-    undim();
-  };
+  };  
   await installRemoteChatStarter();
 })();
