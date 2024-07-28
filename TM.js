@@ -1816,7 +1816,7 @@ button[data-element-id="output-settings-button"] {
   <style>
   .mine-menu-btn {
     width: 100%;
-    padding-bottom: 0.5rem;
+    padding-bottom: 0.75rem;
   }
   </style>
   <button id="mine-collapse-resp" class="mine-menu-btn">Collapse responses</button>
