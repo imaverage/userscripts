@@ -1997,14 +1997,15 @@ body {
     const bindOnSelectorDblTap = (qs, cb, options = {}) => {
       const {
         maxTimeBetweenTaps = 300,
-        maxDistanceBetweenTaps = 20
+        maxDistanceBetweenTaps = 20,
+        mustBeExactElement = false,
       } = options;
 
       let lastTapTime = 0;
       let lastTapX = 0;
       let lastTapY = 0;
       document.body.addEventListener('touchend', (event) => {
-        const selEle = event.target.closest(qs);
+        const selEle = mustBeExactElement ? event.target.matches(qs) : event.target.closest(qs);
         if (!selEle) return;
 
         const touch = event.changedTouches[0];
@@ -2090,8 +2091,9 @@ body {
 
       isFullscreen = !isFullscreen;
     };
+    bindOnSelectorDblTap('body', toggleFullscreen, {mustBeExactElement: true});
     bindOnSelectorDblTap('[data-element-id="chat-space-middle-part"],div:has(>[data-element-id="chat-space-end-part"])', (ele, ev) => {
-      if (ev.target.closest('[data-element-id="user-message"]') || ev.target.closest('[data-element-id="ai-response"]')) return;
+        if (ev.target.closest('[data-element-id="user-message"]') || ev.target.closest('[data-element-id="ai-response"]')) return;
 
       toggleFullscreen();
     });
