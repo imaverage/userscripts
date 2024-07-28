@@ -20,6 +20,7 @@
   };
   const mapEachNonEmptyLine = (blob, cb) => blob.split('\n').filter(l => !!l.trim()).map(cb).join('\n');
   const getAllChatMessages = () => Mine.qsaa('[data-element-id="ai-response"], [data-element-id="user-message"]');
+  const getTa = async () => await Mine.waitForQs('#chat-input-textbox');
 
   // TODO: do i need uninstallers?
   const globalSelectorClickEventHandlers = new Map();
@@ -525,7 +526,6 @@ body {
   installMemoryPluginV1();
 
   const installSelectionPopovers = async () => {
-    const getTa = async () => await Mine.waitForQs('#chat-input-textbox');
     const getSendButton = async () => await Mine.waitForQs(`[data-element-id="send-button"]`);
     const getQuoteResponseMerge = (quote, response) => {
       const quoteCured = mapEachNonEmptyLine(quote.trim(), l => `> ${l}`);
@@ -1021,7 +1021,6 @@ body {
 
   const getIsResponding = () => !!Mine.qs(`[data-element-id="response-block"]:not(:has([id^="message-timestamp-"]))`);
   const getSidebarToggleEle = async () => await Mine.waitFor(() => Mine.qsaa('button').find(e => e.innerText === 'Open sidebar'));
-  const getTa = async () => await Mine.waitForQs('#chat-input-textbox');
   const stopAiResponse = async () => {
     const _ = async () => {
       const stopButton = await Mine.waitFor(getStopButton);
@@ -2044,7 +2043,8 @@ body {
 
     let isFullscreen = false;
     let unisi;
-    const toggleFullscreen = () => {
+    let normalTaWidth;
+    const toggleFullscreen = async () => {
       const durationMs = 200;
       const qss = [
         `[data-element-id="upload-document-button"]`,
@@ -2072,12 +2072,20 @@ body {
       }
 
       if (isFullscreen) {  // Exit fullscreen
+        ta.style.maxWidth = normalTaWidth;
+        await Mine.sleep(200);
         document.body.classList.remove('fullscreen-hide');
         document.body.offsetHeight;
         document.body.classList.remove('fullscreen-active');
       } else {  // Enter fullscreen
+        const ta = await getTa();
+        normalTaWidth = getComputedStyle(ta).width;
+        ta.style.maxWidth = normalTaWidth;
+        ta.style.transition = `max-width 0.2s ease`;
+
         document.body.classList.add('fullscreen-active');
         setTimeout(() => document.body.classList.add('fullscreen-hide'), durationMs);
+        setTimeout(() => ta.style.maxWidth = '1000px', durationMs+50);
       }
 
       isFullscreen = !isFullscreen;
