@@ -2081,7 +2081,7 @@ body {
       } else {  // Enter fullscreen
         normalTaWidth = getComputedStyle(ta).width;
         ta.style.maxWidth = normalTaWidth;
-        ta.style.transition = `max-width 0.2s cubic-bezier(0.4, 0, 0.2, 1)`;
+        ta.style.transition = `max-width 0.2s ease-out`;
 
         document.body.classList.add('fullscreen-active');
         setTimeout(() => document.body.classList.add('fullscreen-hide'), durationMs);
