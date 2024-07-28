@@ -247,7 +247,7 @@ body {
       const contextSize = Number(await getContextSize());
       if (contextSize <= msgElesRev.length) {
         const contextLookbackTailMsg = msgElesRev[contextSize-1];
-        const targetMsgEle = contextLookbackTailMsg.closest('[data-element-id="response-block"]')?.parentElement;
+        const targetMsgEle = contextLookbackTailMsg?.closest('[data-element-id="response-block"]').parentElement;
         if (targetMsgEle) {
           targetMsgEle.classList.add('firstLookbackMessage');
           targetMsgEle.classList.add('visible');
