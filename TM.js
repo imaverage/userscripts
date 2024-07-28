@@ -2150,7 +2150,7 @@ body {
     const userContext = decodeBase64(record.context);
   
     const currentTime = Date.now();
-    const recordCreationTime = new Date(metadata.createdAt).getTime();
+    const recordCreationTime = new Date(metadata.createdDate).getTime();
     const timeDifference = currentTime - recordCreationTime;
     const tenSecondsInMilliseconds = 10 * 1000;
     const isRecordNew = timeDifference <= tenSecondsInMilliseconds;
