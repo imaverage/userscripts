@@ -913,6 +913,8 @@ body {
 [data-element-id="chat-space-end-part"] {
   background: rgba(0,0,0,0.9) !important;
   border-radius: 6px;
+  position: fixed;
+  bottom: 0px;
 }
 `);
   }
