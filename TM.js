@@ -1785,7 +1785,6 @@ button[data-element-id="output-settings-button"] {
   `.trim();
       menu.appendChild(newDiv);
       menu.querySelector('#mine-collapse-resp').addEventListener('click', () => {
-        console.log('hi');
         Mine.qs('[data-element-id="config-buttons"]').click();
       });
     });
