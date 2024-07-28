@@ -122,6 +122,45 @@
 
 
   // main
+  const installRemoteChatStarter = async () => {
+    const jsonBinBinId = await getUserDefinedKeyValueFromChatHistory('remoteChatJsonBinBinId');
+    const jsonBinXMasterKey = await getUserDefinedKeyValueFromChatHistory('remoteChatJsonBinXMasterKey');
+    if (!jsonBinBinId || !jsonBinXMasterKey) return null;
+
+    const response = await fetch(`https://api.jsonbin.io/v3/b/${jsonBinBinId}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'X-MASTER-KEY': jsonBinXMasterKey,
+      },
+    }).then(r => r.json());
+  
+    const record = response.record;
+    const metadata = response.metadata;
+  
+    const decodeBase64 = base64 => atob(base64);
+    const userQuery = decodeBase64(record.query);
+    const userContext = decodeBase64(record.context);
+  
+    const currentTime = Date.now();
+    const recordCreationTime = new Date(record.createdDate).getTime();
+    const timeDifference = currentTime - recordCreationTime;
+    const tenSecondsInMilliseconds = 10 * 1000;
+    const isRecordNew = timeDifference <= tenSecondsInMilliseconds;
+    if (!isRecordNew) return;
+
+    let msg = userQuery;
+    if (userContext) {
+      msg += `\n\nUse the following context:\n"""\n${userContext}\n"""`;
+    }
+
+    const ta = await getTa();
+    if (!ta.value) {
+      await appendTaText(msg, true);
+    }
+  };  
+  if (!isMobile) await installRemoteChatStarter();
+
+
   Mine.quietQs(`[data-element-id="pinned-characters-container"]`);
   Mine.isi(`
 /* context limit reached button is in here */
@@ -2128,43 +2167,4 @@ body {
     });
   };
   if (isMobile) installIPhoneStatusBarStyle();
-
-
-  const installRemoteChatStarter = async () => {
-    const jsonBinBinId = await getUserDefinedKeyValueFromChatHistory('remoteChatJsonBinBinId');
-    const jsonBinXMasterKey = await getUserDefinedKeyValueFromChatHistory('remoteChatJsonBinXMasterKey');
-    if (!jsonBinBinId || !jsonBinXMasterKey) return null;
-
-    const response = await fetch(`https://api.jsonbin.io/v3/b/${jsonBinBinId}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        'X-MASTER-KEY': jsonBinXMasterKey,
-      },
-    }).then(r => r.json());
-  
-    const record = response.record;
-    const metadata = response.metadata;
-  
-    const decodeBase64 = base64 => atob(base64);
-    const userQuery = decodeBase64(record.query);
-    const userContext = decodeBase64(record.context);
-  
-    const currentTime = Date.now();
-    const recordCreationTime = new Date(record.createdDate).getTime();
-    const timeDifference = currentTime - recordCreationTime;
-    const tenSecondsInMilliseconds = 10 * 1000;
-    const isRecordNew = timeDifference <= tenSecondsInMilliseconds;
-    if (!isRecordNew) return;
-
-    let msg = userQuery;
-    if (userContext) {
-      msg += `\n\nUse the following context:\n"""\n${userContext}\n"""`;
-    }
-
-    const ta = await getTa();
-    if (!ta.value) {
-      await appendTaText(msg, true);
-    }
-  };  
-  if (!isMobile) await installRemoteChatStarter();
 })();
