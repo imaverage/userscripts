@@ -2103,7 +2103,7 @@ body {
   // TODO: doesnt seem to work
   const installIPhoneStatusBarStyle = () => {
     // Remove existing Apple-specific meta tags
-    const existingMetaTags = document.querySelectorAll('meta[name^="apple-"]');
+    const existingMetaTags = Mine.qsaa('meta[name^="apple-"]');
     existingMetaTags.forEach(tag => tag.remove());
 
     // Add new meta tags
