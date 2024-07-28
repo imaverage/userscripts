@@ -2071,6 +2071,7 @@ body {
         unisi = Mine.isi(fullscreenStyles);
       }
 
+      const ta = await getTa();
       if (isFullscreen) {  // Exit fullscreen
         ta.style.maxWidth = normalTaWidth;
         await Mine.sleep(200);
@@ -2078,7 +2079,6 @@ body {
         document.body.offsetHeight;
         document.body.classList.remove('fullscreen-active');
       } else {  // Enter fullscreen
-        const ta = await getTa();
         normalTaWidth = getComputedStyle(ta).width;
         ta.style.maxWidth = normalTaWidth;
         ta.style.transition = `max-width 0.2s ease`;
