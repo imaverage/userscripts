@@ -1533,12 +1533,12 @@ body {
       });
     }
 
-    const mine_query = Mine.getQueryParam('mine_query');
-    if (mine_query) {
-      const ta = await getTa();
-      Mine.updateReactTypableFormValue(ta, mine_query);
-      (await getSendButton()).click();
-    }
+    // const mine_query = Mine.getQueryParam('mine_query');
+    // if (mine_query) {
+    //   const ta = await getTa();
+    //   Mine.updateReactTypableFormValue(ta, mine_query);
+    //   (await getSendButton()).click();
+    // }
 
     const createWorkerExecutor = () => {
       const workerScript = `
