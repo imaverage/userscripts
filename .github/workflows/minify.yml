@@ -17,7 +17,7 @@ jobs:
     - name: Install dependencies
       run: npm install terser -g
     - name: Minify
-      run: terser TM.js -c passes=2 -m --ecma 2020 -o TM.auto.min.js
+      run: terser TM.js -c passes=3,pure_getters -m --ecma 6 -o TM.auto.min.js
     - name: Commit minified file
       run: |
         git config --local user.email "action@github.com"
