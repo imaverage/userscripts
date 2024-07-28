@@ -1768,10 +1768,11 @@ button[data-element-id="output-settings-button"] {
   const installCustomConfigItems = async () => {
     bindOnSelectorClick(`[data-element-id="config-buttons"]`, async () => {
       const menu = await Mine.waitForQs(`#elements-in-action-buttons [id^="headlessui-menu-items-"]`);
-      if (menu.querySelector('#mine-config-addons')) return;
+      const myMenuWrapperId = `mine-config-addons`;
+      if (menu.querySelector(`#${myMenuWrapperId}`)) return;
       
       const newDiv = document.createElement('div');
-      newDiv.id = 'mine-config-addons';
+      newDiv.id = myMenuWrapperId;
       newDiv.style = 'border-top: 1px solid rgba(255,255,255,0.15);padding-top: 10px;';
       newDiv.innerHTML = `
   <style>
