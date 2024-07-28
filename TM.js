@@ -2154,17 +2154,17 @@ body {
     const timeDifference = currentTime - recordCreationTime;
     const tenSecondsInMilliseconds = 10 * 1000;
     const isRecordNew = timeDifference <= tenSecondsInMilliseconds;
-    if (isRecordNew) {
-      let msg = userQuery;
-      if (userContext) {
-        msg += `\n\nUse the following context:\n"""\n${userContext}\n"""`;
-      }
+    if (!isRecordNew) return;
 
-      const ta = await getTa();
-      if (!ta.value) {
-        await appendTaText(msg, true);
-      }
+    let msg = userQuery;
+    if (userContext) {
+      msg += `\n\nUse the following context:\n"""\n${userContext}\n"""`;
+    }
+
+    const ta = await getTa();
+    if (!ta.value) {
+      await appendTaText(msg, true);
     }
   };  
-  await installRemoteChatStarter();
+  if (!isMobile) await installRemoteChatStarter();
 })();
