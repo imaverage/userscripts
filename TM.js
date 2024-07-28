@@ -2081,14 +2081,11 @@ body {
       } else {  // Enter fullscreen
         normalTaWidth = getComputedStyle(ta).width;
         ta.style.maxWidth = normalTaWidth;
-        ta.style.transition = `max-width 0.2s ease-out`;
+        ta.style.transition = `max-width 0.2s cubic-bezier(0.4, 0, 0.2, 1)`;
 
         document.body.classList.add('fullscreen-active');
-        setTimeout(async () => {
-          document.body.classList.add('fullscreen-hide');
-          await Mine.sleep(50);
-          ta.style.maxWidth = '1000px';
-        }, durationMs);
+        setTimeout(() => document.body.classList.add('fullscreen-hide'), durationMs);
+        setTimeout(() => ta.style.maxWidth = '1000px', durationMs+50);
       }
 
       isFullscreen = !isFullscreen;
