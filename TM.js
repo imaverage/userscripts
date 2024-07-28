@@ -168,7 +168,7 @@
   display: none;
 }
 
-[id="elements-in-action-buttons"] button {
+[id="elements-in-action-buttons"] > button, [data-element-id="config-buttons"] {
   scale: 0.8;
 }
 [id="elements-in-action-buttons"] {
@@ -1815,7 +1815,7 @@ button[data-element-id="output-settings-button"] {
       newDiv.innerHTML = `
   <style>
   .mine-menu-btn {
-    scale: 1;
+    scale: 1 !important;
     width: 100%;
     padding-bottom: 0.5rem;
   }
