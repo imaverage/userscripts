@@ -2154,6 +2154,7 @@ body {
     const timeDifference = currentTime - recordCreationTime;
     const tenSecondsInMilliseconds = 10 * 1000;
     const isRecordNew = timeDifference <= tenSecondsInMilliseconds;
+    console.log(currentTime, recordCreationTime);
     if (isRecordNew) {
       console.log(userQuery, userContext);
   
