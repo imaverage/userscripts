@@ -2085,7 +2085,7 @@ body {
 
         document.body.classList.add('fullscreen-active');
         setTimeout(() => document.body.classList.add('fullscreen-hide'), durationMs);
-        setTimeout(() => ta.style.maxWidth = '1000px', durationMs+50);
+        setTimeout(() => ta.style.maxWidth = '1000px', durationMs+100);
       }
 
       isFullscreen = !isFullscreen;
