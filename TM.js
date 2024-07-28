@@ -1875,9 +1875,9 @@ body {
 }
 
 .${MINE_QUOTE_SRC_CLASSNAME} {
-  background: darkslategray;
+  background: mediumslateblue;
   border-radius: 3px;
-  color: white;
+  color: black !important;
   cursor: pointer;
 }
 `);
