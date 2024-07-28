@@ -2128,4 +2128,37 @@ body {
     });
   };
   if (isMobile) installStatusStyle();
+
+
+  const installRemoteChatStarter = async () => {
+    const query = Mine.getQueryParam('mine_query');
+    if (query) {
+      if (query === 'LOAD_FROM_REMOTE') {
+        const undim = Mine.dim(document.body);
+        const jsonBinBinId = await getUserDefinedKeyValueFromChatHistory('remoteChatJsonBinBinId');
+        const jsonBinXMasterKey = await getUserDefinedKeyValueFromChatHistory('remoteChatJsonBinXMasterKey');
+        if (!jsonBinBinId || !jsonBinXMasterKey) return null;
+        const record = await fetch(`https://api.jsonbin.io/v3/b/${jsonBinBinId}`, {
+          headers: {
+            'Content-Type': 'application/json',
+            'X-MASTER-KEY': jsonBinXMasterKey,
+          },
+        }).then(r => r.json()).then(d => d['record']);
+
+        const decodeBase64 = base64 => atob(base64);
+        const userQuery = decodeBase64(record.query);
+        const userContext = decodeBase64(record.context);
+        console.log(submitMessage(userQuery, userContext));
+
+        // maybe autosubmit from context
+        let msg = userQuery;
+        if (userContext) {
+          msg += `\n\nUse the following context:\n\`\`\`\n${userContext}\n\`\`\``;
+        }
+
+        undim();
+      }
+    }
+  };
+  await installRemoteChatStarter();
 })();
