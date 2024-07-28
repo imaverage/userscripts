@@ -2101,7 +2101,7 @@ body {
   if (isMobile) installToggleHideStuffOnDblTap();
 
   // TODO: doesnt seem to work
-  const installStatusStyle = () => {
+  const installIPhoneStatusBarStyle = () => {
     // Remove existing Apple-specific meta tags
     const existingMetaTags = document.querySelectorAll('meta[name^="apple-"]');
     existingMetaTags.forEach(tag => tag.remove());
@@ -2127,7 +2127,7 @@ body {
       }
     });
   };
-  if (isMobile) installStatusStyle();
+  if (isMobile) installIPhoneStatusBarStyle();
 
 
   const installRemoteChatStarter = async () => {
