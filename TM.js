@@ -65,123 +65,123 @@
   // main
   Mine.quietQs(`[data-element-id="pinned-characters-container"]`);
   Mine.isi(`
-    /* context limit reached button is in here */
-    .post-message-content {
-      display: none;
-    }
+/* context limit reached button is in here */
+.post-message-content {
+  display: none;
+}
 
-    [id="elements-in-action-buttons"] button {
-      scale: 0.8;
-    }
-    [id="elements-in-action-buttons"] {
-      gap: 0.1rem;
-      margin-bottom: 0;
-    }
+[id="elements-in-action-buttons"] button {
+  scale: 0.8;
+}
+[id="elements-in-action-buttons"] {
+  gap: 0.1rem;
+  margin-bottom: 0;
+}
 
-    [data-element-id="chat-avatar-container"] {
-      display: none;
-    }
-    [data-element-id="response-block"] {
-      padding-left: 0.5rem;
-    }
+[data-element-id="chat-avatar-container"] {
+  display: none;
+}
+[data-element-id="response-block"] {
+  padding-left: 0.5rem;
+}
 
-    @media (max-width: 767px) {
-      /* cant use message-index- bc thats doesnt covery typing state */
-      div:has(>[data-element-id="response-block"]) {
-        padding-right: 9px;
-        padding-left: 9px;
-      }
-      [data-element-id="current-chat-title"] > :first-child {
-        gap: 0;
-      }
-      [data-element-id="response-block"] {
-        padding-left: 0;
-      }
+@media (max-width: 767px) {
+  /* cant use message-index- bc thats doesnt covery typing state */
+  div:has(>[data-element-id="response-block"]) {
+    padding-right: 9px;
+    padding-left: 9px;
+  }
+  [data-element-id="current-chat-title"] > :first-child {
+    gap: 0;
+  }
+  [data-element-id="response-block"] {
+    padding-left: 0;
+  }
 
-      /* model name snippet */
-      [data-element-id="current-chat-title"] [aria-haspopup="menu"] .truncate {
-        display: none;
-      }
+  /* model name snippet */
+  [data-element-id="current-chat-title"] [aria-haspopup="menu"] .truncate {
+    display: none;
+  }
 
-      [data-element-id="search-shortcut-button"] {
-        display: none;
-      }
-      [id="chat-input-textbox"] {
-        padding-left: 10px;
-      }
+  [data-element-id="search-shortcut-button"] {
+    display: none;
+  }
+  [id="chat-input-textbox"] {
+    padding-left: 10px;
+  }
 
-      .enter-to-send {display: none;}
-      [data-element-id="chat-space-end-part"] {padding:4px;}
-      [data-element-id="message-input"] {margin-top: -20px;}
-      [data-element-id="prompt-library-small-button"] {display: none;}
-      [data-element-id="output-settings-button"] {display: none;}
-      #chat-input-textbox {padding: 7px;}
-      [data-element-id="chat-input-textbox-container"] button {opacity: 0.7;}
-      [data-element-id="response-block"] {padding:0;padding-top:10px;}
-    }
+  .enter-to-send {display: none;}
+  [data-element-id="chat-space-end-part"] {padding:4px;}
+  [data-element-id="message-input"] {margin-top: -20px;}
+  [data-element-id="prompt-library-small-button"] {display: none;}
+  [data-element-id="output-settings-button"] {display: none;}
+  #chat-input-textbox {padding: 7px;}
+  [data-element-id="chat-input-textbox-container"] button {opacity: 0.7;}
+  [data-element-id="response-block"] {padding:0;padding-top:10px;}
+}
 
-    div:has(> div > img[src="/logo.png"]) {
-      display: none;
-    }
-    .prose {
-      background: rgb(39, 39, 42);
-      border-radius: 16px;
-      padding: 10px;
-      color: white;
-    }
-    /* my avatar */
-    [data-element-id="response-block"]:has([data-element-id="user-message"]) [data-element-id="chat-avatar-container"] {
-      display: none;
-    }
+div:has(> div > img[src="/logo.png"]) {
+  display: none;
+}
+.prose {
+  background: rgb(39, 39, 42);
+  border-radius: 16px;
+  padding: 10px;
+  color: white;
+}
+/* my avatar */
+[data-element-id="response-block"]:has([data-element-id="user-message"]) [data-element-id="chat-avatar-container"] {
+  display: none;
+}
 
-    div:has(>.bg-blue-500) {
-      display: flex;
-      justify-content: flex-end;
-    }
-    div > button:has(.user-avatar) {
-      visibility: hidden;
-    }
+div:has(>.bg-blue-500) {
+  display: flex;
+  justify-content: flex-end;
+}
+div > button:has(.user-avatar) {
+  visibility: hidden;
+}
 
-    body {
-      background: rgb(16,17,17) !important;
-    }
-    .response-block:hover {
-      background: none !important;
-    }
+body {
+  background: rgb(16,17,17) !important;
+}
+.response-block:hover {
+  background: none !important;
+}
 
-    /* might need to separate these two */
-    .response-block li,
-    .response-block p
-    {
-      border-radius: 5px;
-      margin: 2px;
-      padding-left: 2px;
-      padding-right: 2px;
-    }
+/* might need to separate these two */
+.response-block li,
+.response-block p
+{
+  border-radius: 5px;
+  margin: 2px;
+  padding-left: 2px;
+  padding-right: 2px;
+}
 
-    .response-block li, .response-block li *
-    .response-block p, .response-block p *
-    {
-      color: white;
-      transition: color 0.1s ease-in-out;
-    }
-    .response-block li:hover, .response-block li:hover *,
-    .response-block p:hover, .response-block p:hover *
-    {
-      color: hotpink;
-      transition: color 0s;
-    }
+.response-block li, .response-block li *
+.response-block p, .response-block p *
+{
+  color: white;
+  transition: color 0.1s ease-in-out;
+}
+.response-block li:hover, .response-block li:hover *,
+.response-block p:hover, .response-block p:hover *
+{
+  color: hotpink;
+  transition: color 0s;
+}
 
-    .response-block li ul {
-      margin-top: 0;
-    }
-    .response-block li:nth-child(even), .response-block p:nth-child(even) {
-      background-color: RGBA(0,0,0,0.3);
-    }
+.response-block li ul {
+  margin-top: 0;
+}
+.response-block li:nth-child(even), .response-block p:nth-child(even) {
+  background-color: RGBA(0,0,0,0.3);
+}
 
-    [data-element-id="list-more-button"] {
-      display: none;
-    }
+[data-element-id="list-more-button"] {
+  display: none;
+}
 `);
 
   const attachMetaInfoV1 = async () => {
