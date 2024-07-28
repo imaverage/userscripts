@@ -908,7 +908,14 @@ body {
 
 
 
-
+  if (isMobile) {
+    Mine.isi(`
+[data-element-id="chat-space-end-part"] {
+  background: rgba(0,0,0,0.9);
+  border-radius: 10px;
+}
+`);
+  }
   if (!isMobile) {
     Mine.isi(`
     [data-element-id="message-input"] .pt-2 {
