@@ -1934,8 +1934,8 @@ body {
 }
 
 .mine_quote_src {
-  backgroundColor: mediumslateblue;
-  borderRadius: 3px;
+  background: mediumslateblue;
+  border-radius: 3px;
   color: black;
   cursor: pointer;
 }
