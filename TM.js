@@ -2091,7 +2091,7 @@ body {
 
       isFullscreen = !isFullscreen;
     };
-    bindOnSelectorDblTap('body', toggleFullscreen, {mustBeExactElement: true});
+    bindOnSelectorDblTap('body, [data-element-id="chat-space-background"]', toggleFullscreen, {mustBeExactElement: true});
     bindOnSelectorDblTap('[data-element-id="chat-space-middle-part"],div:has(>[data-element-id="chat-space-end-part"])', (ele, ev) => {
         if (ev.target.closest('[data-element-id="user-message"]') || ev.target.closest('[data-element-id="ai-response"]')) return;
 
