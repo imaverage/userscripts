@@ -1881,7 +1881,7 @@ body {
 }
 `);
     bindOnSelectorClick(`.${MINE_QUOTE_CLASSNAME}`, async e => highlightForQuoteEle(e, true));
-    bindOnSelectorClick(`.mine_quote_src`, async e => Mine.qsaa('.mine_quote').find(qe => qe.innerText === `> ${e.innerText}`)?.scrollIntoView({behavior: 'smooth'}));
+    bindOnSelectorClick('.mine_quote_src', async e => window.getSelection().isCollapsed && Mine.qsaa('.mine_quote').find(qe => qe.innerText === `> ${e.innerText}`)?.scrollIntoView({behavior: 'smooth'}));
 
     // TODO: make this more performant. checks everything every time.
     bindOnSelectorClick(`[data-element-id="send-button"]`, async () => {  // todo: and on press enter?
