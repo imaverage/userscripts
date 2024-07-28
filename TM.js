@@ -1877,7 +1877,7 @@ body {
 .mine_quote_src {
   background: darkslategray;
   border-radius: 3px;
-  color: black;
+  color: white;
   cursor: pointer;
 }
 `);
