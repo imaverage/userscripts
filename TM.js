@@ -1812,7 +1812,14 @@ button[data-element-id="output-settings-button"] {
     
     const newDiv = document.createElement('div');
     newDiv.innerHTML = `
-<button id="mine-collapse-resp" style="scale: 1;">Collapse responses</button>
+<style>
+.mine-menu-btn {
+  scale: 1;
+  width: 100%;
+  padding-bottom: 7px;
+}
+</style>
+<button id="mine-collapse-resp" class="mine-menu-btn">Collapse responses</button>
 `;  
     menu.appendChild(newDiv);
     menu.qs('#mine-collapse-resp').addEventListener('click', () => {
