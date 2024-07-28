@@ -230,8 +230,9 @@
         }
       }
 
-      const cxtSize = await getContextSize();
-      const metaMsg = `${msgCount}/<span style='${msgCount >= cxtSize ? 'color:red;' : ''};'>${cxtSize} mc</span>`;
+      let cxtSize = await getContextSize();
+      if (cxtSize === 0) cxtSize = Infinity;
+      const metaMsg = `${msgCount}/<span style='${msgCount >= cxtSize ? 'color:red;' : ''};'>${cxtSize === Infinity ? '∞' : cxtSize} mc</span>`;
       myInfoDiv.innerHTML = metaMsg;
     };
     const updateContextDivider = async () => {
