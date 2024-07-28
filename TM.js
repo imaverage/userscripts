@@ -1807,8 +1807,19 @@ button[data-element-id="output-settings-button"] {
     await main();
   }
 
-  bindOnSelectorClick(`[data-element-id="config-buttons"]`, () => {});
-
+  bindOnSelectorClick(`[data-element-id="config-buttons"]`, async () => {
+    const menu = await Mine.waitForQs(`#elements-in-action-buttons [id^="headlessui-menu-items-"]`);
+    
+    const newDiv = document.createElement('div');
+    newDiv.innerHTML = `
+<button id="mine-collapse-resp" style="scale: 1;">Collapse responses</button>
+`;  
+    menu.appendChild(newDiv);
+    menu.qs('#mine-collapse-resp').addEventListener('click', () => {
+      console.log('hi');
+    });
+  });
+  
   bindOnSelectorClick(`[data-element-id="send-button"]`, () => {
     // allows for slow quote replied type convos
     if (!getIsChatScrolledToNearBottom(500)) {
