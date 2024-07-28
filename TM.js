@@ -1412,6 +1412,7 @@ body {
       onSpaUrlChangeCallbacks.push(callback);
     };
     bindOnSpaUrlChange(() => setTimeout(enrichAllMessagesIdempotently, 1000));  // give time for DOM to reflect new url
+    setTimeout(enrichAllMessagesIdempotently, 1000);  // for initial load
 
     const initTitleSanitizerService = () => {
       const fullAppNameReferences = ['TypingMind.com', 'TypingMind'];
