@@ -158,7 +158,7 @@
       await appendTaText(msg, true);
     }
   };  
-  if (!isMobile) await installRemoteChatStarter();
+  if (!isMobile) installRemoteChatStarter().then();
 
 
   Mine.quietQs(`[data-element-id="pinned-characters-container"]`);
