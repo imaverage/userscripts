@@ -1921,9 +1921,11 @@ body {
     walkNodes(element);
     return foundMark;
   };
+
+  const MINE_QUOTE_CLASSNAME = `mine_quote`;
   const installQuotability = async () => {
     Mine.isi(`
-.mine_quote {
+.${MINE_QUOTE_CLASSNAME} {
   font-style: italic;
   color: gray;
   cursor: pointer;
@@ -1932,7 +1934,7 @@ body {
   color: gray;
 }
 `);
-    bindOnSelectorClick(`.mine_quote`, async e => highlightForQuoteEle(e, true));
+    bindOnSelectorClick(`.${MINE_QUOTE_CLASSNAME}`, async e => highlightForQuoteEle(e, true));
 
     // TODO: make this more performant. checks everything every time.
     bindOnSelectorClick(`[data-element-id="send-button"]`, async () => {  // todo: and on press enter?
@@ -1960,13 +1962,13 @@ body {
         if (line.trim().startsWith('&gt; ') || line.trim().startsWith('> ')) {
           // Ensure '>' is properly encoded
           const encodedLine = line.replace(/^>\s/, '&gt; ').replace(/&gt;\s/, '&gt; ');
-          return `<span class="mine_quote">${encodedLine}</span>`;
+          return `<span class="${MINE_QUOTE_CLASSNAME}">${encodedLine}</span>`;
         }
         return line;
       });
 
       element.innerHTML = processedLines.join('\n');
-      [...element.querySelectorAll('.mine_quote')].forEach(highlightForQuoteEle);
+      [...element.querySelectorAll('.${MINE_QUOTE_CLASSNAME}')].forEach(e => highlightForQuoteEle(e));
     };
     const tripleQuotify = (element) => {
       const lines = element.innerHTML.split('\n');
