@@ -573,70 +573,70 @@ body {
 
     const style = document.createElement('style');
     style.textContent = `
-  :root {
-    --popover-bg: #333;
-    --popover-text: #fff;
-    --popover-active: #555;
-    --popover-border: #444;
-  }
+:root {
+  --popover-bg: #333;
+  --popover-text: #fff;
+  --popover-active: #555;
+  --popover-border: #444;
+}
 
-  .custom-popover {
-    display: none;
-    position: fixed;
-    background-color: var(--popover-bg);
-    border-radius: 6px;
-    box-shadow: 0 8px 19px rgba(0,0,0,0.6);
-    padding: 2px;
-    z-index: 1000;
-    border: 1px solid var(--popover-border);
-    opacity: 0;
-    transition: opacity 0.1s ease-in-out;
-  }
+.custom-popover {
+  display: none;
+  position: fixed;
+  background-color: var(--popover-bg);
+  border-radius: 6px;
+  box-shadow: 0 8px 19px rgba(0,0,0,0.6);
+  padding: 2px;
+  z-index: 1000;
+  border: 1px solid var(--popover-border);
+  opacity: 0;
+  transition: opacity 0.1s ease-in-out;
+}
 
-  .custom-popover::before {
-    content: '';
-    position: absolute;
-    top: -8px;
-    left: 50%;
-    transform: translateX(-50%);
-    border-left: 8px solid transparent;
-    border-right: 8px solid transparent;
-    border-bottom: 8px solid var(--popover-bg);
-    z-index: 1001;
-  }
+.custom-popover::before {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 8px solid var(--popover-bg);
+  z-index: 1001;
+}
 
-  .custom-popover::after {
-    content: '';
-    position: absolute;
-    top: -9px;
-    left: 50%;
-    transform: translateX(-50%);
-    border-left: 9px solid transparent;
-    border-right: 9px solid transparent;
-    border-bottom: 9px solid var(--popover-border);
-    z-index: 1000;
-  }
+.custom-popover::after {
+  content: '';
+  position: absolute;
+  top: -9px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 9px solid transparent;
+  border-right: 9px solid transparent;
+  border-bottom: 9px solid var(--popover-border);
+  z-index: 1000;
+}
 
-  .custom-popover.show {
-    opacity: 1;
-  }
+.custom-popover.show {
+  opacity: 1;
+}
 
-  .popover-button {
-    background-color: transparent;
-    border: none;
-    color: var(--popover-text);
-    font-size: 14px;
-    padding: 6px 8px;
-    margin: 0 2px;
-    cursor: pointer;
-    transition: background-color 0.1s;
-    border-radius: 6px;
-  }
+.popover-button {
+  background-color: transparent;
+  border: none;
+  color: var(--popover-text);
+  font-size: 14px;
+  padding: 6px 8px;
+  margin: 0 2px;
+  cursor: pointer;
+  transition: background-color 0.1s;
+  border-radius: 6px;
+}
 
-  .popover-button:active {
-    background-color: var(--popover-active);
-  }
-    `;
+.popover-button:active {
+  background-color: var(--popover-active);
+}
+    `.trim();
     document.head.appendChild(style);
 
     let currentSelection = null;
