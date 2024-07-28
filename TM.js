@@ -1806,7 +1806,7 @@ body {
 
     const createMark = () => {
       const mark = document.createElement('mark');
-      mark.className = 'mine_quote_src';
+      mark.className = MINE_QUOTE_SRC_CLASSNAME;
       return mark;
     };
 
@@ -1862,6 +1862,7 @@ body {
   };
 
   const MINE_QUOTE_CLASSNAME = `mine_quote`;
+  const MINE_QUOTE_SRC_CLASSNAME = `mine_quote_src`;
   const installQuotability = async () => {
     Mine.isi(`
 .${MINE_QUOTE_CLASSNAME} {
@@ -1873,7 +1874,7 @@ body {
   color: gray;
 }
 
-.mine_quote_src {
+.${MINE_QUOTE_SRC_CLASSNAME} {
   background: darkslategray;
   border-radius: 3px;
   color: white;
@@ -1881,7 +1882,7 @@ body {
 }
 `);
     bindOnSelectorClick(`.${MINE_QUOTE_CLASSNAME}`, async e => highlightForQuoteEle(e, true));
-    bindOnSelectorClick('.mine_quote_src', async e => window.getSelection().isCollapsed && Mine.qsaa('.mine_quote').find(qe => qe.innerText === `> ${e.innerText}`)?.scrollIntoView({behavior: 'smooth'}));
+    bindOnSelectorClick(`.${MINE_QUOTE_SRC_CLASSNAME}`, async e => window.getSelection().isCollapsed && Mine.qsaa('.mine_quote').find(qe => qe.innerText === `> ${e.innerText}`)?.scrollIntoView({behavior: 'smooth'}));
 
     // TODO: make this more performant. checks everything every time.
     bindOnSelectorClick(`[data-element-id="send-button"]`, async () => {  // todo: and on press enter?
