@@ -1861,14 +1861,12 @@ body {
   };
   if (isMobile) installPinnedMsgScroller();  // looks like its already implemented in TM, but mobile is wonky
 
-  const highlightElementText = (element, text) => {
+  const highlightQuoteSource = (element, text) => {
     if (!element || !text) return null;
 
     const createMark = () => {
       const mark = document.createElement('mark');
-      mark.style.backgroundColor = 'mediumslateblue';
-      mark.style.borderRadius = '3px';
-      mark.style.color = 'black';
+      mark.className = 'mine_quote_src';
       return mark;
     };
 
@@ -1934,8 +1932,16 @@ body {
 .mine_triple_quote {
   color: gray;
 }
+
+.mine_quote_src {
+  backgroundColor: mediumslateblue;
+  borderRadius: 3px;
+  color: black;
+  cursor: pointer;
+}
 `);
     bindOnSelectorClick(`.${MINE_QUOTE_CLASSNAME}`, async e => highlightForQuoteEle(e, true));
+    bindOnSelectorClick(`.mine_quote_src`, async e => Mine.qsaa('.mine_quote').find(qe => qe.innerText === `> ${e.innerText}`)?.scrollIntoView({behavior: 'smooth'}));
 
     // TODO: make this more performant. checks everything every time.
     bindOnSelectorClick(`[data-element-id="send-button"]`, async () => {  // todo: and on press enter?
@@ -1951,7 +1957,7 @@ body {
     const targetMsg = allMsgElesBeforeCurMsgEle.reverse().find(msg => msg.innerText.includes(quoteBody));
     if (!targetMsg) return;
 
-    const maybeHighlight = highlightElementText(targetMsg, quoteBody);
+    const maybeHighlight = highlightQuoteSource(targetMsg, quoteBody);
     if (scrollToSrc) {
       (maybeHighlight ?? targetMsg).scrollIntoView({behavior: 'smooth'});
     }
