@@ -1243,6 +1243,11 @@ button[data-element-id="output-settings-button"] {
           k: () => navigateMessages('up'),
           j: () => navigateMessages('down'),
           l: () => getAllChatMessages().pop()?.scrollIntoView({behavior: 'smooth'}),
+          a: () => {
+            const sel = window.getSelection()?.toString().trim();
+            if (!sel) return;
+            window.open(`https://www.amazon.com/s?k=${encodeURIComponent(sel)}`);
+          },
           q: async () => {
             const sel = document.getSelection()?.toString();
             if (!sel) return;
