@@ -2164,6 +2164,7 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
 
   const installListAutoPreColonTitleSelector = async () => {
     bindOnSelectorClick('[data-element-id="response-block"]', async (ele, e) => {
+      alert('sel');
       const selection = window.getSelection();
       if (!selection.isCollapsed) return;
 
