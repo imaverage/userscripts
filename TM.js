@@ -2185,30 +2185,17 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
       const colonIndex = text.indexOf(':');
       if (colonIndex === -1) return;
 
-      let clickedPosition;
-      if (e.changedTouches) {
-        // Touch event
-        const touch = e.changedTouches[0];
-        const rect = clickedElement.getBoundingClientRect();
-        clickedPosition = touch.clientX - rect.left;
-      } else {
-        // Mouse event
-        clickedPosition = e.clientX - clickedElement.getBoundingClientRect().left;
-      }
-
+      const clickedPosition = e.clientX - clickedElement.getBoundingClientRect().left;
       const charWidth = clickedElement.offsetWidth / text.length;
       const clickedIndex = Math.floor(clickedPosition / charWidth);
 
       if (clickedIndex < colonIndex) {
-        // Use setTimeout to ensure this runs after the default touch behavior
-        setTimeout(() => {
-          const range = document.createRange();
-          range.setStart(clickedElement.firstChild, 0);
-          range.setEnd(clickedElement.firstChild, colonIndex);
+        const range = document.createRange();
+        range.setStart(clickedElement.firstChild, 0);
+        range.setEnd(clickedElement.firstChild, colonIndex);
 
-          selection.removeAllRanges();
-          selection.addRange(range);
-        }, 0);
+        selection.removeAllRanges();
+        selection.addRange(range);
       }
     });
   };
