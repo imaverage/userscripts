@@ -133,14 +133,14 @@
         'X-MASTER-KEY': jsonBinXMasterKey,
       },
     }).then(r => r.json());
-  
+
     const record = response.record;
     const metadata = response.metadata;
-  
+
     const decodeBase64 = base64 => atob(base64);
     const userQuery = decodeBase64(record.query);
     const userContext = decodeBase64(record.context);
-  
+
     const currentTime = Date.now();
     const recordCreationTime = new Date(record.createdDate).getTime();
     const timeDifference = currentTime - recordCreationTime;
@@ -157,7 +157,7 @@
     if (!ta.value) {
       await appendTaText(msg, true);
     }
-  };  
+  };
   if (!isMobile) installRemoteChatStarter().then();
 
 
@@ -1725,7 +1725,7 @@ button[data-element-id="output-settings-button"] {
   if (!isMobile) {
     const wipeChatHotkey = () => {
       // also tried pulling out the context button and storing that pointer on load (doesnt work when mac screen locked)
-  
+
       // CMD+OPT+J
       document.dispatchEvent(new KeyboardEvent('keydown', {
         key: 'j',
@@ -1781,7 +1781,7 @@ button[data-element-id="output-settings-button"] {
       const menu = await Mine.waitForQs(`#elements-in-action-buttons [id^="headlessui-menu-items-"]`);
       const myMenuWrapperId = `mine-config-addons`;
       if (menu.querySelector(`#${myMenuWrapperId}`)) return;
-      
+
       const newDiv = document.createElement('div');
       newDiv.id = myMenuWrapperId;
       newDiv.style = 'border-top: 1px solid rgba(255,255,255,0.15);padding-top: 10px;';
@@ -1807,7 +1807,7 @@ button[data-element-id="output-settings-button"] {
     });
   };
   installCustomConfigItems();
-  
+
   bindOnSelectorClick(`[data-element-id="send-button"]`, () => {
     // allows for slow quote replied type convos
     if (!getIsChatScrolledToNearBottom(500)) {
@@ -2013,7 +2013,7 @@ button[data-element-id="output-settings-button"] {
       const isNowHidden = document.hidden;
       if (isNowHidden) {
         changeFavicon(favicon_normal);
-        checkForNewMsgInBackgroundedTab().then(hasNewMsg => 
+        checkForNewMsgInBackgroundedTab().then(hasNewMsg =>
           hasNewMsg ? changeFavicon(favicon_badged) : null
         );
       } else {
@@ -2036,7 +2036,7 @@ button[data-element-id="output-settings-button"] {
         desiredTapCount = null,
       } = options;
       if (!desiredTapCount) return;
-    
+
       let tapCount = 0;
       let lastTapTime = 0;
       let lastTapX = 0;
@@ -2045,18 +2045,18 @@ button[data-element-id="output-settings-button"] {
       document.body.addEventListener('touchend', (event) => {
         const selEle = mustBeExactElement ? event.target.matches(qs) : event.target.closest(qs);
         if (!selEle) return;
-    
+
         const touch = event.changedTouches[0];
         const currentTime = new Date().getTime();
         const currentX = touch.clientX;
         const currentY = touch.clientY;
-    
+
         const timeBetweenTaps = currentTime - lastTapTime;
         const distanceBetweenTaps = Math.hypot(currentX - lastTapX, currentY - lastTapY);
-    
+
         if (timeBetweenTaps > 0 && timeBetweenTaps < maxTimeBetweenTaps && distanceBetweenTaps < maxDistanceBetweenTaps) {
           tapCount++;
-    
+
           clearTimeout(tapTimer);
           tapTimer = setTimeout(() => {
             if (tapCount === desiredTapCount) {
@@ -2068,7 +2068,7 @@ button[data-element-id="output-settings-button"] {
         } else {
           tapCount = 1;
         }
-    
+
         lastTapTime = currentTime;
         lastTapX = currentX;
         lastTapY = currentY;
@@ -2169,31 +2169,31 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
 
       const listItem = ele.closest('li');
       if (!listItem) return;
-    
+
       const clickedElement = ele.closest('p, div');
       if (!clickedElement || !listItem.contains(clickedElement)) return;
-    
+
       const listGroup = listItem.closest('ul, ol');
       if (!listGroup) return;
-    
-      const allItemsHaveColon = Array.from(listGroup.children).every(li => 
+
+      const allItemsHaveColon = Array.from(listGroup.children).every(li =>
         li.textContent.includes(':')
       );
       if (!allItemsHaveColon) return;
-    
+
       const text = clickedElement.textContent;
       const colonIndex = text.indexOf(':');
       if (colonIndex === -1) return;
-    
+
       const clickedPosition = e.clientX - clickedElement.getBoundingClientRect().left;
       const charWidth = clickedElement.offsetWidth / text.length;
       const clickedIndex = Math.floor(clickedPosition / charWidth);
-    
+
       if (clickedIndex < colonIndex) {
         const range = document.createRange();
         range.setStart(clickedElement.firstChild, 0);
         range.setEnd(clickedElement.firstChild, colonIndex);
-        
+
         selection.removeAllRanges();
         selection.addRange(range);
       }
