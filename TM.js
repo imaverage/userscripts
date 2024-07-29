@@ -2077,50 +2077,13 @@ button[data-element-id="output-settings-button"] {
       }, false);
     };
     const bindOnSelectorDblTap = (qs, cb, options = {}) => {
-      console.log('wired double count');
       options.desiredTapCount = 2;
       bindOnSelectorMultiTap(qs, cb, options);
     };
-    const bindOnSelectorTrippleTap = (qs, cb, options = {}) => {
-      console.log('wired triple count');
+    const bindOnSelectorTripleTap = (qs, cb, options = {}) => {
       options.desiredTapCount = 3;
       bindOnSelectorMultiTap(qs, cb, options);
     };
-    // const bindOnSelectorDblTap = (qs, cb, options = {}) => {
-    //   const {
-    //     maxTimeBetweenTaps = 300,
-    //     maxDistanceBetweenTaps = 20,
-    //     mustBeExactElement = false,
-    //   } = options;
-
-    //   let lastTapTime = 0;
-    //   let lastTapX = 0;
-    //   let lastTapY = 0;
-    //   document.body.addEventListener('touchend', (event) => {
-    //     const selEle = mustBeExactElement ? event.target.matches(qs) : event.target.closest(qs);
-    //     if (!selEle) return;
-
-    //     const touch = event.changedTouches[0];
-    //     const currentTime = new Date().getTime();
-    //     const currentX = touch.clientX;
-    //     const currentY = touch.clientY;
-
-    //     const timeBetweenTaps = currentTime - lastTapTime;
-    //     const distanceBetweenTaps = Math.hypot(currentX - lastTapX, currentY - lastTapY);
-
-    //     const isDblTap = timeBetweenTaps > 0 &&
-    //                      timeBetweenTaps < maxTimeBetweenTaps &&
-    //                      distanceBetweenTaps < maxDistanceBetweenTaps;
-    //     if (isDblTap) {
-    //       event.preventDefault();
-    //       cb(selEle, event);
-    //     }
-
-    //     lastTapTime = currentTime;
-    //     lastTapX = currentX;
-    //     lastTapY = currentY;
-    //   }, false);
-    // };
 
     const msgEditToolbarEleQs = `div:has(>[data-element-id="more-actions-menu-button"])`;
     Mine.hideQs(msgEditToolbarEleQs);
@@ -2184,8 +2147,8 @@ button[data-element-id="output-settings-button"] {
       isFullscreen = !isFullscreen;
     };
     bindOnSelectorDblTap('body, [data-element-id="chat-space-background"]', toggleFullscreen, {mustBeExactElement: true});
-    bindOnSelectorTrippleTap('body, [data-element-id="chat-space-background"]', () => {
-      alert('tripple');
+    bindOnSelectorTripleTap('body, [data-element-id="chat-space-background"]', () => {
+      alert('Triple');
     }, {mustBeExactElement: true});
     bindOnSelectorDblTap('[data-element-id="chat-space-middle-part"],div:has(>[data-element-id="chat-space-end-part"])', (ele, ev) => {
         if (ev.target.closest('[data-element-id="user-message"]') || ev.target.closest('[data-element-id="ai-response"]')) return;
