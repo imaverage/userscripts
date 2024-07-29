@@ -2043,7 +2043,6 @@ button[data-element-id="output-settings-button"] {
       let lastTapX = 0;
       let lastTapY = 0;
       let tapTimer;
-    
       document.body.addEventListener('touchend', (event) => {
         const selEle = mustBeExactElement ? event.target.matches(qs) : event.target.closest(qs);
         if (!selEle) return;
