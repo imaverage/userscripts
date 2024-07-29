@@ -2162,6 +2162,49 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
   };
   if (isMobile) installToggleHideStuffOnDblTap();
 
+  const installListAutoTitleSelector = async () => {
+    document.body.addEventListener('click', e => {
+      if (!e.target.closest('[data-element-id="response-block"]')) return;
+
+      const listItem = e.target.closest('li');
+      if (!listItem) return;
+    
+      const clickedElement = e.target.closest('p, div');
+      if (!clickedElement || !listItem.contains(clickedElement)) return;
+    
+      const listGroup = listItem.closest('ul, ol');
+      if (!listGroup) return;
+    
+      const allItemsHaveColon = Array.from(listGroup.children).every(li => 
+        li.textContent.includes(':')
+      );
+      if (!allItemsHaveColon) return;
+    
+      const text = clickedElement.textContent;
+      const colonIndex = text.indexOf(':');
+      if (colonIndex === -1) return;
+    
+      const clickedPosition = e.clientX - clickedElement.getBoundingClientRect().left;
+      const charWidth = clickedElement.offsetWidth / text.length;
+      const clickedIndex = Math.floor(clickedPosition / charWidth);
+    
+      if (clickedIndex < colonIndex) {
+        const selection = window.getSelection();
+
+        // Check if there's no existing selection
+        if (selection.isCollapsed) {
+          const range = document.createRange();
+          range.setStart(clickedElement.firstChild, 0);
+          range.setEnd(clickedElement.firstChild, colonIndex);
+          
+          selection.removeAllRanges();
+          selection.addRange(range);
+        }
+      }
+    });    
+  };
+  installListAutoTitleSelector();
+
   // TODO: doesnt seem to work
   // const installIPhoneStatusBarStyle = () => {
   //   // Remove existing Apple-specific meta tags
