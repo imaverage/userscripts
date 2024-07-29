@@ -2166,13 +2166,13 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
     bindOnSelectorClick('[data-element-id="response-block"]', async (ele, e) => {
       const selection = window.getSelection();
       if (!selection.isCollapsed) return;
-      console.log(1, ele);
+      console.log(1, e.target);
 
-      const listItem = ele.closest('li');
+      const listItem = e.target.closest('li');
       if (!listItem) return;
       console.log(1.5);
 
-      const clickedElement = ele.closest('p, div');
+      const clickedElement = e.target.closest('p, div');
       if (!clickedElement || !listItem.contains(clickedElement)) return;
 
       console.log(2);
