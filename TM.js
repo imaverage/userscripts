@@ -2029,13 +2029,14 @@ button[data-element-id="output-settings-button"] {
   installFavico();
 
   const installToggleHideStuffOnDblTap = () => {
-    const bindOnSelectorMultiTap = (qs, dblTapCb, tripleTapCb, options = {}) => {
+    const bindOnSelectorMultiTap = (qs, cb, options = {}) => {
       const {
         maxTimeBetweenTaps = 300,
         maxDistanceBetweenTaps = 20,
         mustBeExactElement = false,
-        desiredTapCount = 3,
+        desiredTapCount = null,
       } = options;
+      if (!desiredTapCount) return;
     
       let tapCount = 0;
       let lastTapTime = 0;
@@ -2060,12 +2061,9 @@ button[data-element-id="output-settings-button"] {
     
           clearTimeout(tapTimer);
           tapTimer = setTimeout(() => {
-            if (tapCount === 2) {
+            if (tapCount === desiredTapCount) {
               event.preventDefault();
-              dblTapCb(selEle, event);
-            } else if (tapCount === 3) {
-              event.preventDefault();
-              tripleTapCb(selEle, event);
+              cb(selEle, event);
             }
             tapCount = 0;
           }, maxTimeBetweenTaps);
