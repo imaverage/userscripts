@@ -2176,9 +2176,7 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
       const listGroup = listItem.closest('ul, ol');
       if (!listGroup) return;
 
-      const allItemsHaveColon = Array.from(listGroup.children).every(li =>
-        li.textContent.includes(':')
-      );
+      const allItemsHaveColon = Array.from(listGroup.children).every(li => li.textContent.includes(':'));
       if (!allItemsHaveColon) return;
 
       const text = clickedElement.textContent;
@@ -2199,7 +2197,7 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
       }
     });
   };
-  installListAutoPreColonTitleSelector();
+  if (!isMobile) installListAutoPreColonTitleSelector();
 
   // TODO: doesnt seem to work
   // const installIPhoneStatusBarStyle = () => {
