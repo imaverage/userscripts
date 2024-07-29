@@ -2077,10 +2077,12 @@ button[data-element-id="output-settings-button"] {
       }, false);
     };
     const bindOnSelectorDblTap = (qs, cb, options = {}) => {
+      console.log('wired double count');
       options.desiredTapCount = 2;
       bindOnSelectorMultiTap(qs, cb, options);
     });
     const bindOnSelectorTrippleTap = (qs, cb, options = {}) => {
+      console.log('wired triple count');
       options.desiredTapCount = 3;
       bindOnSelectorMultiTap(qs, cb, options);
     });
