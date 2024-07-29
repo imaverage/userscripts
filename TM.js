@@ -2151,7 +2151,7 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
       const undim = Mine.dim(document.body);
       Mine.qsaa('button').find(e => e.innerText.toLowerCase() === 'Open sidebar'.toLowerCase()).click();
       (await Mine.waitForQs(`[data-element-id="custom-chat-item"] .truncate`)).click();
-      setTimeout(undim, 1000);
+      setTimeout(undim, 500);
     }, {mustBeExactElement: true});
     bindOnSelectorDblTap('[data-element-id="chat-space-middle-part"],div:has(>[data-element-id="chat-space-end-part"])', (ele, ev) => {
         if (ev.target.closest('[data-element-id="user-message"]') || ev.target.closest('[data-element-id="ai-response"]')) return;
