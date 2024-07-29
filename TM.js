@@ -2103,6 +2103,7 @@ button[data-element-id="output-settings-button"] {
       const qss = [
         `[data-element-id="upload-document-button"]`,
         `[data-element-id="voice-input-button"]`,
+        `[id^="message-timestamp-]`,
 
         // display none causes dom shifts
         `.hide-when-print.sticky`,
