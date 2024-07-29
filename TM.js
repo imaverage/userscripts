@@ -2084,14 +2084,23 @@ button[data-element-id="output-settings-button"] {
     };
 
     const msgEditToolbarEleQs = `div:has(>[data-element-id="more-actions-menu-button"])`;
-    Mine.hideQs(msgEditToolbarEleQs);
+    Mine.isi(`
+${msgEditToolbarEleQs} {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+    `);
     bindOnSelectorDblTap('[data-element-id="response-block"]', responseBlock => {
       const editButtonContainer = responseBlock.querySelector(msgEditToolbarEleQs);
-      const currentDisplay = window.getComputedStyle(editButtonContainer).getPropertyValue('display');
-      if (currentDisplay === 'flex') {
-        editButtonContainer.style.removeProperty('display');
+      const currentOpacity = window.getComputedStyle(editButtonContainer).getPropertyValue('opacity');
+
+      if (currentOpacity === '1') {
+        editButtonContainer.style.opacity = '0';
+        editButtonContainer.style.pointerEvents = 'none';
       } else {
-        editButtonContainer.style.setProperty('display', 'flex', 'important');
+        editButtonContainer.style.opacity = '1';
+        editButtonContainer.style.pointerEvents = 'auto';
       }
     });
 
