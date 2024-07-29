@@ -2164,9 +2164,9 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
 
   const installListAutoPreColonTitleSelector = async () => {
     bindOnSelectorClick('[data-element-id="response-block"]', async (ele, e) => {
-      alert('sel');
       const selection = window.getSelection();
       if (!selection.isCollapsed) return;
+      console.log(1);
 
       const listItem = ele.closest('li');
       if (!listItem) return;
@@ -2174,6 +2174,7 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
       const clickedElement = ele.closest('p, div');
       if (!clickedElement || !listItem.contains(clickedElement)) return;
 
+      console.log(2);
       const listGroup = listItem.closest('ul, ol');
       if (!listGroup) return;
 
@@ -2182,6 +2183,7 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
       );
       if (!allItemsHaveColon) return;
 
+      console.log(3);
       const text = clickedElement.textContent;
       const colonIndex = text.indexOf(':');
       if (colonIndex === -1) return;
