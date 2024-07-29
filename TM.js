@@ -2162,8 +2162,11 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
   };
   if (isMobile) installToggleHideStuffOnDblTap();
 
-  const installListAutoTitleSelector = async () => {
+  const installListAutoPreColonTitleSelector = async () => {
     document.body.addEventListener('click', e => {
+      const selection = window.getSelection();
+      if (!selection.isCollapsed) return;
+
       if (!e.target.closest('[data-element-id="response-block"]')) return;
 
       const listItem = e.target.closest('li');
@@ -2189,21 +2192,16 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
       const clickedIndex = Math.floor(clickedPosition / charWidth);
     
       if (clickedIndex < colonIndex) {
-        const selection = window.getSelection();
-
-        // Check if there's no existing selection
-        if (selection.isCollapsed) {
-          const range = document.createRange();
-          range.setStart(clickedElement.firstChild, 0);
-          range.setEnd(clickedElement.firstChild, colonIndex);
-          
-          selection.removeAllRanges();
-          selection.addRange(range);
-        }
+        const range = document.createRange();
+        range.setStart(clickedElement.firstChild, 0);
+        range.setEnd(clickedElement.firstChild, colonIndex);
+        
+        selection.removeAllRanges();
+        selection.addRange(range);
       }
     });    
   };
-  installListAutoTitleSelector();
+  installListAutoPreColonTitleSelector();
 
   // TODO: doesnt seem to work
   // const installIPhoneStatusBarStyle = () => {
