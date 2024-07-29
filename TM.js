@@ -2148,7 +2148,9 @@ button[data-element-id="output-settings-button"] {
     };
     bindOnSelectorDblTap('body, [data-element-id="chat-space-background"]', toggleFullscreen, {mustBeExactElement: true});
     bindOnSelectorTripleTap('body, [data-element-id="chat-space-background"]', () => {
-      alert('Triple');
+      if (window.location.hash) return;
+      Mine.qsaa('button').find(e => e.innerText === 'Open sidebar').click();
+      (await Mine.waitForQs(`[data-element-id="custom-chat-item"] .truncate`)).click();
     }, {mustBeExactElement: true});
     bindOnSelectorDblTap('[data-element-id="chat-space-middle-part"],div:has(>[data-element-id="chat-space-end-part"])', (ele, ev) => {
         if (ev.target.closest('[data-element-id="user-message"]') || ev.target.closest('[data-element-id="ai-response"]')) return;
