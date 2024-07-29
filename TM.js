@@ -2170,6 +2170,7 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
 
       const listItem = ele.closest('li');
       if (!listItem) return;
+      console.log(1.5);
 
       const clickedElement = ele.closest('p, div');
       if (!clickedElement || !listItem.contains(clickedElement)) return;
