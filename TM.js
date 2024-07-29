@@ -2147,7 +2147,7 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
       isFullscreen = !isFullscreen;
     };
     bindOnSelectorDblTap('body, [data-element-id="chat-space-background"]', toggleFullscreen, {mustBeExactElement: true});
-    bindOnSelectorTripleTap('body, [data-element-id="chat-space-background"]', () => {
+    bindOnSelectorTripleTap('body, [data-element-id="chat-space-background"]', async () => {
       if (window.location.hash) return;
       Mine.qsaa('button').find(e => e.innerText.toLowerCase() === 'Open sidebar'.toLowerCase()).click();
       (await Mine.waitForQs(`[data-element-id="custom-chat-item"] .truncate`)).click();
