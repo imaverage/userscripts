@@ -2111,17 +2111,17 @@ button[data-element-id="output-settings-button"] {
         `#elements-in-action-buttons`,
       ];
       const fullscreenStyles = `
-  ${qss.join(',\n')} {
-    opacity: 1;
-    transition: opacity ${durationMs}ms ease-in-out;
-  }
-  ${qss.map(qs => `.fullscreen-active ${qs}`).join(',\n')} {
-    opacity: 0;
-    pointer-events: none;
-  }
-  ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].includes(qs)).map(qs => `.fullscreen-hide ${qs}`).join(',\n')} {
-    display: none !important;
-  }
+${qss.join(',\n')} {
+  opacity: 1;
+  transition: opacity ${durationMs}ms ease-in-out;
+}
+${qss.map(qs => `.fullscreen-active ${qs}`).join(',\n')} {
+  opacity: 0;
+  pointer-events: none;
+}
+${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].includes(qs)).map(qs => `.fullscreen-hide ${qs}`).join(',\n')} {
+  display: none !important;
+}
       `;
       if (!unisi) {
         unisi = Mine.isi(fullscreenStyles);
