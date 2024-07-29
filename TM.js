@@ -2080,6 +2080,10 @@ button[data-element-id="output-settings-button"] {
       options.desiredTapCount = 2;
       bindOnSelectorMultiTap(qs, cb, options);
     });
+    const bindOnSelectorTrippleTap = (qs, cb, options = {}) => {
+      options.desiredTapCount = 3;
+      bindOnSelectorMultiTap(qs, cb, options);
+    });
     // const bindOnSelectorDblTap = (qs, cb, options = {}) => {
     //   const {
     //     maxTimeBetweenTaps = 300,
@@ -2178,6 +2182,9 @@ button[data-element-id="output-settings-button"] {
       isFullscreen = !isFullscreen;
     };
     bindOnSelectorDblTap('body, [data-element-id="chat-space-background"]', toggleFullscreen, {mustBeExactElement: true});
+    bindOnSelectorTrippleTap('body, [data-element-id="chat-space-background"]', () => {
+      alert('tripple');
+    }, {mustBeExactElement: true});
     bindOnSelectorDblTap('[data-element-id="chat-space-middle-part"],div:has(>[data-element-id="chat-space-end-part"])', (ele, ev) => {
         if (ev.target.closest('[data-element-id="user-message"]') || ev.target.closest('[data-element-id="ai-response"]')) return;
         if (ev.target.closest('button')) return;
