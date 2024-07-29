@@ -2029,41 +2029,94 @@ button[data-element-id="output-settings-button"] {
   installFavico();
 
   const installToggleHideStuffOnDblTap = () => {
-    const bindOnSelectorDblTap = (qs, cb, options = {}) => {
+    const bindOnSelectorMultiTap = (qs, dblTapCb, tripleTapCb, options = {}) => {
       const {
         maxTimeBetweenTaps = 300,
         maxDistanceBetweenTaps = 20,
         mustBeExactElement = false,
+        desiredTapCount = 3,
       } = options;
-
+    
+      let tapCount = 0;
       let lastTapTime = 0;
       let lastTapX = 0;
       let lastTapY = 0;
+      let tapTimer;
+    
       document.body.addEventListener('touchend', (event) => {
         const selEle = mustBeExactElement ? event.target.matches(qs) : event.target.closest(qs);
         if (!selEle) return;
-
+    
         const touch = event.changedTouches[0];
         const currentTime = new Date().getTime();
         const currentX = touch.clientX;
         const currentY = touch.clientY;
-
+    
         const timeBetweenTaps = currentTime - lastTapTime;
         const distanceBetweenTaps = Math.hypot(currentX - lastTapX, currentY - lastTapY);
-
-        const isDblTap = timeBetweenTaps > 0 &&
-                         timeBetweenTaps < maxTimeBetweenTaps &&
-                         distanceBetweenTaps < maxDistanceBetweenTaps;
-        if (isDblTap) {
-          event.preventDefault();
-          cb(selEle, event);
+    
+        if (timeBetweenTaps > 0 && timeBetweenTaps < maxTimeBetweenTaps && distanceBetweenTaps < maxDistanceBetweenTaps) {
+          tapCount++;
+    
+          clearTimeout(tapTimer);
+          tapTimer = setTimeout(() => {
+            if (tapCount === 2) {
+              event.preventDefault();
+              dblTapCb(selEle, event);
+            } else if (tapCount === 3) {
+              event.preventDefault();
+              tripleTapCb(selEle, event);
+            }
+            tapCount = 0;
+          }, maxTimeBetweenTaps);
+        } else {
+          tapCount = 1;
         }
-
+    
         lastTapTime = currentTime;
         lastTapX = currentX;
         lastTapY = currentY;
       }, false);
     };
+    const bindOnSelectorDblTap = (qs, cb, options = {}) => {
+      options.desiredTapCount = 2;
+      bindOnSelectorMultiTap(qs, cb, options);
+    });
+    // const bindOnSelectorDblTap = (qs, cb, options = {}) => {
+    //   const {
+    //     maxTimeBetweenTaps = 300,
+    //     maxDistanceBetweenTaps = 20,
+    //     mustBeExactElement = false,
+    //   } = options;
+
+    //   let lastTapTime = 0;
+    //   let lastTapX = 0;
+    //   let lastTapY = 0;
+    //   document.body.addEventListener('touchend', (event) => {
+    //     const selEle = mustBeExactElement ? event.target.matches(qs) : event.target.closest(qs);
+    //     if (!selEle) return;
+
+    //     const touch = event.changedTouches[0];
+    //     const currentTime = new Date().getTime();
+    //     const currentX = touch.clientX;
+    //     const currentY = touch.clientY;
+
+    //     const timeBetweenTaps = currentTime - lastTapTime;
+    //     const distanceBetweenTaps = Math.hypot(currentX - lastTapX, currentY - lastTapY);
+
+    //     const isDblTap = timeBetweenTaps > 0 &&
+    //                      timeBetweenTaps < maxTimeBetweenTaps &&
+    //                      distanceBetweenTaps < maxDistanceBetweenTaps;
+    //     if (isDblTap) {
+    //       event.preventDefault();
+    //       cb(selEle, event);
+    //     }
+
+    //     lastTapTime = currentTime;
+    //     lastTapX = currentX;
+    //     lastTapY = currentY;
+    //   }, false);
+    // };
 
     const msgEditToolbarEleQs = `div:has(>[data-element-id="more-actions-menu-button"])`;
     Mine.hideQs(msgEditToolbarEleQs);
