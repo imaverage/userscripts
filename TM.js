@@ -2166,7 +2166,7 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
     bindOnSelectorClick('[data-element-id="response-block"]', async (ele, e) => {
       const selection = window.getSelection();
       if (!selection.isCollapsed) return;
-      console.log(1);
+      console.log(1, ele);
 
       const listItem = ele.closest('li');
       if (!listItem) return;
