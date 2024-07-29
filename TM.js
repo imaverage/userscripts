@@ -2163,7 +2163,8 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
   if (isMobile) installToggleHideStuffOnDblTap();
 
   const installListAutoPreColonTitleSelector = async () => {
-    document.body.addEventListener('click', e => {
+    const clickProxyEventName = isMobile ? 'touchend' : 'click';
+    document.body.addEventListener(clickProxyEventName, e => {
       const selection = window.getSelection();
       if (!selection.isCollapsed) return;
 
