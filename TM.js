@@ -1937,32 +1937,32 @@ button[data-element-id="output-settings-button"] {
       (maybeHighlight ?? targetMsg).scrollIntoView({behavior: 'smooth'});
     }
   };
+  const quotify = (element) => {
+    const lines = element.innerHTML.split('\n');
+    const processedLines = lines.map(line => {
+      if (line.trim().startsWith('&gt; ') || line.trim().startsWith('> ')) {
+        // Ensure '>' is properly encoded
+        const encodedLine = line.replace(/^>\s/, '&gt; ').replace(/&gt;\s/, '&gt; ');
+        return `<span class="${MINE_QUOTE_CLASSNAME}">${encodedLine}</span>`;
+      }
+      return line;
+    });
+
+    element.innerHTML = processedLines.join('\n');
+    [...element.querySelectorAll(`.${MINE_QUOTE_CLASSNAME}`)].forEach(e => highlightForQuoteEle(e));
+  };
+  const tripleQuotify = (element) => {
+    const lines = element.innerHTML.split('\n');
+    const processedLines = lines.map(line => {
+      if (line.trim() === '"""') {
+        return `<span class="mine_triple_quote">${line}</span>`;
+      }
+      return line;
+    });
+
+    element.innerHTML = processedLines.join('\n');
+  };
   const enrichAllMessagesIdempotently = async () => {
-    const quotify = (element) => {
-      const lines = element.innerHTML.split('\n');
-      const processedLines = lines.map(line => {
-        if (line.trim().startsWith('&gt; ') || line.trim().startsWith('> ')) {
-          // Ensure '>' is properly encoded
-          const encodedLine = line.replace(/^>\s/, '&gt; ').replace(/&gt;\s/, '&gt; ');
-          return `<span class="${MINE_QUOTE_CLASSNAME}">${encodedLine}</span>`;
-        }
-        return line;
-      });
-
-      element.innerHTML = processedLines.join('\n');
-      [...element.querySelectorAll(`.${MINE_QUOTE_CLASSNAME}`)].forEach(e => highlightForQuoteEle(e));
-    };
-    const tripleQuotify = (element) => {
-      const lines = element.innerHTML.split('\n');
-      const processedLines = lines.map(line => {
-        if (line.trim() === '"""') {
-          return `<span class="mine_triple_quote">${line}</span>`;
-        }
-        return line;
-      });
-
-      element.innerHTML = processedLines.join('\n');
-    };
     await Mine.waitForQs('[data-element-id="user-message"]', {recheckIntervalMs: 100, timeoutMs: Infinity}).catch(() => null).then(anEle => {
       if (!anEle) return;
 
