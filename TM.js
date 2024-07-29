@@ -2146,7 +2146,7 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
     };
     bindOnSelectorDblTap('body, [data-element-id="chat-space-background"]', toggleFullscreen, {mustBeExactElement: true});
     bindOnSelectorTripleTap('body, [data-element-id="chat-space-background"], [data-element-id="chat-space-middle-part"]', async () => {
-      if (getAllChatMessages().length) return;  // only for home page usage
+      if (getAllChatMessages().length) return;  // only for home page usage. clicking new chat changes hash.
       const undim = Mine.dim(document.body);
       Mine.qsaa('button').find(e => e.innerText.toLowerCase() === 'Open sidebar'.toLowerCase()).click();
       (await Mine.waitForQs(`[data-element-id="custom-chat-item"] .truncate`)).click();
