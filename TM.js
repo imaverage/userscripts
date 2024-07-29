@@ -1722,21 +1722,20 @@ button[data-element-id="output-settings-button"] {
     });
   };
 
-  const wipeChatHotkey = () => {
-    // also tried pulling out the context button and storing that pointer on load (doesnt work when mac screen locked)
-
-    // CMD+OPT+J
-    document.dispatchEvent(new KeyboardEvent('keydown', {
-      key: 'j',
-      code: 'KeyJ',
-      metaKey: true,
-      altKey: true,
-      bubbles: true,
-      cancelable: true
-    }));
-  };
-
   if (!isMobile) {
+    const wipeChatHotkey = () => {
+      // also tried pulling out the context button and storing that pointer on load (doesnt work when mac screen locked)
+  
+      // CMD+OPT+J
+      document.dispatchEvent(new KeyboardEvent('keydown', {
+        key: 'j',
+        code: 'KeyJ',
+        metaKey: true,
+        altKey: true,
+        bubbles: true,
+        cancelable: true
+      }));
+    };
     const maybeWipeChat = async () => {
       document.body.style.opacity = 0.1;
       await closeSide();
