@@ -2166,16 +2166,13 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
     bindOnSelectorClick('[data-element-id="response-block"]', async (ele, e) => {
       const selection = window.getSelection();
       if (!selection.isCollapsed) return;
-      console.log(1, e.target);
 
       const listItem = e.target.closest('li');
       if (!listItem) return;
-      console.log(1.5);
 
       const clickedElement = e.target.closest('p, div');
       if (!clickedElement || !listItem.contains(clickedElement)) return;
 
-      console.log(2);
       const listGroup = listItem.closest('ul, ol');
       if (!listGroup) return;
 
@@ -2184,7 +2181,6 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
       );
       if (!allItemsHaveColon) return;
 
-      console.log(3);
       const text = clickedElement.textContent;
       const colonIndex = text.indexOf(':');
       if (colonIndex === -1) return;
