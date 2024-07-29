@@ -90,7 +90,7 @@
         for (const [selector, handlers] of globalSelectorClickEventHandlers) {
           const targetEle = e.target.closest(selector);
           if (targetEle) {
-            handlers.forEach(handler => handler(targetEle));
+            handlers.forEach(handler => handler(targetEle, e));
           }
         }
       });
@@ -2163,17 +2163,14 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
   if (isMobile) installToggleHideStuffOnDblTap();
 
   const installListAutoPreColonTitleSelector = async () => {
-    const clickProxyEventName = isMobile ? 'touchend' : 'click';
-    document.body.addEventListener(clickProxyEventName, e => {
+    bindOnSelectorClick('[data-element-id="response-block"]', async (ele, e) => {
       const selection = window.getSelection();
       if (!selection.isCollapsed) return;
 
-      if (!e.target.closest('[data-element-id="response-block"]')) return;
-
-      const listItem = e.target.closest('li');
+      const listItem = ele.closest('li');
       if (!listItem) return;
     
-      const clickedElement = e.target.closest('p, div');
+      const clickedElement = ele.closest('p, div');
       if (!clickedElement || !listItem.contains(clickedElement)) return;
     
       const listGroup = listItem.closest('ul, ol');
@@ -2200,7 +2197,7 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
         selection.removeAllRanges();
         selection.addRange(range);
       }
-    });    
+    });
   };
   installListAutoPreColonTitleSelector();
 
