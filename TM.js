@@ -1782,6 +1782,8 @@ button[data-element-id="output-settings-button"] {
       const myMenuWrapperId = `mine-config-addons`;
       if (menu.querySelector(`#${myMenuWrapperId}`)) return;
 
+      const activeTimeLabel = '1h 5m';
+
       const newDiv = document.createElement('div');
       newDiv.id = myMenuWrapperId;
       newDiv.style = 'border-top: 1px solid rgba(255,255,255,0.15);padding-top: 10px;';
@@ -1793,6 +1795,7 @@ button[data-element-id="output-settings-button"] {
   }
   </style>
   <button id="mine-collapse-resp" class="mine-menu-btn">${uncollapseAiResponsesFn?'Uncollapse':'Collapse'} responses</button>
+  <button id="mine-active-time" class="mine-menu-btn" disabled>${activeTimeLabel} used</button>
   `.trim();
       menu.appendChild(newDiv);
       menu.querySelector('#mine-collapse-resp').addEventListener('click', () => {
