@@ -1827,7 +1827,7 @@ button[data-element-id="output-settings-button"] {
   }
   </style>
   <button id="mine-collapse-resp" class="mine-menu-btn">${uncollapseAiResponsesFn?'Uncollapse':'Collapse'} responses</button>
-  <button id="mine-active-time" class="mine-menu-btn" disabled>... used</button>
+  <button id="mine-active-time" class="mine-menu-btn" style="color: gray;" disabled>... used</button>
   `.trim();
       menu.appendChild(newDiv);
       menu.querySelector('#mine-collapse-resp').addEventListener('click', () => {
