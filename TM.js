@@ -862,7 +862,7 @@ body {
       await getAnimFrameAsync();
       const pluginItems = Mine.qsaa('[data-element-id="current-chat-title"] [role="menuitem"]');
       // pluginItems.forEach(e => e.style.display = 'none');  // needed to work on iphone for some reason
-      // pluginItems.forEach(e => e.style.display = '');  // needed to work on iphone for some reason
+      pluginItems.forEach(e => e.style.display = '');  // needed to work on iphone for some reason
       const unwantedPluginNames = [
         "Web Search",
         "Perplexity Search",
@@ -877,6 +877,8 @@ body {
         "Render Chart",
         "Render HTML",
       ].map(t => t.toLowerCase());
+
+      // new line splitting stuff seems to be wonky on iphone
       pluginItems.filter(e => unwantedPluginNames.some(upn => e.innerText.toLowerCase().includes(upn.toLowerCase()))).forEach(e => e.style.display = 'none');
     }, {mustBeExactElement: true});
   };
