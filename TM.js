@@ -2270,6 +2270,7 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
 
         event.preventDefault();
         event.stopPropagation();
+        preventTextSelection(target);
         if (event.type === 'mousedown' || event.type === 'touchstart') {
           timer = setTimeout(() => callback(target), duration);
         } else {
