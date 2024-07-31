@@ -877,7 +877,7 @@ body {
         "Render Chart",
         "Render HTML",
       ].map(t => t.toLowerCase());
-      pluginItems.filter(e => unwantedPluginNames.includes(e.innerText.toLowerCase().split('\n').pop())).forEach(e => e.style.display = 'none');
+      pluginItems.filter(e => unwantedPluginNames.some(upn => e.innerText.toLowerCase().includes(upn.toLowerCase()))).forEach(e => e.style.display = 'none');
     }, {mustBeExactElement: true});
   };
   installPluginNoiseHider();
