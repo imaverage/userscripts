@@ -10,7 +10,7 @@
     return _debounceTimer;
   };
 
-  const getChatIndexedDbValue = async urlChatValue => await Mine.getIndexedDbValue(`CHAT_${urlChatValue}`, 'keyval-store', 'keyval');
+  const getChatIndexedDbValueAsync = async urlChatValue => await Mine.getIndexedDbValue(`CHAT_${urlChatValue}`, 'keyval-store', 'keyval');
   const getStopButton = () => Mine.qsaa('button').find(e => e.innerText === 'Stop');
   const isAiTyping = () => !!getStopButton();
   const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
@@ -20,10 +20,10 @@
   };
   const mapEachNonEmptyLine = (blob, cb) => blob.split('\n').filter(l => !!l.trim()).map(cb).join('\n');
   const getAllChatMessages = () => Mine.qsaa('[data-element-id="ai-response"], [data-element-id="user-message"]');
-  const getTa = async () => await Mine.waitForQs('#chat-input-textbox');
+  const getTaAsync = async () => await Mine.waitForQs('#chat-input-textbox');
   const getSendButtonAsync = async () => await Mine.waitForQs(`[data-element-id="send-button"]`);
-  const appendTaText = async (textToAppend, doSubmit) => {
-    const ta = await getTa();
+  const appendTaTextAsync = async (textToAppend, doSubmit) => {
+    const ta = await getTaAsync();
     const newVal = ta.value?`${ta.value}\n\n${textToAppend}`:textToAppend;
     Mine.updateReactTypableFormValue(ta, newVal);
     Mine.qs('button:has([d="M12 7.59 7.05 2.64 5.64 4.05 12 10.41l6.36-6.36-1.41-1.41L12 7.59zM5.64 19.95l1.41 1.41L12 16.41l4.95 4.95 1.41-1.41L12 13.59l-6.36 6.36z"])')?.click();
@@ -35,8 +35,9 @@
     return true;
   };
   const getActiveChatId = () => window.location.hash.split('chat=')[1];
+  const getAnimFrameAsync = () => new Promise(resolve => requestAnimationFrame(resolve));
 
-  const getUserDefinedKeyValueFromChatHistory = async secretKeyName => {
+  const getUserDefinedKeyValueFromChatHistoryAsync = async secretKeyName => {
     if (!secretKeyName) return null;
 
     const dbName = 'keyval-store';
@@ -124,8 +125,8 @@
 
   // main
   const installRemoteChatStarter = async () => {
-    const jsonBinBinId = await getUserDefinedKeyValueFromChatHistory('remoteChatJsonBinBinId');
-    const jsonBinXMasterKey = await getUserDefinedKeyValueFromChatHistory('remoteChatJsonBinXMasterKey');
+    const jsonBinBinId = await getUserDefinedKeyValueFromChatHistoryAsync('remoteChatJsonBinBinId');
+    const jsonBinXMasterKey = await getUserDefinedKeyValueFromChatHistoryAsync('remoteChatJsonBinXMasterKey');
     if (!jsonBinBinId || !jsonBinXMasterKey) return null;
 
     const response = await fetch(`https://api.jsonbin.io/v3/b/${jsonBinBinId}`, {
@@ -154,9 +155,9 @@
       msg += `\n\nUse the following context:\n"""\n${userContext}\n"""`;
     }
 
-    const ta = await getTa();
+    const ta = await getTaAsync();
     if (!ta.value) {
-      await appendTaText(msg, true);
+      await appendTaTextAsync(msg, true);
     }
   };
   if (!isMobile) installRemoteChatStarter().then();
@@ -289,7 +290,7 @@ body {
       const chatId = getActiveChatId();
       if (!chatId) return null;
 
-      const inf = await getChatIndexedDbValue(chatId);
+      const inf = await getChatIndexedDbValueAsync(chatId);
       const contextSize = inf.chatParams.contextLimit;
       return contextSize;
     };
@@ -357,7 +358,7 @@ body {
       // TODO: hide info button in this case
       const chatId = getActiveChatId();
       if (!chatId) return;
-      const inf = await getChatIndexedDbValue(chatId);
+      const inf = await getChatIndexedDbValueAsync(chatId);
       if (!inf) return;
 
       await updateInfoButton();
@@ -474,7 +475,7 @@ body {
       });
     };
 
-    const memoryPluginPassword = await getUserDefinedKeyValueFromChatHistory('memoryPluginPassword');
+    const memoryPluginPassword = await getUserDefinedKeyValueFromChatHistoryAsync('memoryPluginPassword');
 
     // keep this constant between plugin and top window script
     const EncryptionLib = (() => {
@@ -585,7 +586,7 @@ body {
     };
     const quoteReplyWith = text => async ({selectedText, isLongPressed}) => {
       const quotedResp = getQuoteResponseMerge(selectedText, text);
-      return await appendTaText(quotedResp, isLongPressed);
+      return await appendTaTextAsync(quotedResp, isLongPressed);
     };
     const commands = {
       'elab': quoteReplyWith('elaborate'),
@@ -1031,7 +1032,7 @@ body {
       stopButton.click();
       await Mine.sleep(100);  // might need to raise this to 500 if finniky
     };
-    const ta = await getTa();
+    const ta = await getTaAsync();
     const oldValue = ta.value;
     if (oldValue) {
       Mine.updateReactTypableFormValue(ta, '');
@@ -1256,7 +1257,7 @@ button[data-element-id="output-settings-button"] {
             const newMsg = mapEachNonEmptyLine(sel.trim(), line => `> ${line}`);
 
             const replyWithStatement = async statement => {
-              const taEle = await getTa();
+              const taEle = await getTaAsync();
               const taVal = taEle.value;
               const newVal = `${taVal.trimEnd()}\n\n${statement}\n`.trim()+'\n';
               Mine.updateReactTypableFormValue(taEle, newVal);
@@ -1282,7 +1283,7 @@ button[data-element-id="output-settings-button"] {
           const match = query.match(pattern);
           return match ? match[1] : null;
         }
-        const ta = await getTa();
+        const ta = await getTaAsync();
         const q = ta.value;
         const maybeArg = getOptionalArgumentStr(q);
         if (maybeArg) {
@@ -1312,12 +1313,12 @@ button[data-element-id="output-settings-button"] {
           async b => {
             b.addEventListener('touchend', async () => {
               await postProcessTaBeforeSubmit();
-              (await getTa()).blur();
+              (await getTaAsync()).blur();
             });
           },
         );
       } else {
-        await Mine.attachToElementContinuously(getTa, ta => {
+        await Mine.attachToElementContinuously(getTaAsync, ta => {
           // happens at least when u switch chats
           ta.addEventListener('keydown', async e => {
             if (!isModifierFree(e)) return;
@@ -1518,7 +1519,7 @@ button[data-element-id="output-settings-button"] {
 
         await Mine.sleep(500);
         dialogButtonEles.find(e => e.innerText === 'Finish').click();
-        const ta = await getTa();
+        const ta = await getTaAsync();
         await Mine.waitFor(() => ta.value.trim().length);
         (await getSendButtonAsync()).click();
       }
@@ -1540,7 +1541,7 @@ button[data-element-id="output-settings-button"] {
 
     // const mine_query = Mine.getQueryParam('mine_query');
     // if (mine_query) {
-    //   const ta = await getTa();
+    //   const ta = await getTaAsync();
     //   Mine.updateReactTypableFormValue(ta, mine_query);
     //   (await getSendButtonAsync()).click();
     // }
@@ -1741,7 +1742,7 @@ button[data-element-id="output-settings-button"] {
       document.body.style.opacity = 0.1;
       await closeSide();
       const wipeChat = async () => {
-        const ta = await getTa();
+        const ta = await getTaAsync();
         const oldValue = ta.value;
         Mine.updateReactTypableFormValue(ta, '');
 
@@ -1842,7 +1843,7 @@ button[data-element-id="output-settings-button"] {
         Mine.qs('[data-element-id="config-buttons"]').click();
       });
 
-      const chatTimestampMsArr = (await getChatIndexedDbValue(getActiveChatId()))?.messages.map(e => new Date(e.createdAt)) || [];
+      const chatTimestampMsArr = (await getChatIndexedDbValueAsync(getActiveChatId()))?.messages.map(e => new Date(e.createdAt)) || [];
       const activeTime = calculateActiveTimeMs(chatTimestampMsArr);
       const activeTimeLabel = formatActiveTime(activeTime);
       menu.querySelector('#mine-active-time').innerHTML = `${activeTimeLabel} engaged`;
@@ -2177,7 +2178,7 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
         unisi = Mine.isi(fullscreenStyles);
       }
 
-      const ta = await getTa();
+      const ta = await getTaAsync();
       if (isFullscreen) {  // Exit fullscreen
         ta.style.maxWidth = normalTaWidth;
         await Mine.sleep(200);
@@ -2269,7 +2270,6 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
     }
 
     // Usage
-    const getAnimFrameAsync = () => new Promise(resolve => requestAnimationFrame(resolve));
     const setPluginsState = async (desiredPluginNames, enable = true) => {
       const pluginsTrigger = await Mine.waitForQs(`button:has([d="M11.25 5.337c0-.355-.186-.676-.401-.959a1.647 1.647 0 01-.349-1.003c0-1.036 1.007-1.875 2.25-1.875S15 2.34 15 3.375c0 .369-.128.713-.349 1.003-.215.283-.401.604-.401.959 0 .332.278.598.61.578 1.91-.114 3.79-.342 5.632-.676a.75.75 0 01.878.645 49.17 49.17 0 01.376 5.452.657.657 0 01-.66.664c-.354 0-.675-.186-.958-.401a1.647 1.647 0 00-1.003-.349c-1.035 0-1.875 1.007-1.875 2.25s.84 2.25 1.875 2.25c.369 0 .713-.128 1.003-.349.283-.215.604-.401.959-.401.31 0 .557.262.534.571a48.774 48.774 0 01-.595 4.845.75.75 0 01-.61.61c-1.82.317-3.673.533-5.555.642a.58.58 0 01-.611-.581c0-.355.186-.676.401-.959.221-.29.349-.634.349-1.003 0-1.035-1.007-1.875-2.25-1.875s-2.25.84-2.25 1.875c0 .369.128.713.349 1.003.215.283.401.604.401.959a.641.641 0 01-.658.643 49.118 49.118 0 01-4.708-.36.75.75 0 01-.645-.878c.293-1.614.504-3.257.629-4.924A.53.53 0 005.337 15c-.355 0-.676.186-.959.401-.29.221-.634.349-1.003.349-1.036 0-1.875-1.007-1.875-2.25s.84-2.25 1.875-2.25c.369 0 .713.128 1.003.349.283.215.604.401.959.401a.656.656 0 00.659-.663 47.703 47.703 0 00-.31-4.82.75.75 0 01.83-.832c1.343.155 2.703.254 4.077.294a.64.64 0 00.657-.642z"])`);
       Mine.simulateClick(pluginsTrigger);
