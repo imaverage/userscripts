@@ -34,6 +34,7 @@
     }
     return true;
   };
+  const getActiveChatId = () => window.location.hash.split('chat=')[1];
 
   const getUserDefinedKeyValueFromChatHistory = async secretKeyName => {
     if (!secretKeyName) return null;
@@ -285,7 +286,7 @@ body {
   const attachMetaInfoV1 = async () => {
     const infoIconPath = `M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z`;
     const getContextSize = async () => {
-      const chatId = window.location.hash.split('chat=')[1];
+      const chatId = getActiveChatId();
       if (!chatId) return null;
 
       const inf = await getChatIndexedDbValue(chatId);
@@ -354,7 +355,7 @@ body {
     };
     const refreshCurrentChatMeta = async () => {
       // TODO: hide info button in this case
-      const chatId = window.location.hash.split('chat=')[1];
+      const chatId = getActiveChatId();
       if (!chatId) return;
       const inf = await getChatIndexedDbValue(chatId);
       if (!inf) return;
@@ -1776,13 +1777,44 @@ button[data-element-id="output-settings-button"] {
   }
 
   const installCustomConfigItems = async () => {
+    const calculateActiveTime = (timestamps, sessionGapMins = 15) => {
+      if (timestamps.length < 2) return 0;
+
+      const sessionGapMs = sessionGapMins*60*1000;
+      const sortedTimestamps = timestamps.sort((a, b) => a - b);
+      let activeTime = 0;
+
+      for (let i = 1; i < sortedTimestamps.length; i++) {
+        const timeDiff = sortedTimestamps[i] - sortedTimestamps[i-1];
+        activeTime += timeDiff < sessionGapMs ? timeDiff : 0;
+      }
+
+      return activeTime;
+    };
+    const formatActiveTime = (ms) => {
+      const seconds = Math.floor(ms / 1000);
+      const minutes = Math.floor(seconds / 60);
+      const hours = Math.floor(minutes / 60);
+      const days = Math.floor(hours / 24);
+
+      const s = seconds % 60;
+      const m = minutes % 60;
+      const h = hours % 24;
+
+      const parts = [];
+      if (days > 0) parts.push(`${days}d`);
+      if (h > 0) parts.push(`${h}h`);
+      if (m > 0 && days === 0) parts.push(`${m}m`);
+      if (s > 0 && hours === 0) parts.push(`${s}s`);
+
+      return parts.join(' ') || '0s';
+    };
+
     let uncollapseAiResponsesFn;
     bindOnSelectorClick(`[data-element-id="config-buttons"]`, async () => {
       const menu = await Mine.waitForQs(`#elements-in-action-buttons [id^="headlessui-menu-items-"]`);
       const myMenuWrapperId = `mine-config-addons`;
       if (menu.querySelector(`#${myMenuWrapperId}`)) return;
-
-      const activeTimeLabel = '1h 5m';
 
       const newDiv = document.createElement('div');
       newDiv.id = myMenuWrapperId;
@@ -1795,7 +1827,7 @@ button[data-element-id="output-settings-button"] {
   }
   </style>
   <button id="mine-collapse-resp" class="mine-menu-btn">${uncollapseAiResponsesFn?'Uncollapse':'Collapse'} responses</button>
-  <button id="mine-active-time" class="mine-menu-btn" disabled>${activeTimeLabel} used</button>
+  <button id="mine-active-time" class="mine-menu-btn" disabled>... used</button>
   `.trim();
       menu.appendChild(newDiv);
       menu.querySelector('#mine-collapse-resp').addEventListener('click', () => {
@@ -1807,6 +1839,11 @@ button[data-element-id="output-settings-button"] {
         }
         Mine.qs('[data-element-id="config-buttons"]').click();
       });
+
+      const chatTimestampMsArr = (await getChatIndexedDbValue(getActiveChatId()))?.messages.map(e => new Date(e.createdAt)) || [];
+      const activeTime = calculateActiveTime(chatTimestampMsArr);
+      const activeTimeLabel = formatActiveTime(activeTime);
+      menu.querySelector('#mine-active-time').innerHTML = `${activeTimeLabel} used`;
     });
   };
   installCustomConfigItems();
