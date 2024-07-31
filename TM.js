@@ -2292,7 +2292,7 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
       if (sb) sb.style.display = 'none';
       const desiredPlugins = ['Memory', 'Personal Finance'];
       await setPluginsState(desiredPlugins, true);
-      await Mine.sleep(100);
+      await Mine.sleep(1000);
       (await getSendButtonAsync()).click();
       await Mine.sleep(100);
       await setPluginsState(desiredPlugins, false);
