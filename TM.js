@@ -1777,7 +1777,7 @@ button[data-element-id="output-settings-button"] {
   }
 
   const installCustomConfigItems = async () => {
-    const calculateActiveTime = (timestamps, sessionGapMins = 30) => {
+    const calculateActiveTimeMs = (timestamps, sessionGapMins = 30) => {
       if (timestamps.length < 2) return 0;
 
       const sessionGapMs = sessionGapMins*60*1000;
@@ -1785,8 +1785,9 @@ button[data-element-id="output-settings-button"] {
       let activeTime = 0;
 
       for (let i = 1; i < sortedTimestamps.length; i++) {
-        const timeDiff = sortedTimestamps[i] - sortedTimestamps[i-1];
-        activeTime += timeDiff < sessionGapMs ? timeDiff : 0;
+        const timeSinceLast = sortedTimestamps[i] - sortedTimestamps[i-1];
+        const isSameSession = timeSinceLast < sessionGapMs;
+        activeTime += isSameSession ? timeSinceLast : 0;
       }
 
       return activeTime;
@@ -1842,7 +1843,7 @@ button[data-element-id="output-settings-button"] {
       });
 
       const chatTimestampMsArr = (await getChatIndexedDbValue(getActiveChatId()))?.messages.map(e => new Date(e.createdAt)) || [];
-      const activeTime = calculateActiveTime(chatTimestampMsArr);
+      const activeTime = calculateActiveTimeMs(chatTimestampMsArr);
       const activeTimeLabel = formatActiveTime(activeTime);
       menu.querySelector('#mine-active-time').innerHTML = `${activeTimeLabel} engaged`;
     });
