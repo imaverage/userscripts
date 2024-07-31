@@ -1213,19 +1213,7 @@ button[data-element-id="output-settings-button"] {
     if (!isMobile) fixDesktopUx().then();
 
     const isModifierFree = ev => !ev.altKey && !ev.ctrlKey && !ev.metaKey && !ev.shiftKey;
-    const fixScrollingAndHotkeys = async () => {
-      const originalScrollTo = window.scrollTo;
-      window.scrollTo = (...args) => {
-        const firstArg = args[0];
-        const options =
-          (typeof firstArg === 'object')
-            ? firstArg
-            : { top: firstArg, left: args[1] };
-        options.behavior = 'smooth';
-
-        originalScrollTo.call(window, options);
-      };
-
+    const addHotkeys = async () => {
       document.addEventListener('keyup', async ev => {
         if (!(isModifierFree(ev) && ev.target.tagName.toLowerCase() === 'body')) return;
 
@@ -1280,7 +1268,7 @@ button[data-element-id="output-settings-button"] {
         }
       });
     };
-    if (!isMobile) setTimeout(fixScrollingAndHotkeys, 500);
+    setTimeout(addHotkeys, 500);
 
     const installArgumentRunner = async () => {
       const postProcessTaBeforeSubmit = async () => {
