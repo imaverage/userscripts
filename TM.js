@@ -861,7 +861,6 @@ body {
       await Mine.waitForQs('[data-element-id="current-chat-title"] [role="menuitem"]');
       await getAnimFrameAsync();
       const pluginItems = Mine.qsaa('[data-element-id="current-chat-title"] [role="menuitem"]');
-      // pluginItems.forEach(e => e.style.display = 'none');  // needed to work on iphone for some reason
       pluginItems.forEach(e => e.style.display = '');  // needed to work on iphone for some reason
       const unwantedPluginNames = [
         "Web Search",
@@ -2279,7 +2278,7 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
       await getAnimFrameAsync();
 
       const pluginItems = Mine.qsaa('[data-element-id="current-chat-title"] [role="menuitem"]');
-      pluginItems.forEach(e => e.style.display = 'none');  // needed to work on iphone for some reason
+      pluginItems.forEach(e => e.style.display = '');  // needed to work on iphone for some reason
       pluginItems.filter(e => desiredPluginNames.some(desiredPluginName => e.innerText.toLowerCase() === desiredPluginName.toLowerCase())).forEach(e => {
         const btn = e.querySelector('button');
         const isCurEnabled = btn.getAttribute('aria-checked')?.toLowerCase() === 'true';
