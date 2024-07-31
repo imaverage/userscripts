@@ -2293,7 +2293,7 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
       Mine.simulateClick(pluginsTrigger);
     };
     const longPressUsagePluginNames = ['Memory', 'Personal Finance', 'Javascript Interpreter'];
-    const longPress = handleLongPress('[data-element-id="send-button"]', 1000, async element => {
+    const longPress = handleLongPress('[data-element-id="send-button"]', 500, async element => {
       await setPluginsState(longPressUsagePluginNames, true);
       await Mine.sleep(100);
       (await getSendButtonAsync()).click();
