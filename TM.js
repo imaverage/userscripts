@@ -2313,7 +2313,7 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
         isLongPressing = false;
         setTimeout(async () => {
           await setPluginsState(longPressUsagePluginNames, false);
-        }, 500);
+        }, 1500);
       }
     };
 
