@@ -2288,7 +2288,7 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
         menuEle.style.display = 'none';
       }
       // pluginItems.forEach(e => e.style.display = '');  // needed to work on iphone for some reason
-      pluginItems.filter(e => desiredPluginNames.some(desiredPluginName => e.innerText.toLowerCase() === desiredPluginName.toLowerCase())).forEach(e => {
+      pluginItems.filter(e => desiredPluginNames.some(desiredPluginName => e.innerText.toLowerCase().includes(desiredPluginName.toLowerCase()))).forEach(e => {
         const btn = e.querySelector('button');
         const isCurEnabled = btn.getAttribute('aria-checked')?.toLowerCase() === 'true';
         const needsToggle = (isCurEnabled && !enable) || (!isCurEnabled && enable);
