@@ -2302,26 +2302,15 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
       Mine.simulateClick(pluginsTrigger);
     };
     const longPressUsagePluginNames = ['Memory', 'Personal Finance', 'Javascript Interpreter'];
-    let isLongPressing = false;
     const longPress = handleLongPress('[data-element-id="send-button"]', 500, async sendButton => {
-      isLongPressing = true;
       await setPluginsState(longPressUsagePluginNames, true);
+
+      await Mine.waitFor(() => !Mine.qs('[data-element-id="send-button"]'), {recheckIntervalMs: 500});
+      await Mine.sleep(1000);
+      await setPluginsState(longPressUsagePluginNames, false);
     });
-
-    const handleRelease = async () => {
-      if (isLongPressing) {
-        isLongPressing = false;
-        setTimeout(async () => {
-          await setPluginsState(longPressUsagePluginNames, false);
-        }, 1500);
-      }
-    };
-
     document.addEventListener('mousedown', longPress);
     document.addEventListener('touchstart', longPress);
-    document.addEventListener('mouseup', handleRelease);
-    document.addEventListener('mouseleave', handleRelease);
-    document.addEventListener('touchend', handleRelease);
   };
   installLongSendBtnWithPlugins();
 
