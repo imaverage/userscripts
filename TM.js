@@ -1787,18 +1787,24 @@ button[data-element-id="output-settings-button"] {
     const calculateActiveTimeMs = (timestamps, sessionGapMins = 30) => {
       if (timestamps.length < 2) return 0;
 
-      const sessionGapMs = sessionGapMins*60*1000;
+      const sessionGapMs = sessionGapMins * 60 * 1000;
       const sortedTimestamps = timestamps.sort((a, b) => a - b);
       let activeTime = 0;
+      let sessionStart = sortedTimestamps[0];
 
       for (let i = 1; i < sortedTimestamps.length; i++) {
         const timeSinceLast = sortedTimestamps[i] - sortedTimestamps[i-1];
-        const isSameSession = timeSinceLast < sessionGapMs;
-        activeTime += isSameSession ? timeSinceLast : 0;
+        if (timeSinceLast >= sessionGapMs) {
+          activeTime += sortedTimestamps[i-1] - sessionStart;
+          sessionStart = sortedTimestamps[i];
+        }
       }
+
+      activeTime += sortedTimestamps[sortedTimestamps.length - 1] - sessionStart;
 
       return activeTime;
     };
+
     const formatActiveTime = (ms) => {
       const seconds = Math.floor(ms / 1000);
       const minutes = Math.floor(seconds / 60);
