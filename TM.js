@@ -2254,6 +2254,11 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
   if (!isMobile) installListAutoPreColonTitleSelector();
 
   const installLongSendBtnWithPlugins = async () => {
+    function preventTextSelection(element) {
+      element.style.webkitTouchCallout = 'none';
+      element.style.webkitUserSelect = 'none';
+      element.style.userSelect = 'none';
+    }
     function handleLongPress(selector, duration = 1000, callback) {
       let timer;
 
@@ -2295,10 +2300,11 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
       Mine.simulateClick(pluginsTrigger);
     };
     const longPressUsagePluginNames = ['Memory', 'Personal Finance', 'Javascript Interpreter'];
-    const longPress = handleLongPress('[data-element-id="send-button"]', 500, async element => {
+    const longPress = handleLongPress('[data-element-id="send-button"]', 500, async sendButton => {
+      preventTextSelection(sendButton);
       await setPluginsState(longPressUsagePluginNames, true);
       await Mine.sleep(100);
-      (await getSendButtonAsync()).click();
+      sendButton.click();
       await Mine.sleep(500);
       await setPluginsState(longPressUsagePluginNames, false);
     });
