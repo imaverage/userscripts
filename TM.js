@@ -2269,6 +2269,7 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
         if (!target) return;
 
         event.preventDefault();
+        event.stopPropagation();
         if (event.type === 'mousedown' || event.type === 'touchstart') {
           timer = setTimeout(() => callback(target), duration);
         } else {
