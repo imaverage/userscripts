@@ -1818,16 +1818,17 @@ button[data-element-id="output-settings-button"] {
 
       const newDiv = document.createElement('div');
       newDiv.id = myMenuWrapperId;
-      newDiv.style = 'border-top: 1px solid rgba(255,255,255,0.15);padding-top: 10px;';
+      newDiv.style = 'border-top: 1px solid rgba(255,255,255,0.15);padding-top: 10px;padding-bottom:5px;';
       newDiv.innerHTML = `
   <style>
   .mine-menu-btn {
     width: 100%;
-    padding-bottom: 0.75rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
   }
   </style>
   <button id="mine-collapse-resp" class="mine-menu-btn">${uncollapseAiResponsesFn?'Uncollapse':'Collapse'} responses</button>
-  <button id="mine-active-time" class="mine-menu-btn" style="color: gray;" disabled>... used</button>
+  <button id="mine-active-time" class="mine-menu-btn" style="color: gray;" disabled>... engaged</button>
   `.trim();
       menu.appendChild(newDiv);
       menu.querySelector('#mine-collapse-resp').addEventListener('click', () => {
@@ -1843,7 +1844,7 @@ button[data-element-id="output-settings-button"] {
       const chatTimestampMsArr = (await getChatIndexedDbValue(getActiveChatId()))?.messages.map(e => new Date(e.createdAt)) || [];
       const activeTime = calculateActiveTime(chatTimestampMsArr);
       const activeTimeLabel = formatActiveTime(activeTime);
-      menu.querySelector('#mine-active-time').innerHTML = `${activeTimeLabel} used`;
+      menu.querySelector('#mine-active-time').innerHTML = `${activeTimeLabel} engaged`;
     });
   };
   installCustomConfigItems();
