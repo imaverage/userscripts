@@ -1531,7 +1531,7 @@ button[data-element-id="output-settings-button"] {
       }
       new TabKeyHandler(startListening, stopListening);  // recognition needs time to process from time u see the preview text
     };
-    installTabWalkieTalkie();
+    if (!isMobile) installTabWalkieTalkie();
 
     if (!isMobile) {
       Mine.bindHotkey('`', document, async event => {
