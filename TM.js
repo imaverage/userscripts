@@ -2072,6 +2072,8 @@ button[data-element-id="output-settings-button"] {
   installFavico();
 
   const installToggleHideStuffOnDblTap = () => {
+    Mine.isi(`#chat-input-textbox:not(:empty) {max-width: 1000px !important;}`);
+
     const bindOnSelectorMultiTap = (qs, cb, options = {}) => {
       const {
         maxTimeBetweenTaps = 300,
