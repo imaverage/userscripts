@@ -2305,9 +2305,9 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
     const longPress = handleLongPress('[data-element-id="send-button"]', 500, async sendButton => {
       await setPluginsState(longPressUsagePluginNames, true);
       await Mine.sleep(100);
-      sendButton.click();
-      await Mine.sleep(500);
-      await setPluginsState(longPressUsagePluginNames, false);
+      // sendButton.click();
+      // await Mine.sleep(500);
+      // await setPluginsState(longPressUsagePluginNames, false);
     });
 
     document.addEventListener('mousedown', longPress);
