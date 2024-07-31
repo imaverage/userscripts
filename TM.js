@@ -2256,10 +2256,10 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
       let timer;
 
       return (event) => {
-        event.preventDefault();
         const target = event.target.closest(selector);
         if (!target) return;
 
+        event.preventDefault();
         if (event.type === 'mousedown' || event.type === 'touchstart') {
           timer = setTimeout(() => callback(target), duration);
         } else {
