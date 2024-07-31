@@ -1812,10 +1812,10 @@ button[data-element-id="output-settings-button"] {
       const parts = [];
       if (days > 0) parts.push(`${days}d`);
       if (h > 0) parts.push(`${h}h`);
-      if (m > 0 && days === 0) parts.push(`${m}m`);
-      if (s > 0 && hours === 0) parts.push(`${s}s`);
+      if (m > 0) parts.push(`${m}m`);
+      if (s > 0) parts.push(`${s}s`);
 
-      return parts.join(' ') || '0s';
+      return parts.join(' ');
     };
 
     let uncollapseAiResponsesFn;
