@@ -862,6 +862,7 @@ body {
       await getAnimFrameAsync();
       const pluginItems = Mine.qsaa('[data-element-id="current-chat-title"] [role="menuitem"]');
       pluginItems.forEach(e => e.style.display = 'none');  // needed to work on iphone for some reason
+      pluginItems.forEach(e => e.style.display = '');  // needed to work on iphone for some reason
       const unwantedPluginNames = [
         "Web Search",
         "Perplexity Search",
