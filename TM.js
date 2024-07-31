@@ -2281,6 +2281,7 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
           btn.click();
         }
       });
+      await Mine.sleep(1000);
       Mine.simulateClick(pluginsTrigger);
     };
     const longPress = handleLongPress('[data-element-id="send-button"]', 1000, async element => {
