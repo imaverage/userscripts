@@ -2289,14 +2289,14 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
     };
     const longPress = handleLongPress('[data-element-id="send-button"]', 1000, async element => {
       const sb = await getSendButtonAsync();
-      sb?.style.display = 'none';
+      if (sb) sb.style.display = 'none';
       const desiredPlugins = ['Memory', 'Personal Finance'];
       await setPluginsState(desiredPlugins, true);
       await Mine.sleep(100);
       (await getSendButtonAsync()).click();
       await Mine.sleep(100);
       await setPluginsState(desiredPlugins, false);
-      sb?.style.display = '';
+      if (sb) sb.style.display = 'none';
     });
 
     document.addEventListener('mousedown', longPress);
