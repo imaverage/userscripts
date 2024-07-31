@@ -1777,7 +1777,7 @@ button[data-element-id="output-settings-button"] {
   }
 
   const installCustomConfigItems = async () => {
-    const calculateActiveTime = (timestamps, sessionGapMins = 15) => {
+    const calculateActiveTime = (timestamps, sessionGapMins = 30) => {
       if (timestamps.length < 2) return 0;
 
       const sessionGapMs = sessionGapMins*60*1000;
