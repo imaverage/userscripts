@@ -2289,7 +2289,7 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
       await Mine.sleep(1000);
       (await getSendButtonAsync()).click();
       await Mine.sleep(1000);
-      await setPluginsState(desiredPlugins, true);
+      await setPluginsState(desiredPlugins, false);
     });
 
     document.addEventListener('mousedown', longPress);
