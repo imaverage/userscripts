@@ -2278,8 +2278,8 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
       await getAnimFrameAsync();
 
       const pluginItems = Mine.qsaa('[data-element-id="current-chat-title"] [role="menuitem"]');
-      const menu = pluginItems[0].closest('[role=menu]');
-      menu.style.display = 'none';
+      const menuEle = pluginItems[0]?.closest('[role=menu]');
+      menuEle && menuEle.style.display = 'none';
       pluginItems.forEach(e => e.style.display = '');  // needed to work on iphone for some reason
       pluginItems.filter(e => desiredPluginNames.some(desiredPluginName => e.innerText.toLowerCase() === desiredPluginName.toLowerCase())).forEach(e => {
         const btn = e.querySelector('button');
