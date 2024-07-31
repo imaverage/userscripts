@@ -2284,9 +2284,12 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
       Mine.simulateClick(pluginsTrigger);
     };
     const longPress = handleLongPress('[data-element-id="send-button"]', 1000, async element => {
-      await setPluginsState(['Memory', 'Personal Finance'], true);
+      const desiredPlugins = ['Memory', 'Personal Finance'];
+      await setPluginsState(desiredPlugins, true);
       await Mine.sleep(1000);
       (await getSendButtonAsync()).click();
+      await Mine.sleep(1000);
+      await setPluginsState(desiredPlugins, true);
     });
 
     document.addEventListener('mousedown', longPress);
