@@ -2285,9 +2285,8 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
       const pluginItems = Mine.qsaa('[data-element-id="current-chat-title"] [role="menuitem"]');
       const menuEle = pluginItems[0]?.closest('[role=menu]');
       if (menuEle) {
-        menuEle.style.display = 'none';
+        menuEle.style.display = 'none';  // this or setting every item display to '' is needed to work on iphone for some reason
       }
-      // pluginItems.forEach(e => e.style.display = '');  // needed to work on iphone for some reason
       pluginItems.filter(e => desiredPluginNames.some(desiredPluginName => e.innerText.toLowerCase().includes(desiredPluginName.toLowerCase()))).forEach(e => {
         const btn = e.querySelector('button');
         const isCurEnabled = btn.getAttribute('aria-checked')?.toLowerCase() === 'true';
