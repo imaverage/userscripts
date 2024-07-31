@@ -913,6 +913,11 @@ body {
 
   if (isMobile) {
     Mine.isi(`
+[data-element-id="send-button"] {
+  -webkit-user-select: none !important;
+  user-select: none !important;
+}
+
 [data-element-id="chat-space-end-part"] {
   border-radius: 6px;
 }
@@ -2256,11 +2261,6 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
   if (!isMobile) installListAutoPreColonTitleSelector();
 
   const installLongSendBtnWithPlugins = async () => {
-    function preventTextSelection(element) {
-      element.style.webkitTouchCallout = 'none';
-      element.style.webkitUserSelect = 'none';
-      element.style.userSelect = 'none';
-    }
     function handleLongPress(selector, duration = 1000, callback) {
       let timer;
 
@@ -2270,7 +2270,6 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
 
         event.preventDefault();
         event.stopPropagation();
-        preventTextSelection(target);
         if (event.type === 'mousedown' || event.type === 'touchstart') {
           timer = setTimeout(() => callback(target), duration);
         } else {
