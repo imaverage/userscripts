@@ -185,7 +185,7 @@
   padding-left: 0.5rem;
 }
 
-@media (max-width: 767px) {
+@media (max-width: 900px) {
   /* cant use message-index- bc thats doesnt covery typing state */
   div:has(>[data-element-id="response-block"]) {
     padding-right: 9px;
