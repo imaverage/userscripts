@@ -1312,22 +1312,21 @@ button[data-element-id="output-settings-button"] {
             });
           },
         );
-      } else {
-        await Mine.attachToElementContinuously(getTaAsync, ta => {
-          // happens at least when u switch chats
-          ta.addEventListener('keydown', async e => {
-            if (!isModifierFree(e)) return;
-
-            if (e.key === 'Escape') return await stopAiResponse();
-            if (e.key === 'Enter') {
-              if (getIsResponding()) {
-                await stopAiResponse();
-              }
-              await postProcessTaBeforeSubmit();
-            }
-          });
-        });
       }
+      await Mine.attachToElementContinuously(getTaAsync, ta => {
+        // happens at least when u switch chats
+        ta.addEventListener('keydown', async e => {
+          if (!isModifierFree(e)) return;
+
+          if (e.key === 'Escape') return await stopAiResponse();
+          if (e.key === 'Enter') {
+            if (getIsResponding()) {
+              await stopAiResponse();
+            }
+            await postProcessTaBeforeSubmit();
+          }
+        });
+      });
     };
     installArgumentRunner();
 
