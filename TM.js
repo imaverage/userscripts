@@ -1235,6 +1235,12 @@ button[data-element-id="output-settings-button"] {
           msgEles[currentIndex]?.scrollIntoView({behavior: 'smooth'});
         };
 
+        const replyWithStatement = async statement => {
+          const taEle = await getTaAsync();
+          const taVal = taEle.value;
+          const newVal = `${taVal.trimEnd()}\n\n${statement}\n`.trim()+'\n';
+          Mine.updateReactTypableFormValue(taEle, newVal);
+        };
         const keyMap = {
           '/': () => getTaAsync().then(ta => ta.focus()),  // for mobile w external keyboard
           k: () => navigateMessages('up'),
@@ -1245,21 +1251,22 @@ button[data-element-id="output-settings-button"] {
             if (!sel) return;
             window.open(`https://www.amazon.com/s?k=${encodeURIComponent(sel)}`);
           },
+          e: async () => {
+            const sel = document.getSelection()?.toString();
+            if (!sel) return;
+
+            const newMsg = mapEachNonEmptyLine(sel.trim(), line => `> ${line}`);
+            await replyWithStatement(newMsg+'\nelaborate');
+          },
           q: async () => {
             const sel = document.getSelection()?.toString();
             if (!sel) return;
 
             const newMsg = mapEachNonEmptyLine(sel.trim(), line => `> ${line}`);
-
-            const replyWithStatement = async statement => {
-              const taEle = await getTaAsync();
-              const taVal = taEle.value;
-              const newVal = `${taVal.trimEnd()}\n\n${statement}\n`.trim()+'\n';
-              Mine.updateReactTypableFormValue(taEle, newVal);
-              taEle.focus();
-              taEle.setSelectionRange(taEle.value.length, taEle.value.length);
-            };
             await replyWithStatement(newMsg);
+            const taEle = await getTaAsync();
+            taEle.focus();
+            taEle.setSelectionRange(taEle.value.length, taEle.value.length);
           },
         };
 
