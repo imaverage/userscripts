@@ -1235,12 +1235,16 @@ button[data-element-id="output-settings-button"] {
           msgEles[currentIndex]?.scrollIntoView({behavior: 'smooth'});
         };
 
-        const replyWithStatement = async statement => {
+        const replyWithStatement = async (statement, focusAfter = true) => {
           const taEle = await getTaAsync();
           const taVal = taEle.value;
           const newVal = `${taVal.trimEnd()}\n\n${statement}\n`.trim()+'\n';
           Mine.updateReactTypableFormValue(taEle, newVal);
-        };
+          if (focusAfter) {
+            taEle.focus();
+            taEle.setSelectionRange(taEle.value.length, taEle.value.length);
+          }
+      };
         const keyMap = {
           '/': () => getTaAsync().then(ta => ta.focus()),  // for mobile w external keyboard
           k: () => navigateMessages('up'),
@@ -1256,7 +1260,7 @@ button[data-element-id="output-settings-button"] {
             if (!sel) return;
 
             const newMsg = mapEachNonEmptyLine(sel.trim(), line => `> ${line}`);
-            await replyWithStatement(newMsg+'\nelaborate');
+            await replyWithStatement(newMsg+'\nelaborate', false);
           },
           q: async () => {
             const sel = document.getSelection()?.toString();
@@ -1264,9 +1268,6 @@ button[data-element-id="output-settings-button"] {
 
             const newMsg = mapEachNonEmptyLine(sel.trim(), line => `> ${line}`);
             await replyWithStatement(newMsg);
-            const taEle = await getTaAsync();
-            taEle.focus();
-            taEle.setSelectionRange(taEle.value.length, taEle.value.length);
           },
         };
 
