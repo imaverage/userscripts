@@ -1253,6 +1253,7 @@ button[data-element-id="output-settings-button"] {
             if (!sel) return;
 
             quoteReplyWith('');
+            const taEle = await getTaAsync();
             taEle.focus();
             taEle.setSelectionRange(taEle.value.length, taEle.value.length);
 
