@@ -1245,7 +1245,6 @@ button[data-element-id="output-settings-button"] {
             if (!sel) return;
             window.open(`https://www.amazon.com/s?k=${encodeURIComponent(sel)}`);
           },
-          // e: elaborate
           e: async () => {
             quoteReplyWith('elaborate');
           },
