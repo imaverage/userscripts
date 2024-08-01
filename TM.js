@@ -1246,7 +1246,7 @@ button[data-element-id="output-settings-button"] {
           }
       };
         const keyMap = {
-          '/': () => getTaAsync().then(ta => ta.focus()),  // for mobile w external keyboard
+          '/': () => getTaAsync().then(ta => ta.focus()),  // useful for mobile w external keyboard
           k: () => navigateMessages('up'),
           j: () => navigateMessages('down'),
           l: () => getAllChatMessages().pop()?.scrollIntoView({behavior: 'smooth'}),
