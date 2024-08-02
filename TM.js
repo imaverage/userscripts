@@ -1333,7 +1333,7 @@ button[data-element-id="output-settings-button"] {
 
             await setPluginsState(true);
             maybeSendBtn.click();
-            await Mine.sleep(1000);
+            await Mine.sleep(2000);
             await setPluginsState(false);
             return;
           }
