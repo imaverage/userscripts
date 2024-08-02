@@ -1060,7 +1060,23 @@ body {
   };
   const getIsSideBarOpen = () => Mine.qs('#navbar')?.getBoundingClientRect().left === 0;
 
+  const navigateMessageInDirection = (direction) => {
+    const msgEles = getAllChatMessages();
+    let currentIndex = msgEles.findIndex(el => {
+      const rect = el.getBoundingClientRect();
+      return rect.top >= 0 && rect.top < window.innerHeight;
+    });
 
+    if (currentIndex === -1) currentIndex = 0;
+
+    if (direction === 'up') {
+      currentIndex = (currentIndex - 1 + msgEles.length) % msgEles.length;
+    } else {
+      currentIndex = (currentIndex + 1) % msgEles.length;
+    }
+
+    msgEles[currentIndex]?.scrollIntoView({behavior: 'smooth'});
+  };
   const main = async () => {
     const verticalMoreIconPath = `M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z`;
     const stopIconPath = `M400 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48z`;
@@ -1218,24 +1234,6 @@ button[data-element-id="output-settings-button"] {
       document.addEventListener('keyup', async ev => {
         if (!(isModifierFree(ev) && ev.target.tagName.toLowerCase() === 'body')) return;
 
-        const navigateMessages = (direction) => {
-          const msgEles = getAllChatMessages();
-          let currentIndex = msgEles.findIndex(el => {
-            const rect = el.getBoundingClientRect();
-            return rect.top >= 0 && rect.top < window.innerHeight;
-          });
-
-          if (currentIndex === -1) currentIndex = 0;
-
-          if (direction === 'up') {
-            currentIndex = (currentIndex - 1 + msgEles.length) % msgEles.length;
-          } else {
-            currentIndex = (currentIndex + 1) % msgEles.length;
-          }
-
-          msgEles[currentIndex]?.scrollIntoView({behavior: 'smooth'});
-        };
-
         const replyWithStatement = async (statement, focusAfter = true) => {
           const taEle = await getTaAsync();
           const taVal = taEle.value;
@@ -1248,8 +1246,8 @@ button[data-element-id="output-settings-button"] {
       };
         const keyMap = {
           '/': () => getTaAsync().then(ta => ta.focus()),  // useful for mobile w external keyboard
-          k: () => navigateMessages('up'),
-          j: () => navigateMessages('down'),
+          k: () => navigateMessageInDirection('up'),
+          j: () => navigateMessageInDirection('down'),
           l: () => getAllChatMessages().pop()?.scrollIntoView({behavior: 'smooth'}),
           a: () => {
             const sel = window.getSelection()?.toString().trim();
@@ -1866,10 +1864,8 @@ button[data-element-id="output-settings-button"] {
         }
         Mine.qs('[data-element-id="config-buttons"]').click();
       });
-      menu.querySelector('#mine-go-up').addEventListener('click', () => {
-        const allMsgElesBeforeCurMsgEle = getAllMsgElesBeforeCurMsgEle();
-        allMsgElesBeforeCurMsgEle.pop().scrollIntoView({behavior: 'smooth'});
-      });
+      menu.querySelector('#mine-go-up').addEventListener('click', () => navigateMessageInDirection('up'));
+      menu.querySelector('#mine-go-dn').addEventListener('click', () => navigateMessageInDirection('dn'));
 
       const chatTimestampMsArr = (await getChatIndexedDbValueAsync(getActiveChatId()))?.messages.map(e => new Date(e.createdAt)) || [];
       const activeTime = calculateActiveTimeMs(chatTimestampMsArr);
@@ -1994,14 +1990,10 @@ button[data-element-id="output-settings-button"] {
       enrichAllMessagesIdempotently();
     });
   };
-  const getAllMsgElesBeforeCurMsgEle = () => {
+  const highlightForQuoteEle = (e, scrollToSrc = false) => {
     const curMsgEle = e.closest('[data-element-id="user-message"]');
     const allMsgEles = Mine.qsaa(`[data-element-id="ai-response"], [data-element-id="user-message"]`);
     const allMsgElesBeforeCurMsgEle = Array.from(allMsgEles).filter(msg => msg.compareDocumentPosition(curMsgEle) & Node.DOCUMENT_POSITION_FOLLOWING);
-    return allMsgElesBeforeCurMsgEle;
-  };
-  const highlightForQuoteEle = (e, scrollToSrc = false) => {
-    const allMsgElesBeforeCurMsgEle = getAllMsgElesBeforeCurMsgEle();
     const quoteBody = e.innerText.substring(1).trim();
     const targetMsg = allMsgElesBeforeCurMsgEle.reverse().find(msg => msg.innerText.includes(quoteBody));
     if (!targetMsg) return;
