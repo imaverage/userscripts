@@ -1332,6 +1332,7 @@ button[data-element-id="output-settings-button"] {
             if (!maybeSendBtn) return;
 
             await setPluginsState(true);
+            await Mine.sleep(500);
             maybeSendBtn.click();
             await Mine.sleep(2000);
             await setPluginsState(false);
