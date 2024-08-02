@@ -1328,8 +1328,6 @@ button[data-element-id="output-settings-button"] {
           if (e.metaKey && e.shiftKey && e.key === 'Enter') {
             e.preventDefault();
 
-            // TODO: enable plugins and hit send
-
             const maybeSendBtn = getSendButton();
             if (!maybeSendBtn) return;
 
