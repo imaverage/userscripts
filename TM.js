@@ -1845,7 +1845,7 @@ button[data-element-id="output-settings-button"] {
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
   }
-  .mine-menu-btn .half {
+  .mine-menu-btn.half {
     width: 49%;
   }
   </style>
