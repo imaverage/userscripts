@@ -1343,6 +1343,8 @@ button[data-element-id="output-settings-button"] {
 
           if (e.key === 'Escape') return await stopAiResponse();
           if (e.key === 'Enter') {
+            if (isMobile) return;
+
             if (getIsResponding()) {
               await stopAiResponse();
             }
