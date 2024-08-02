@@ -1847,9 +1847,14 @@ button[data-element-id="output-settings-button"] {
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
   }
+  .mine-menu-btn .half {
+    width: 49%;
+  }
   </style>
-  <button id="mine-collapse-resp" class="mine-menu-btn">${uncollapseAiResponsesFn?'Uncollapse':'Collapse'} responses</button>
   <button id="mine-active-time" class="mine-menu-btn" style="color: gray;" disabled>... engaged</button>
+  <button id="mine-collapse-resp" class="mine-menu-btn half">${uncollapseAiResponsesFn?'Uncollapse':'Collapse'} responses</button>
+  <button id="mine-go-up" class="mine-menu-btn half">↑</button>
+  <button id="mine-go-dn" class="mine-menu-btn half">↓</button>
   `.trim();
       menu.appendChild(newDiv);
       menu.querySelector('#mine-collapse-resp').addEventListener('click', () => {
@@ -1860,6 +1865,10 @@ button[data-element-id="output-settings-button"] {
           uncollapseAiResponsesFn = Mine.isi(`[data-element-id="ai-response"] {max-height: 112px;overflow: scroll;}`);
         }
         Mine.qs('[data-element-id="config-buttons"]').click();
+      });
+      menu.querySelector('#mine-go-up').addEventListener('click', () => {
+        const allMsgElesBeforeCurMsgEle = getAllMsgElesBeforeCurMsgEle();
+        allMsgElesBeforeCurMsgEle.pop().scrollIntoView({behavior: 'smooth'});
       });
 
       const chatTimestampMsArr = (await getChatIndexedDbValueAsync(getActiveChatId()))?.messages.map(e => new Date(e.createdAt)) || [];
@@ -1985,10 +1994,14 @@ button[data-element-id="output-settings-button"] {
       enrichAllMessagesIdempotently();
     });
   };
-  const highlightForQuoteEle = (e, scrollToSrc = false) => {
+  const getAllMsgElesBeforeCurMsgEle = () => {
     const curMsgEle = e.closest('[data-element-id="user-message"]');
     const allMsgEles = Mine.qsaa(`[data-element-id="ai-response"], [data-element-id="user-message"]`);
     const allMsgElesBeforeCurMsgEle = Array.from(allMsgEles).filter(msg => msg.compareDocumentPosition(curMsgEle) & Node.DOCUMENT_POSITION_FOLLOWING);
+    return allMsgElesBeforeCurMsgEle;
+  };
+  const highlightForQuoteEle = (e, scrollToSrc = false) => {
+    const allMsgElesBeforeCurMsgEle = getAllMsgElesBeforeCurMsgEle();
     const quoteBody = e.innerText.substring(1).trim();
     const targetMsg = allMsgElesBeforeCurMsgEle.reverse().find(msg => msg.innerText.includes(quoteBody));
     if (!targetMsg) return;
