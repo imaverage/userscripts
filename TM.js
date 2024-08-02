@@ -21,6 +21,7 @@
   const mapEachNonEmptyLine = (blob, cb) => blob.split('\n').filter(l => !!l.trim()).map(cb).join('\n');
   const getAllChatMessages = () => Mine.qsaa('[data-element-id="ai-response"], [data-element-id="user-message"]');
   const getTaAsync = async () => await Mine.waitForQs('#chat-input-textbox');
+  const getSendButton = () => Mine.qs(`[data-element-id="send-button"]`);
   const getSendButtonAsync = async () => await Mine.waitForQs(`[data-element-id="send-button"]`);
   const appendTaTextAsync = async (textToAppend, doSubmit) => {
     const ta = await getTaAsync();
@@ -1324,6 +1325,21 @@ button[data-element-id="output-settings-button"] {
       await Mine.attachToElementContinuously(getTaAsync, ta => {
         // happens at least when u switch chats
         ta.addEventListener('keydown', async e => {
+          if (e.metaKey && e.shiftKey && e.key === 'Enter') {
+            e.preventDefault();
+
+            // TODO: enable plugins and hit send
+
+            const maybeSendBtn = getSendButton();
+            if (!maybeSendBtn) return;
+
+            await setPluginsState(true);
+            maybeSendBtn.click();
+            await Mine.sleep(1000);
+            await setPluginsState(false);
+            return;
+          }
+
           if (!isModifierFree(e)) return;
 
           if (e.key === 'Escape') return await stopAiResponse();
@@ -2256,6 +2272,29 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
   };
   if (!isMobile) installListAutoPreColonTitleSelector();
 
+  // want to selective turn on and off my set of plugins bc ai is too plugin happy and u cant enable/disable tools func always like if u used it once in the chat, u have to do the individual tools itself
+  const setPluginsState = async (enable = true, desiredPluginNames = ['Memory', 'Personal Finance', 'Javascript Interpreter']) => {
+    const pluginsTrigger = await Mine.waitForQs(`button:has([d="M11.25 5.337c0-.355-.186-.676-.401-.959a1.647 1.647 0 01-.349-1.003c0-1.036 1.007-1.875 2.25-1.875S15 2.34 15 3.375c0 .369-.128.713-.349 1.003-.215.283-.401.604-.401.959 0 .332.278.598.61.578 1.91-.114 3.79-.342 5.632-.676a.75.75 0 01.878.645 49.17 49.17 0 01.376 5.452.657.657 0 01-.66.664c-.354 0-.675-.186-.958-.401a1.647 1.647 0 00-1.003-.349c-1.035 0-1.875 1.007-1.875 2.25s.84 2.25 1.875 2.25c.369 0 .713-.128 1.003-.349.283-.215.604-.401.959-.401.31 0 .557.262.534.571a48.774 48.774 0 01-.595 4.845.75.75 0 01-.61.61c-1.82.317-3.673.533-5.555.642a.58.58 0 01-.611-.581c0-.355.186-.676.401-.959.221-.29.349-.634.349-1.003 0-1.035-1.007-1.875-2.25-1.875s-2.25.84-2.25 1.875c0 .369.128.713.349 1.003.215.283.401.604.401.959a.641.641 0 01-.658.643 49.118 49.118 0 01-4.708-.36.75.75 0 01-.645-.878c.293-1.614.504-3.257.629-4.924A.53.53 0 005.337 15c-.355 0-.676.186-.959.401-.29.221-.634.349-1.003.349-1.036 0-1.875-1.007-1.875-2.25s.84-2.25 1.875-2.25c.369 0 .713.128 1.003.349.283.215.604.401.959.401a.656.656 0 00.659-.663 47.703 47.703 0 00-.31-4.82.75.75 0 01.83-.832c1.343.155 2.703.254 4.077.294a.64.64 0 00.657-.642z"])`);
+    Mine.simulateClick(pluginsTrigger);
+    await Mine.waitForQs('[data-element-id="current-chat-title"] [role="menuitem"]');
+    await getAnimFrameAsync();
+
+    const pluginItems = Mine.qsaa('[data-element-id="current-chat-title"] [role="menuitem"]');
+    const menuEle = pluginItems[0]?.closest('[role=menu]');
+    if (menuEle) {
+      menuEle.style.display = 'none';  // this or setting every item display to '' is needed to work on iphone for some reason
+    }
+    pluginItems.filter(e => desiredPluginNames.some(desiredPluginName => e.innerText.toLowerCase().includes(desiredPluginName.toLowerCase()))).forEach(e => {
+      const btn = e.querySelector('button');
+      const isCurEnabled = btn.getAttribute('aria-checked')?.toLowerCase() === 'true';
+      const needsToggle = (isCurEnabled && !enable) || (!isCurEnabled && enable);
+      if (needsToggle) {
+        btn.click();
+      }
+    });
+    await getAnimFrameAsync();
+    Mine.simulateClick(pluginsTrigger);
+  };
   const installLongSendBtnWithPlugins = async () => {
     function handleLongPress(selector, duration = 1000, callback) {
       let timer;
@@ -2274,36 +2313,12 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
       };
     }
 
-    // want to selective turn on and off my set of plugins bc ai is too plugin happy and u cant enable/disable tools func always like if u used it once in the chat, u have to do the individual tools itself
-    const setPluginsState = async (desiredPluginNames, enable = true) => {
-      const pluginsTrigger = await Mine.waitForQs(`button:has([d="M11.25 5.337c0-.355-.186-.676-.401-.959a1.647 1.647 0 01-.349-1.003c0-1.036 1.007-1.875 2.25-1.875S15 2.34 15 3.375c0 .369-.128.713-.349 1.003-.215.283-.401.604-.401.959 0 .332.278.598.61.578 1.91-.114 3.79-.342 5.632-.676a.75.75 0 01.878.645 49.17 49.17 0 01.376 5.452.657.657 0 01-.66.664c-.354 0-.675-.186-.958-.401a1.647 1.647 0 00-1.003-.349c-1.035 0-1.875 1.007-1.875 2.25s.84 2.25 1.875 2.25c.369 0 .713-.128 1.003-.349.283-.215.604-.401.959-.401.31 0 .557.262.534.571a48.774 48.774 0 01-.595 4.845.75.75 0 01-.61.61c-1.82.317-3.673.533-5.555.642a.58.58 0 01-.611-.581c0-.355.186-.676.401-.959.221-.29.349-.634.349-1.003 0-1.035-1.007-1.875-2.25-1.875s-2.25.84-2.25 1.875c0 .369.128.713.349 1.003.215.283.401.604.401.959a.641.641 0 01-.658.643 49.118 49.118 0 01-4.708-.36.75.75 0 01-.645-.878c.293-1.614.504-3.257.629-4.924A.53.53 0 005.337 15c-.355 0-.676.186-.959.401-.29.221-.634.349-1.003.349-1.036 0-1.875-1.007-1.875-2.25s.84-2.25 1.875-2.25c.369 0 .713.128 1.003.349.283.215.604.401.959.401a.656.656 0 00.659-.663 47.703 47.703 0 00-.31-4.82.75.75 0 01.83-.832c1.343.155 2.703.254 4.077.294a.64.64 0 00.657-.642z"])`);
-      Mine.simulateClick(pluginsTrigger);
-      await Mine.waitForQs('[data-element-id="current-chat-title"] [role="menuitem"]');
-      await getAnimFrameAsync();
-
-      const pluginItems = Mine.qsaa('[data-element-id="current-chat-title"] [role="menuitem"]');
-      const menuEle = pluginItems[0]?.closest('[role=menu]');
-      if (menuEle) {
-        menuEle.style.display = 'none';  // this or setting every item display to '' is needed to work on iphone for some reason
-      }
-      pluginItems.filter(e => desiredPluginNames.some(desiredPluginName => e.innerText.toLowerCase().includes(desiredPluginName.toLowerCase()))).forEach(e => {
-        const btn = e.querySelector('button');
-        const isCurEnabled = btn.getAttribute('aria-checked')?.toLowerCase() === 'true';
-        const needsToggle = (isCurEnabled && !enable) || (!isCurEnabled && enable);
-        if (needsToggle) {
-          btn.click();
-        }
-      });
-      await getAnimFrameAsync();
-      Mine.simulateClick(pluginsTrigger);
-    };
-    const longPressUsagePluginNames = ['Memory', 'Personal Finance', 'Javascript Interpreter'];
     const longPress = handleLongPress('[data-element-id="send-button"]', 500, async sendButton => {
-      await setPluginsState(longPressUsagePluginNames, true);
+      await setPluginsState(true);
 
       await Mine.waitFor(() => !Mine.qs('[data-element-id="send-button"]'), {recheckIntervalMs: 500});
       await Mine.sleep(1000);
-      await setPluginsState(longPressUsagePluginNames, false);
+      await setPluginsState(false);
     });
     document.addEventListener('mousedown', longPress);
     document.addEventListener('touchstart', longPress);
