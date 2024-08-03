@@ -1101,7 +1101,7 @@ textarea[placeholder*="JS code"]
   filter: drop-shadow(0px -5px 10px #000000);
 }
 
-[data-element-id="send-button"] {
+div:has(>[data-element-id="send-button"]) {
   display: none;
 }
 [data-element-id="main-page-buttons-containter"] button {
