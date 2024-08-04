@@ -2239,7 +2239,7 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
     });
     toggleFullscreen();
   };
-  if (isMobile) installToggleHideStuffOnDblTap();
+  installToggleHideStuffOnDblTap();
 
   const installListAutoPreColonTitleSelector = async () => {
     bindOnSelectorClick('[data-element-id="response-block"]', async (ele, e) => {
