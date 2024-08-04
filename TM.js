@@ -2111,7 +2111,7 @@ button[data-element-id="output-settings-button"] {
       let lastTapX = 0;
       let lastTapY = 0;
       let tapTimer;
-      document.body.addEventListener(isMobile?'touchend':'click', (event) => {
+      document.body.addEventListener('touchend', (event) => {
         const selEle = mustBeExactElement ? event.target.matches(qs) : event.target.closest(qs);
         if (!selEle) return;
 
@@ -2239,8 +2239,8 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
     });
     toggleFullscreen();
   };
-  // TODO: support desktop. will need to fix the dbl tap/click thing
-  installToggleHideStuffOnDblTap();
+  // TODO: support desktop. will need to update the dbl tap/click thing
+  if (isMobile) installToggleHideStuffOnDblTap();
 
   const installListAutoPreColonTitleSelector = async () => {
     bindOnSelectorClick('[data-element-id="response-block"]', async (ele, e) => {
