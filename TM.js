@@ -37,6 +37,10 @@
   };
   const getActiveChatId = () => window.location.hash.split('chat=')[1];
   const getAnimFrameAsync = () => new Promise(resolve => requestAnimationFrame(resolve));
+  const getIsSomeTextSelected = () => {
+    const selection = window.getSelection();
+    return !selection.isCollapsed;
+  };
 
   const getUserDefinedKeyValueFromChatHistoryAsync = async secretKeyName => {
     if (!secretKeyName) return null;
@@ -2171,6 +2175,8 @@ ${msgEditToolbarEleQs} {
 }
     `);
     bindOnSelectorDblTap('[data-element-id="response-block"]', responseBlock => {
+      if (getIsSomeTextSelected()) return;
+
       const editButtonContainer = responseBlock.querySelector(msgEditToolbarEleQs);
       const currentOpacity = window.getComputedStyle(editButtonContainer).getPropertyValue('opacity');
 
