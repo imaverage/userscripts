@@ -2094,10 +2094,10 @@ button[data-element-id="output-settings-button"] {
   };
   installFavico();
 
-  const installToggleHideStuffOnDblTapOrClick = () => {
+  const installToggleHideStuffOnDblAction = () => {
     Mine.isi(`#chat-input-textbox:not(:empty) {max-width: 1000px !important;}`);
 
-    const bindOnSelectorMultiTap = (qs, cb, options = {}) => {
+    const bindOnSelectorMultiAction = (qs, cb, options = {}) => {
       const {
         maxTimeBetweenTaps = 300,
         maxDistanceBetweenTaps = 20,
@@ -2113,7 +2113,6 @@ button[data-element-id="output-settings-button"] {
       let tapTimer;
 
       const eventType = isMobile ? 'touchend' : 'click';
-
       document.body.addEventListener(eventType, (event) => {
         const selEle = mustBeExactElement ? event.target.matches(qs) : event.target.closest(qs);
         if (!selEle) return;
@@ -2156,11 +2155,11 @@ button[data-element-id="output-settings-button"] {
 
     const bindOnSelectorDblTap = (qs, cb, options = {}) => {
       options.desiredTapCount = 2;
-      bindOnSelectorMultiTap(qs, cb, options);
+      bindOnSelectorMultiAction(qs, cb, options);
     };
     const bindOnSelectorTripleTap = (qs, cb, options = {}) => {
       options.desiredTapCount = 3;
-      bindOnSelectorMultiTap(qs, cb, options);
+      bindOnSelectorMultiAction(qs, cb, options);
     };
 
     const msgEditToolbarEleQs = `div:has(>[data-element-id="more-actions-menu-button"])`;
@@ -2251,7 +2250,7 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
     toggleFullscreen();
   };
   // TODO: support desktop. will need to update the dbl tap/click thing
-  installToggleHideStuffOnDblTapOrClick();
+  installToggleHideStuffOnDblAction();
 
   const installListAutoPreColonTitleSelector = async () => {
     bindOnSelectorClick('[data-element-id="response-block"]', async (ele, e) => {
