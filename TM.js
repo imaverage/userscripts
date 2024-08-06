@@ -2334,11 +2334,6 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
           timer = setTimeout(() => callback(target), duration);
         } else if (event.type === 'mouseup' || event.type === 'touchend') {
           clearTimeout(timer);
-          const elapsedTime = Date.now() - startTime;
-          if (elapsedTime < duration) {
-            // Handle short press (normal click) here if needed
-            console.log('Short press detected');
-          }
         }
       };
     }
