@@ -2320,6 +2320,7 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
   const installLongSendBtnWithPlugins = async () => {
     function handleLongPress(selector, duration = 1000, callback) {
       let timer;
+      let startTime;
 
       return (event) => {
         const target = event.target.closest(selector);
@@ -2327,24 +2328,34 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
 
         event.preventDefault();
         event.stopPropagation();
+
         if (event.type === 'mousedown' || event.type === 'touchstart') {
+          startTime = Date.now();
           timer = setTimeout(() => callback(target), duration);
-        } else {
+        } else if (event.type === 'mouseup' || event.type === 'touchend') {
           clearTimeout(timer);
+          const elapsedTime = Date.now() - startTime;
+          if (elapsedTime < duration) {
+            // Handle short press (normal click) here if needed
+            console.log('Short press detected');
+          }
         }
       };
     }
 
     const longPress = handleLongPress('[data-element-id="send-button"]', 500, async sendButton => {
       await setPluginsState(true);
-
       await Mine.waitFor(() => !Mine.qs('[data-element-id="send-button"]'), {recheckIntervalMs: 500});
       await Mine.sleep(1000);
       await setPluginsState(false);
     });
+
     document.addEventListener('mousedown', longPress);
     document.addEventListener('touchstart', longPress);
+    document.addEventListener('mouseup', longPress);
+    document.addEventListener('touchend', longPress);
   };
+
   installLongSendBtnWithPlugins();
 
   // TODO: doesnt seem to work
