@@ -2248,7 +2248,6 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
     });
     toggleFullscreen();
   };
-  // TODO: support desktop. will need to update the dbl tap/click thing
   installToggleHideStuffOnDblAction();
 
   const installListAutoPreColonTitleSelector = async () => {
