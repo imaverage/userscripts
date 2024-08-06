@@ -2131,7 +2131,6 @@ button[data-element-id="output-settings-button"] {
 
         const timeBetweenTaps = currentTime - lastTapTime;
         const distanceBetweenTaps = Math.hypot(currentX - lastTapX, currentY - lastTapY);
-
         if (timeBetweenTaps > 0 && timeBetweenTaps < maxTimeBetweenTaps && distanceBetweenTaps < maxDistanceBetweenTaps) {
           tapCount++;
 
