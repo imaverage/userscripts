@@ -1020,7 +1020,7 @@ body {
   }
 
   Mine.isi(`.transition {transition-duration: 0s !important;}`);
-  const ensureSidebarClosed = async () => {
+  const ensureSidebarClosedAsync = async () => {
     if (getIsSideBarOpen()) {
       const isMaximized = document.body.clientWidth > 1000;
       if (!isMaximized)
@@ -1484,7 +1484,7 @@ button[data-element-id="output-settings-button"] {
     attachMetaInfoV1();
 
     if (document.body.clientWidth < 1000) {
-      await ensureSidebarClosed();
+      await ensureSidebarClosedAsync();
     }
 
     const [maybeMineCharKey, maybeMineCharVal] = window.location.hash.slice(1).split('=');
@@ -1790,7 +1790,7 @@ button[data-element-id="output-settings-button"] {
       document.body.style.opacity = 1;
     };
     maybeWipeChat().then(main);
-    window.addEventListener('resize', ensureSidebarClosed);
+    window.addEventListener('resize', ensureSidebarClosedAsync);
   } else {
     await main();
   }
@@ -2240,6 +2240,9 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
       const undim = Mine.dim(document.body);
       Mine.qsaa('button').find(e => e.innerText.toLowerCase() === 'Open sidebar'.toLowerCase()).click();
       (await Mine.waitForQs(`[data-element-id="custom-chat-item"] .truncate`)).click();
+      if (!isMobile) {
+        ensureSidebarClosedAsync();
+      }
       setTimeout(undim, 500);
     }, {mustBeExactElement: true});
     bindOnSelectorDblTap('[data-element-id="chat-space-middle-part"],div:has(>[data-element-id="chat-space-end-part"])', (ele, ev) => {
