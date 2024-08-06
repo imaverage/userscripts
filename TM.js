@@ -165,6 +165,7 @@
 
 
   Mine.quietQs(`[data-element-id="pinned-characters-container"]`);
+  Mine.quietQs(`[data-element-id="chat-date-info"]`);
   Mine.isi(`
 /* context limit reached button is in here */
 .post-message-content {
