@@ -1847,11 +1847,11 @@ button[data-element-id="output-settings-button"] {
     padding-bottom: 0.5rem;
   }
   .mine-menu-btn.half {
-    width: 49%;
+    width: 48%;
   }
   </style>
   <button id="mine-active-time" class="mine-menu-btn" style="color: gray;" disabled>... engaged</button>
-  <button id="mine-collapse-resp" class="mine-menu-btn half">${uncollapseAiResponsesFn?'Uncollapse':'Collapse'} responses</button>
+  <button id="mine-collapse-resp" class="mine-menu-btn">${uncollapseAiResponsesFn?'Uncollapse':'Collapse'} responses</button>
   <button id="mine-go-up" class="mine-menu-btn half">↑</button>
   <button id="mine-go-dn" class="mine-menu-btn half">↓</button>
   `.trim();
