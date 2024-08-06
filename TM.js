@@ -2347,8 +2347,8 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
 
     document.addEventListener('mousedown', longPress);
     document.addEventListener('touchstart', longPress);
-    document.addEventListener('mouseup', longPress);
-    document.addEventListener('touchend', longPress);
+    // document.addEventListener('mouseup', longPress);
+    // document.addEventListener('touchend', longPress);
   };
 
   installLongSendBtnWithPlugins();
