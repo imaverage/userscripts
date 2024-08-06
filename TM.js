@@ -2221,8 +2221,8 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
         document.body.offsetHeight;
         document.body.classList.remove('fullscreen-active');
       } else {  // Enter fullscreen
-        normalTaWidth = getComputedStyle(ta).width;
         await getAnimFrameAsync();
+        normalTaWidth = getComputedStyle(ta).width;
         ta.style.maxWidth = normalTaWidth;
         ta.style.transition = `max-width ${durationMs}ms ease`;
 
