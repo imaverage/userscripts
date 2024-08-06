@@ -2241,7 +2241,7 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
       Mine.qsaa('button').find(e => e.innerText.toLowerCase() === 'Open sidebar'.toLowerCase()).click();
       (await Mine.waitForQs(`[data-element-id="custom-chat-item"] .truncate`)).click();
       if (!isMobile) {
-        ensureSidebarClosedAsync();
+        await ensureSidebarClosedAsync();
       }
       setTimeout(undim, 500);
     }, {mustBeExactElement: true});
