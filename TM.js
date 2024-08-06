@@ -2111,14 +2111,24 @@ button[data-element-id="output-settings-button"] {
       let lastTapX = 0;
       let lastTapY = 0;
       let tapTimer;
-      document.body.addEventListener(isMobile?'touchend':'click', (event) => {
+
+      const eventType = isMobile ? 'touchend' : 'click';
+
+      document.body.addEventListener(eventType, (event) => {
         const selEle = mustBeExactElement ? event.target.matches(qs) : event.target.closest(qs);
         if (!selEle) return;
 
-        const touch = event.changedTouches[0];
         const currentTime = new Date().getTime();
-        const currentX = touch.clientX;
-        const currentY = touch.clientY;
+        let currentX, currentY;
+
+        if (isMobile) {
+          const touch = event.changedTouches[0];
+          currentX = touch.clientX;
+          currentY = touch.clientY;
+        } else {
+          currentX = event.clientX;
+          currentY = event.clientY;
+        }
 
         const timeBetweenTaps = currentTime - lastTapTime;
         const distanceBetweenTaps = Math.hypot(currentX - lastTapX, currentY - lastTapY);
@@ -2143,6 +2153,7 @@ button[data-element-id="output-settings-button"] {
         lastTapY = currentY;
       }, false);
     };
+
     const bindOnSelectorDblTap = (qs, cb, options = {}) => {
       options.desiredTapCount = 2;
       bindOnSelectorMultiTap(qs, cb, options);
