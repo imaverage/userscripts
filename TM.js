@@ -2094,7 +2094,7 @@ button[data-element-id="output-settings-button"] {
   };
   installFavico();
 
-  const installToggleHideStuffOnDblTap = () => {
+  const installToggleHideStuffOnDblTapOrClick = () => {
     Mine.isi(`#chat-input-textbox:not(:empty) {max-width: 1000px !important;}`);
 
     const bindOnSelectorMultiTap = (qs, cb, options = {}) => {
@@ -2111,7 +2111,7 @@ button[data-element-id="output-settings-button"] {
       let lastTapX = 0;
       let lastTapY = 0;
       let tapTimer;
-      document.body.addEventListener('touchend', (event) => {
+      document.body.addEventListener(isMobile?'touchend':'click', (event) => {
         const selEle = mustBeExactElement ? event.target.matches(qs) : event.target.closest(qs);
         if (!selEle) return;
 
@@ -2240,7 +2240,7 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
     toggleFullscreen();
   };
   // TODO: support desktop. will need to update the dbl tap/click thing
-  if (isMobile) installToggleHideStuffOnDblTap();
+  installToggleHideStuffOnDblTapOrClick();
 
   const installListAutoPreColonTitleSelector = async () => {
     bindOnSelectorClick('[data-element-id="response-block"]', async (ele, e) => {
