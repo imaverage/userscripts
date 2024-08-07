@@ -11,6 +11,7 @@
   };
 
   const getChatIndexedDbValueAsync = async urlChatValue => await Mine.getIndexedDbValue(`CHAT_${urlChatValue}`, 'keyval-store', 'keyval');
+  const setChatIndexedDbValueAsync = async (urlChatValue, newChatObject) => await Mine.setIndexedDbValue(`CHAT_${urlChatValue}`, newChatObject, 'keyval-store', 'keyval');
   const getStopButton = () => Mine.qsaa('button').find(e => e.innerText === 'Stop');
   const isAiTyping = () => !!getStopButton();
   const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
@@ -2405,9 +2406,19 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ apiKey: tmChatBufferPassword }),
           });
-          if (!response.ok) throw new Error('Failed to download chat');
 
-          const result = await response.json();
+          let result;
+          try {
+            result = await response.json();
+          } catch (jsonError) {
+            // If JSON parsing fails, create a default error object
+            result = {
+              isSuccess: false,
+              message: `Failed to parse response: ${jsonError.message}`
+            };
+          }
+          if (!response.ok) throw new Error(result.message || `HTTP error! status: ${response.status}`);
+
           if (result.isSuccess) {
             const downloadedChatData = JSON.parse(result.chat);
             const chatID = downloadedChatData.chatID;
@@ -2432,15 +2443,8 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
                 request.onsuccess = event => ok();
               };
             });
-            // TODO: move to top
-            const setChatIndexedDbValueAsync = async (urlChatValue, newChatObject) => {
-              await Mine.setIndexedDbValue(`CHAT_${urlChatValue}`, newChatObject, 'keyval-store', 'keyval');
-            };
             await setChatIndexedDbValueAsync(chatID, downloadedChatData).catch(e => alert('error saving buffer'));
-
-            alert('Chat successfully downloaded and stored.');  // TODO: rm
-            window.location.reload();
-            // TODO: redirect there?
+            setTimeout(() => window.location.reload(), 1000);
           } else {
             return alert(`fail: ${result.message}`);
           }
