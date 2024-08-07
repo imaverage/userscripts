@@ -1124,9 +1124,6 @@ div:has(>[data-element-id="send-button"]) {
   max-height: 502px;
 }
 
-[data-element-id="config-buttons"] {
-  display: none;
-}
 [data-element-id="response-block"]:has([data-element-id="model-setting-info"]) {
   border: 1px solid rgba(255,255,255,0.3);
   opacity: 0.25;
