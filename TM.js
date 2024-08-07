@@ -138,8 +138,6 @@
     }).then(r => r.json());
 
     const record = response.record;
-    const metadata = response.metadata;
-
     const decodeBase64 = base64 => atob(base64);
     const userQuery = decodeBase64(record.query);
     const userContext = decodeBase64(record.context);
