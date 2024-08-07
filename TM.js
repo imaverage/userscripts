@@ -35,7 +35,7 @@
     }
     return true;
   };
-  const getActiveChatId = () => window.location.hash.split('chat=')[1];
+  const getCurrentChatId = () => window.location.hash.split('chat=')[1];
   const getAnimFrameAsync = () => new Promise(resolve => requestAnimationFrame(resolve));
 
   const getUserDefinedKeyValueFromChatHistoryAsync = async secretKeyName => {
@@ -289,7 +289,7 @@ body {
   const attachMetaInfoV1 = async () => {
     const infoIconPath = `M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z`;
     const getContextSize = async () => {
-      const chatId = getActiveChatId();
+      const chatId = getCurrentChatId();
       if (!chatId) return null;
 
       const inf = await getChatIndexedDbValueAsync(chatId);
@@ -358,7 +358,7 @@ body {
     };
     const refreshCurrentChatMeta = async () => {
       // TODO: hide info button in this case
-      const chatId = getActiveChatId();
+      const chatId = getCurrentChatId();
       if (!chatId) return;
       const inf = await getChatIndexedDbValueAsync(chatId);
       if (!inf) return;
@@ -1862,7 +1862,7 @@ button[data-element-id="output-settings-button"] {
       menu.querySelector('#mine-go-up').addEventListener('click', () => navigateMessageInDirection('up'));
       menu.querySelector('#mine-go-dn').addEventListener('click', () => navigateMessageInDirection('dn'));
 
-      const chatTimestampMsArr = (await getChatIndexedDbValueAsync(getActiveChatId()))?.messages.map(e => new Date(e.createdAt)) || [];
+      const chatTimestampMsArr = (await getChatIndexedDbValueAsync(getCurrentChatId()))?.messages.map(e => new Date(e.createdAt)) || [];
       const activeTime = calculateActiveTimeMs(chatTimestampMsArr);
       const activeTimeLabel = formatActiveTime(activeTime);
       menu.querySelector('#mine-active-time').innerHTML = `${activeTimeLabel} engaged`;
