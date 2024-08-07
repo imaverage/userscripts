@@ -1116,9 +1116,6 @@ div:has(>[data-element-id="send-button"]) {
 [data-element-id="message-input"] label:has(input[type=checkbox]) {
   display: none;
 }
-[id="elements-in-action-buttons"] {
-  display: none;
-}
 
 [data-element-id="user-message"] {
   max-height: 502px;
