@@ -2425,7 +2425,9 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
 
           const maybeExistingChat = await getChatIndexedDbValueAsync(chatID);
           if (maybeExistingChat) {
-            const isOk = confirm(`Overwrite existing chat (${maybeExistingChat.messages?.length} msgs) with new (${downloadedChatData.messages?.length})?`);
+            const existingCount = maybeExistingChat.messages?.length;
+            const newCount = downloadedChatData.messages?.length;
+            const isOk = confirm(`Overwrite existing chat (${existingCount} msgs) with new (${newCount})?\n\n(${newCount > existingCount?'':'not '}recommended)`);
             if (!isOk) return;
           }
 
