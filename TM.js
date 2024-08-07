@@ -2414,10 +2414,12 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
             // If JSON parsing fails, create a default error object
             result = {
               isSuccess: false,
-              message: `Failed to parse response: ${jsonError.message}`
             };
           }
-          if (!response.ok) throw new Error(result.message || `HTTP error! status: ${response.status}`);
+          if (!response.ok) {
+            if (result.message) alert('fail: ' + result.message);
+            throw new Error(result.message);
+          }
 
           if (result.isSuccess) {
             const downloadedChatData = JSON.parse(result.chat);
@@ -2448,9 +2450,7 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
           } else {
             return alert(`fail: ${result.message}`);
           }
-        } catch (error) {
-          alert('Failed to download chat.');
-        }
+        } catch (error) {}
       }
       div.querySelector('#mine-dl-chat').addEventListener('click', downloadChat);
     }
