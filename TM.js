@@ -1898,7 +1898,7 @@ button[data-element-id="output-settings-button"] {
             const {isSuccess, message} = await response.json();
             alert(`${isSuccess?'success':'fail'}: ${message}`);
           } catch (error) {
-            alert('Failed to upload chat. Please try again.');
+            alert('Failed to upload chat.');
           }
         });
       } else {
@@ -2395,9 +2395,59 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
       div.style = 'text-align: center; color: gray;';
       div.innerHTML = '<button id="mine-dl-chat">Download chat from remote</button>';
       container.insertAdjacentElement('afterend', div);
-      div.querySelector('#mine-dl-chat').addEventListener('click', async () => {
-        console.log(1);
-      });
+      const downloadChat = async () => {
+        const tmChatBufferPassword = await getUserDefinedKeyValueFromChatHistoryAsync('tmChatBufferPassword');
+        if (!tmChatBufferPassword) return alert('missing tmChatBufferPassword');
+
+        try {
+          const response = await fetch('https://pepperpotts.fly.dev/tm/download-chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ apiKey: tmChatBufferPassword }),
+          });
+          if (!response.ok) throw new Error('Failed to download chat');
+
+          const result = await response.json();
+          if (result.isSuccess) {
+            const downloadedChatData = JSON.parse(result.chat);
+            const chatID = downloadedChatData.chatID;
+
+            const maybeExistingChat = await getChatIndexedDbValueAsync(chatID);
+            if (maybeExistingChat) {
+              return alert('Chat already exists. Overwrite?');  // TODO: impl
+            }
+
+            // TODO: move to real Mine.
+            Mine.setIndexedDbValue = async (key, value, dbName, storeName) => new Promise((ok, notOk) => {
+              const openRequest = indexedDB.open(dbName);
+              openRequest.onerror = event => notOk(`An error occurred while accessing the database: ${event.target.errorCode}`);
+              openRequest.onsuccess = event => {
+                const db = event.target.result;
+                const transaction = db.transaction([storeName], "readwrite");
+                const objectStore = transaction.objectStore(storeName);
+                const request = objectStore.put(value, key);
+
+                request.onerror = event => notOk(`An error occurred while storing the data: ${event.target.errorCode}`);
+                request.onsuccess = event => ok();
+              };
+            });
+            // TODO: move to top
+            const setChatIndexedDbValueAsync = async (urlChatValue, newChatObject) => {
+              await Mine.setIndexedDbValue(`CHAT_${urlChatValue}`, newChatObject, 'keyval-store', 'keyval');
+            };
+            await setChatIndexedDbValueAsync(chatID, downloadedChatData).catch(e => alert('error saving buffer'));
+
+            alert('Chat successfully downloaded and stored.');  // TODO: rm
+            window.location.reload();
+            // TODO: redirect there?
+          } else {
+            return alert(`fail: ${result.message}`);
+          }
+        } catch (error) {
+          alert('Failed to download chat.');
+        }
+      }
+      div.querySelector('#mine-dl-chat').addEventListener('click', downloadChat);
     }
   };
   installHomepageMenu();
