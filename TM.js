@@ -1843,8 +1843,12 @@ button[data-element-id="output-settings-button"] {
   .mine-menu-btn.half {
     width: 48%;
   }
+  .mine-menu-btn[disabled] {
+    color: gray;
+  }
   </style>
-  <button id="mine-active-time" class="mine-menu-btn" style="color: gray;" disabled>... engaged</button>
+  <button id="mine-active-time" class="mine-menu-btn disabled" disabled>... engaged</button>
+  <button id="mine-copy-to-server" class="mine-menu-btn">Copy chat to server</button>
   <button id="mine-collapse-resp" class="mine-menu-btn">${uncollapseAiResponsesFn?'Uncollapse':'Collapse'} responses</button>
   <button id="mine-go-up" class="mine-menu-btn half">↑</button>
   <button id="mine-go-dn" class="mine-menu-btn half">↓</button>
@@ -1866,6 +1870,39 @@ button[data-element-id="output-settings-button"] {
       const activeTime = calculateActiveTimeMs(chatTimestampMsArr);
       const activeTimeLabel = formatActiveTime(activeTime);
       menu.querySelector('#mine-active-time').innerHTML = `${activeTimeLabel} engaged`;
+
+      const curChatId = getCurrentChatId();
+      const copyToServerBtn = menu.querySelector('#mine-copy-to-server');
+      if (curChatId) {
+        copyToServerBtn.addEventListener('click', async () => {
+          const tmChatBufferPassword = await getUserDefinedKeyValueFromChatHistoryAsync('tmChatBufferPassword');
+          if (!tmChatBufferPassword) {
+            alert('password not found');
+            return;
+          }
+
+          try {
+            const chatIndexedDbEntry = await getChatIndexedDbValueAsync(curChatId);
+            if (!chatIndexedDbEntry) {
+              return alert('chat not found');
+            }
+            const chatIndexedDbEntrySerialized = JSON.stringify(chatIndexedDbEntry);
+
+            const response = await fetch('https://pepperpotts.fly.dev/tm/upload-chat', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ chat: chatIndexedDbEntrySerialized }),
+            });
+
+            const {isSuccess, message} = await response.json();
+            alert(`${isSuccess?'success':'fail'}: ${message}`);
+          } catch (error) {
+            alert('Failed to upload chat. Please try again.');
+          }
+        });
+      } else {
+        copyToServerBtn.disabled = true;
+      }
     });
   };
   installCustomConfigItems();
