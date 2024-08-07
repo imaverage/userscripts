@@ -2382,8 +2382,25 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
     document.addEventListener('mouseup', longPress);
     document.addEventListener('touchend', longPress);
   };
-
   installLongSendBtnWithPlugins();
+
+  const installHomepageMenu = async () => {
+    if (getCurrentChatId()) return;
+
+    const container = document.querySelector('[data-element-id="pinned-characters-container"]');
+    if (!container) return;
+
+    if (container) {
+      const div = document.createElement('div');
+      div.style = 'text-align: center; color: gray;';
+      div.innerHTML = '<button id="mine-dl-chat">Download chat from remote</button>';
+      container.insertAdjacentElement('afterend', div);
+      div.querySelector('#mine-dl-chat').addEventListener('click', async () => {
+
+      });
+    }
+  };
+  installHomepageMenu();
 
   // TODO: doesnt seem to work
   // const installIPhoneStatusBarStyle = () => {
