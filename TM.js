@@ -2400,57 +2400,55 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
         const tmChatBufferPassword = await getUserDefinedKeyValueFromChatHistoryAsync('tmChatBufferPassword');
         if (!tmChatBufferPassword) return alert('missing tmChatBufferPassword');
 
+        const response = await fetch('https://pepperpotts.fly.dev/tm/download-chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ apiKey: tmChatBufferPassword }),
+        });
+
+        let result;
         try {
-          const response = await fetch('https://pepperpotts.fly.dev/tm/download-chat', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ apiKey: tmChatBufferPassword }),
-          });
+          result = await response.json();
+        } catch (jsonError) {
+          // If JSON parsing fails, create a default error object
+          result = {
+            isSuccess: false,
+          };
+        }
+        if (!response.ok) {
+          if (result.message) alert('fail: ' + result.message);
+          return;
+        }
 
-          let result;
-          try {
-            result = await response.json();
-          } catch (jsonError) {
-            // If JSON parsing fails, create a default error object
-            result = {
-              isSuccess: false,
+        if (result.isSuccess) {
+          const downloadedChatData = JSON.parse(result.chat);
+          const chatID = downloadedChatData.chatID;
+
+          const maybeExistingChat = await getChatIndexedDbValueAsync(chatID);
+          if (maybeExistingChat) {
+            const isOk = confirm('Chat already exists. Overwrite?');
+            if (!isOk) return;
+          }
+
+          // TODO: move to real Mine.
+          Mine.setIndexedDbValue = async (key, value, dbName, storeName) => new Promise((ok, notOk) => {
+            const openRequest = indexedDB.open(dbName);
+            openRequest.onerror = event => notOk(`An error occurred while accessing the database: ${event.target.errorCode}`);
+            openRequest.onsuccess = event => {
+              const db = event.target.result;
+              const transaction = db.transaction([storeName], "readwrite");
+              const objectStore = transaction.objectStore(storeName);
+              const request = objectStore.put(value, key);
+
+              request.onerror = event => notOk(`An error occurred while storing the data: ${event.target.errorCode}`);
+              request.onsuccess = event => ok();
             };
-          }
-          if (!response.ok) {
-            if (result.message) alert('fail: ' + result.message);
-            throw new Error(result.message);
-          }
-
-          if (result.isSuccess) {
-            const downloadedChatData = JSON.parse(result.chat);
-            const chatID = downloadedChatData.chatID;
-
-            const maybeExistingChat = await getChatIndexedDbValueAsync(chatID);
-            if (maybeExistingChat) {
-              const isOk = confirm('Chat already exists. Overwrite?');
-              if (!isOk) return;
-            }
-
-            // TODO: move to real Mine.
-            Mine.setIndexedDbValue = async (key, value, dbName, storeName) => new Promise((ok, notOk) => {
-              const openRequest = indexedDB.open(dbName);
-              openRequest.onerror = event => notOk(`An error occurred while accessing the database: ${event.target.errorCode}`);
-              openRequest.onsuccess = event => {
-                const db = event.target.result;
-                const transaction = db.transaction([storeName], "readwrite");
-                const objectStore = transaction.objectStore(storeName);
-                const request = objectStore.put(value, key);
-
-                request.onerror = event => notOk(`An error occurred while storing the data: ${event.target.errorCode}`);
-                request.onsuccess = event => ok();
-              };
-            });
-            await setChatIndexedDbValueAsync(chatID, downloadedChatData).catch(e => alert('error saving buffer'));
-            setTimeout(() => window.location.reload(), 1000);
-          } else {
-            return alert(`fail: ${result.message}`);
-          }
-        } catch (error) {}
+          });
+          await setChatIndexedDbValueAsync(chatID, downloadedChatData).catch(e => alert('error saving buffer'));
+          setTimeout(() => window.location.reload(), 1000);
+        } else {
+          return alert(`fail: ${result.message}`);
+        }
       }
       div.querySelector('#mine-dl-chat').addEventListener('click', downloadChat);
     }
