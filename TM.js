@@ -2414,7 +2414,8 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
 
             const maybeExistingChat = await getChatIndexedDbValueAsync(chatID);
             if (maybeExistingChat) {
-              return alert('Chat already exists. Overwrite?');  // TODO: impl
+              const isOk = confirm('Chat already exists. Overwrite?');
+              if (!isOk) return;
             }
 
             // TODO: move to real Mine.
