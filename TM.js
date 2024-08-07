@@ -2393,9 +2393,9 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
 
     if (container) {
       const div = document.createElement('div');
-      div.style = 'text-align: center; color: gray;';
+      div.style = 'text-align: center; color: gray; margin-top: 10px;';
       div.innerHTML = '<button id="mine-dl-chat">Download chat from remote</button>';
-      container.insertAdjacentElement('afterend', div);
+      container.appendChild(div);
       const downloadChat = async () => {
         const tmChatBufferPassword = await getUserDefinedKeyValueFromChatHistoryAsync('tmChatBufferPassword');
         if (!tmChatBufferPassword) return alert('missing tmChatBufferPassword');
