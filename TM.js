@@ -2410,7 +2410,6 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
         try {
           result = await response.json();
         } catch (jsonError) {
-          // If JSON parsing fails, create a default error object
           result = {
             isSuccess: false,
           };
