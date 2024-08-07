@@ -2396,7 +2396,7 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
       div.innerHTML = '<button id="mine-dl-chat">Download chat from remote</button>';
       container.insertAdjacentElement('afterend', div);
       div.querySelector('#mine-dl-chat').addEventListener('click', async () => {
-
+        console.log(1);
       });
     }
   };
