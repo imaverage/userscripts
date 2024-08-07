@@ -178,6 +178,9 @@
 [id="elements-in-action-buttons"] {
   gap: 0.1rem;
   margin-bottom: 0;
+
+  -webkit-user-select: none !important;
+  user-select: none !important;
 }
 
 [data-element-id="chat-avatar-container"] {
@@ -1891,7 +1894,7 @@ button[data-element-id="output-settings-button"] {
             const response = await fetch('https://pepperpotts.fly.dev/tm/upload-chat', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ chat: chatIndexedDbEntrySerialized }),
+              body: JSON.stringify({ chat: chatIndexedDbEntrySerialized, apiKey: tmChatBufferPassword }),
             });
 
             const {isSuccess, message} = await response.json();
