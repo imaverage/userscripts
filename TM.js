@@ -2425,7 +2425,7 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
 
           const maybeExistingChat = await getChatIndexedDbValueAsync(chatID);
           if (maybeExistingChat) {
-            const isOk = confirm('Chat already exists. Overwrite?');
+            const isOk = confirm(`Overwrite existing chat (${maybeExistingChat.messages?.length} msgs) with new (${downloadedChatData.messages?.length})?`);
             if (!isOk) return;
           }
 
