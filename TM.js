@@ -1857,7 +1857,7 @@ button[data-element-id="output-settings-button"] {
         } else {
           uncollapseAiResponsesFn = Mine.isi(`[data-element-id="ai-response"] {max-height: 112px;overflow: scroll;}`);
         }
-        Mine.qs(`#elements-in-action-buttons`).click();
+        Mine.qs(`[data-element-id="config-buttons"]`).click();
       });
       menu.querySelector('#mine-go-up').addEventListener('click', () => navigateMessageInDirection('up'));
       menu.querySelector('#mine-go-dn').addEventListener('click', () => navigateMessageInDirection('dn'));
