@@ -1897,7 +1897,7 @@ button[data-element-id="output-settings-button"] {
             });
 
             const {isSuccess, message} = await response.json();
-            alert(`${isSuccess?'success':'fail'}: ${message}`);
+            alert(`[${isSuccess?'success':'fail'}] ${message}`);
           } catch (error) {
             alert('Failed to upload chat.');
           }
@@ -2415,7 +2415,7 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
           };
         }
         if (!response.ok) {
-          if (result.message) alert('fail: ' + result.message);
+          if (result.message) alert('[fail] ' + result.message);
           return;
         }
 
@@ -2446,7 +2446,7 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
           await setChatIndexedDbValueAsync(chatID, downloadedChatData).catch(e => alert('error saving buffer'));
           setTimeout(() => window.location.reload(), 1000);
         } else {
-          return alert(`fail: ${result.message}`);
+          return alert(`[fail] ${result.message}`);
         }
       }
       div.querySelector('#mine-dl-chat').addEventListener('click', downloadChat);
