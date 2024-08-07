@@ -2387,7 +2387,7 @@ ${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].i
   const installHomepageMenu = async () => {
     if (getCurrentChatId()) return;
 
-    const container = document.querySelector('[data-element-id="pinned-characters-container"]');
+    const container = await Mine.waitForQs('[data-element-id="pinned-characters-container"]');
     if (!container) return;
 
     if (container) {
