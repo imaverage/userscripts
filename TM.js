@@ -1859,6 +1859,8 @@ button[data-element-id="output-settings-button"] {
         } else {
           uncollapseAiResponsesFn = Mine.isi(`[data-element-id="ai-response"] {max-height: 112px;overflow: scroll;}`);
         }
+
+        // hide config menu
         Mine.simulateClick(Mine.qs(`[data-element-id="chat-space-background"]`));
       });
       menu.querySelector('#mine-go-up').addEventListener('click', () => navigateMessageInDirection('up'));
