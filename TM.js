@@ -1355,7 +1355,7 @@ button[data-element-id="output-settings-button"] {
           }
         });
 
-        const updatePlaceholder = () => {taEle.placeholder = 'Message'; taEle.dispatchEvent(new Event('input'));};
+        const updatePlaceholder = () => taEle.placeholder = 'Message';
         ['blur', 'focus'].forEach(eventName => taEle.addEventListener(eventName, () => requestAnimationFrame(updatePlaceholder)));
         await getAnimFrameAsync();
         setTimeout(updatePlaceholder, 0);
