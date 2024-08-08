@@ -1355,11 +1355,10 @@ button[data-element-id="output-settings-button"] {
           }
         });
 
-        const updatePlaceholder = () => taEle.placeholder = 'Message';
+        const updatePlaceholder = () => {taEle.placeholder = 'Message'; taEle.dispatchEvent(new Event('input'));};
         ['blur', 'focus'].forEach(eventName => taEle.addEventListener(eventName, () => requestAnimationFrame(updatePlaceholder)));
         await getAnimFrameAsync();
         setTimeout(updatePlaceholder, 0);
-        setTimeout(updatePlaceholder, 1000);
       });
     };
     installArgumentRunner();
