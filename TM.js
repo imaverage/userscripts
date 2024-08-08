@@ -1358,6 +1358,7 @@ button[data-element-id="output-settings-button"] {
           taEle.placeholder = 'Message';
         }
         ['blur', 'focus', 'input'].forEach(eventName => taEle.addEventListener(eventName, () => requestAnimationFrame(updatePlaceholder)));
+        updatePlaceholder();
         await getAnimFrameAsync();
         setTimeout(updatePlaceholder, 0);
       });
