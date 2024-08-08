@@ -1327,13 +1327,9 @@ button[data-element-id="output-settings-button"] {
       await Mine.attachToElementContinuously(getTaAsync, taEle => {
         // happens at least when u switch chats
 
-        taEle.placeholder = '';
-        taEle.addEventListener('blur', () => {
-          requestAnimationFrame(() => taEle.placeholder='');
-        });
-        taEle.addEventListener('focus', () => {
-          requestAnimationFrame(() => taEle.placeholder='');
-        });
+        const updatePlaceholder = () => taEle.placeholder = 'b9';
+        taEle.addEventListener('blur', () => requestAnimationFrame(updatePlaceholder));
+        taEle.addEventListener('focus', () => requestAnimationFrame(updatePlaceholder));
         taEle.addEventListener('keydown', async e => {
           if (e.metaKey && e.shiftKey && e.key === 'Enter') {
             e.preventDefault();
