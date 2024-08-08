@@ -182,10 +182,14 @@
   user-select: none !important;
 }
 
+:root {
+  --mine-bg-color: rgb(16,17,17);
+}
+
 /* get the right background color. transparency doesnt look good. */
 [data-element-id="chat-space-end-part"] {
   border: 0;
-  background: rgb(16, 17, 17);
+  background: var(--mine-bg-color);
 }
 
 [data-element-id="chat-avatar-container"] {
@@ -253,7 +257,7 @@ div > button:has(.user-avatar) {
 }
 
 body {
-  background: rgb(16,17,17) !important;
+  background: var(--mine-bg-color) !important;
 }
 .response-block:hover {
   background: none !important;
