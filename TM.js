@@ -1327,7 +1327,7 @@ button[data-element-id="output-settings-button"] {
       await Mine.attachToElementContinuously(getTaAsync, taEle => {
         // happens at least when u switch chats
 
-        const updatePlaceholder = () => taEle.placeholder = 'b9';
+        const updatePlaceholder = () => taEle.placeholder = 'Message';
         ['blur', 'focus'].forEach(eventName => taEle.addEventListener(eventName, () => requestAnimationFrame(updatePlaceholder)));
         requestAnimationFrame(updatePlaceholder);
 
