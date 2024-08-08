@@ -1195,6 +1195,9 @@ button:has([d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"]):focus {
 #nav-buy-button {
   display: none;
 }
+#chat-input-textbox::placeholder {
+  opacity: 0.5;
+}
 #chat-input-textbox {
   padding-left: 12px;
   background: rgba(0, 0, 0, 0.2);
