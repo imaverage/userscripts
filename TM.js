@@ -190,6 +190,7 @@
 [data-element-id="chat-space-end-part"] {
   border: 0;
   background: var(--mine-bg-color) !important;
+  box-shadow: 0px 0px 10px 10px var(--mine-bg-color);
 }
 
 [data-element-id="chat-avatar-container"] {
