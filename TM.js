@@ -1327,10 +1327,6 @@ button[data-element-id="output-settings-button"] {
       await Mine.attachToElementContinuously(getTaAsync, taEle => {
         // happens at least when u switch chats
 
-        const updatePlaceholder = () => taEle.placeholder = 'Message';
-        ['blur', 'focus'].forEach(eventName => taEle.addEventListener(eventName, () => requestAnimationFrame(updatePlaceholder)));
-        requestAnimationFrame(updatePlaceholder);
-
         taEle.addEventListener('keydown', async e => {
           if (e.metaKey && e.shiftKey && e.key === 'Enter') {
             e.preventDefault();
@@ -1358,6 +1354,11 @@ button[data-element-id="output-settings-button"] {
             await postProcessTaBeforeSubmit();
           }
         });
+
+        const updatePlaceholder = () => taEle.placeholder = 'Message';
+        ['blur', 'focus'].forEach(eventName => taEle.addEventListener(eventName, () => requestAnimationFrame(updatePlaceholder)));
+        await getAnimFrameAsync();
+        updatePlaceholder();
       });
     };
     installArgumentRunner();
