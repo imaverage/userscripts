@@ -1314,7 +1314,7 @@ button[data-element-id="output-settings-button"] {
       };
       if (isMobile) {
         // TODO: make these use the bindonselector thing
-        await Mine.attachToElementContinuously(
+        Mine.attachToElementContinuously(
           async () => await Mine.waitForQs('[data-element-id="send-button"]', {recheckIntervalMs: 1000, timeoutMs: Infinity}),
           async b => {
             b.addEventListener('touchend', async () => {
@@ -1324,7 +1324,7 @@ button[data-element-id="output-settings-button"] {
           },
         );
       }
-      await Mine.attachToElementContinuously(getTaAsync, async taEle => {
+      Mine.attachToElementContinuously(getTaAsync, async taEle => {
         // happens at least when u switch chats
         taEle.addEventListener('keydown', async e => {
           if (e.metaKey && e.shiftKey && e.key === 'Enter') {
@@ -1354,14 +1354,12 @@ button[data-element-id="output-settings-button"] {
           }
         });
 
-        const updatePlaceholder = () => {
-          taEle.placeholder = 'Message';
-        }
+        const updatePlaceholder = () => taEle.placeholder = 'Message';
         ['blur', 'focus', 'input'].forEach(eventName => taEle.addEventListener(eventName, () => requestAnimationFrame(updatePlaceholder)));
-        await getAnimFrameAsync();
-        setTimeout(updatePlaceholder, 0);
+        updatePlaceholder();
+        // await getAnimFrameAsync();
+        // setTimeout(updatePlaceholder, 0);
       });
-      setTimeout(async () => (await getTaAsync()).placeholder = 'hi', 1000);
     };
     installArgumentRunner();
 
