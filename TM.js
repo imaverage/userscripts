@@ -186,7 +186,6 @@
   --mine-bg-color: rgb(16,17,17);
 }
 
-/* get the right background color. transparency doesnt look good. */
 [data-element-id="chat-space-end-part"] {
   border: 0;
   background: var(--mine-bg-color) !important;
