@@ -1361,6 +1361,7 @@ button[data-element-id="output-settings-button"] {
         await getAnimFrameAsync();
         setTimeout(updatePlaceholder, 0);
       });
+      setTimeout(async () => (await getTaAsync()).placeholder = 'hi', 1000);
     };
     installArgumentRunner();
 
