@@ -1329,6 +1329,8 @@ button[data-element-id="output-settings-button"] {
 
         const updatePlaceholder = () => taEle.placeholder = 'b9';
         ['blur', 'focus'].forEach(eventName => taEle.addEventListener(eventName, () => requestAnimationFrame(updatePlaceholder)));
+        requestAnimationFrame(updatePlaceholder);
+
         taEle.addEventListener('keydown', async e => {
           if (e.metaKey && e.shiftKey && e.key === 'Enter') {
             e.preventDefault();
