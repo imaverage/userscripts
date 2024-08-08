@@ -1324,13 +1324,16 @@ button[data-element-id="output-settings-button"] {
           },
         );
       }
-      await Mine.attachToElementContinuously(getTaAsync, ta => {
+      await Mine.attachToElementContinuously(getTaAsync, taEle => {
         // happens at least when u switch chats
-        ta.placeholder = 'Mine'+new Date();
-        ta.addEventListener('blur', async e => {
-          ta.placeholder = 'Mine'+new Date();
+
+        taEle.addEventListener('blur', () => {
+          requestAnimationFrame(() => taEle.placeholder='');
         });
-        ta.addEventListener('keydown', async e => {
+        taEle.addEventListener('focus', () => {
+          requestAnimationFrame(() => taEle.placeholder='');
+        });
+        taEle.addEventListener('keydown', async e => {
           if (e.metaKey && e.shiftKey && e.key === 'Enter') {
             e.preventDefault();
 
