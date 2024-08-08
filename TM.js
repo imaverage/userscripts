@@ -189,7 +189,7 @@
 /* get the right background color. transparency doesnt look good. */
 [data-element-id="chat-space-end-part"] {
   border: 0;
-  background: var(--mine-bg-color);
+  background: var(--mine-bg-color) !important;
 }
 
 [data-element-id="chat-avatar-container"] {
@@ -1211,7 +1211,6 @@ button:has([d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"]):focus {
 }
 
 div:has(>.pb-safe) {
-  border: 1px solid dimgray;
   border-bottom-width: 0;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
