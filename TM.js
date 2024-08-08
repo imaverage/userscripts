@@ -1690,9 +1690,6 @@ button[data-element-id="output-settings-button"] {
         right: -2px;
         height: calc(100vh - 60px - 100px);
       }
-      .mine_notes:hover {
-        opacity: 1;
-      }
       .mine_notes:focus {
         opacity: 1;
         right: -2px;
@@ -1702,7 +1699,7 @@ button[data-element-id="output-settings-button"] {
       .mine_notes {
         transition: all 0.2s ease;
         cursor: pointer;
-        opacity: 0.2;
+        opacity: 0.2 !important;
         line-height: 1.1em;
         padding: 7px;
         position: fixed;
@@ -1715,6 +1712,9 @@ button[data-element-id="output-settings-button"] {
         border-width: 2px;
         height: 36px;
         resize: none;
+      }
+      .mine_notes:hover {
+        opacity: 1 !important;
       }
     </style>
     <textarea class="mine_notes" placeholder="📝 Notes..." title="[M] Notepad"></textarea>
