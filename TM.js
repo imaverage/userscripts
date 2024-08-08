@@ -182,6 +182,12 @@
   user-select: none !important;
 }
 
+/* get the right background color. transparency doesnt look good. */
+[data-element-id="chat-space-end-part"] {
+  border: 0;
+  background: rgb(16, 17, 17);
+}
+
 [data-element-id="chat-avatar-container"] {
   display: none;
 }
@@ -1099,9 +1105,11 @@ textarea[placeholder*="JS code"]
   outline: none;
 }
 
+/*
 .fixed:has([data-element-id="chat-space-end-part"]) {
   filter: drop-shadow(0px -5px 10px #000000);
 }
+*/
 
 div:has(>[data-element-id="send-button"]) {
   display: none;
