@@ -1083,7 +1083,6 @@ body {
   const main = async () => {
     const verticalMoreIconPath = `M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z`;
     const stopIconPath = `M400 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48z`;
-    const regenerateIconPath = `M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z`;
     const css = `
 ${Mine.getCssToHide(`[data-element-id="input-row"] div:has([data-element-id="prompt-library-small-button"])`)}
 ${Mine.getCssToQuietQs('[data-element-id="current-chat-title"]', {delayMs: 0})}
@@ -1189,9 +1188,6 @@ button:has([d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"]):focus {
   background: rgba(0, 0, 0, 0.2);
 }
 #chat-input-textbox + button {
-  display: none;
-}
-div:has(>button [d="${regenerateIconPath}"]) {
   display: none;
 }
 .transition-all {
