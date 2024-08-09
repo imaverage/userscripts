@@ -2238,6 +2238,7 @@ ${msgEditToolbarEleQs} {
         `[data-element-id="upload-document-button"]`,
         `[data-element-id="voice-input-button"]`,
         `[id^="message-timestamp-"]`,
+        `[data-element-id="pinned-characters-container"]>div`,
         `.mine_notes:placeholder-shown`,  // empty notes tab
 
         // display none causes dom shifts
