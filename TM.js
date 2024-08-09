@@ -2233,28 +2233,31 @@ ${msgEditToolbarEleQs} {
       const durationMs = 200;
 
       // display none causes dom shifts
-      const qssDontDisplayNone = [
+      const qssToMakeInvisible = [
         `.hide-when-print.sticky`,
         `#elements-in-action-buttons`,
         `[data-element-id="pinned-characters-container"] > div:first-child`,
       ];
-      const qss = [
-        ...qssDontDisplayNone,
+      const qssToMakeInvisibleAndUndisplay = [
         `[data-element-id="upload-document-button"]`,
         `[data-element-id="voice-input-button"]`,
         `[id^="message-timestamp-"]`,
         `.mine_notes:placeholder-shown`,  // empty notes tab
       ];
+      const qssToFullScreen = [
+        ...qssToMakeInvisible,
+        ...qssToMakeInvisibleAndUndisplay,
+      ];
       const fullscreenStyles = `
-${qss.join(',\n')} {
+${qssToFullScreen.join(',\n')} {
   opacity: 1;
   transition: opacity ${durationMs}ms ease-in-out;
 }
-${qss.map(qs => `.fullscreen-active ${qs}`).join(',\n')} {
+${qssToFullScreen.map(qs => `.fullscreen-active ${qs}`).join(',\n')} {
   opacity: 0;
   pointer-events: none;
 }
-${qss.filter(qs => !qssDontDisplayNone.includes(qs)).map(qs => `.fullscreen-hide ${qs}`).join(',\n')} {
+${qssToFullScreen.filter(qs => !qssToMakeInvisible.includes(qs)).map(qs => `.fullscreen-hide ${qs}`).join(',\n')} {
   display: none !important;
 }
       `;
