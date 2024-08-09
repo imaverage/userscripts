@@ -2231,19 +2231,19 @@ ${msgEditToolbarEleQs} {
     let normalTaWidth;
     const toggleFullscreen = async () => {
       const durationMs = 200;
+
+      // display none causes dom shifts
       const qssDontDisplayNone = [
         `.hide-when-print.sticky`,
         `#elements-in-action-buttons`,
         `[data-element-id="pinned-characters-container"] > div:first-child`,
       ];
       const qss = [
+        ...qssDontDisplayNone,
         `[data-element-id="upload-document-button"]`,
         `[data-element-id="voice-input-button"]`,
         `[id^="message-timestamp-"]`,
         `.mine_notes:placeholder-shown`,  // empty notes tab
-
-        // display none causes dom shifts
-        ...qssDontDisplayNone,
       ];
       const fullscreenStyles = `
 ${qss.join(',\n')} {
