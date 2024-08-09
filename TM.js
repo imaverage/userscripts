@@ -932,9 +932,6 @@ body {
   user-select: none !important;
 }
 
-[data-element-id="chat-space-end-part"] {
-  border-radius: 6px;
-}
 `);
   }
   if (!isMobile) {
