@@ -2231,6 +2231,11 @@ ${msgEditToolbarEleQs} {
     let normalTaWidth;
     const toggleFullscreen = async () => {
       const durationMs = 200;
+      const qssDontDisplayNone = [
+        `.hide-when-print.sticky`,
+        `#elements-in-action-buttons`,
+        `[data-element-id="pinned-characters-container"] > div:first-child`,
+      ];
       const qss = [
         `[data-element-id="upload-document-button"]`,
         `[data-element-id="voice-input-button"]`,
@@ -2238,9 +2243,7 @@ ${msgEditToolbarEleQs} {
         `.mine_notes:placeholder-shown`,  // empty notes tab
 
         // display none causes dom shifts
-        `[data-element-id="pinned-characters-container"] > div:first-child`,
-        `.hide-when-print.sticky`,
-        `#elements-in-action-buttons`,
+        ...qssDontDisplayNone,
       ];
       const fullscreenStyles = `
 ${qss.join(',\n')} {
@@ -2251,7 +2254,7 @@ ${qss.map(qs => `.fullscreen-active ${qs}`).join(',\n')} {
   opacity: 0;
   pointer-events: none;
 }
-${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`, `[data-element-id="pinned-characters-container"] > div:first-child`].includes(qs)).map(qs => `.fullscreen-hide ${qs}`).join(',\n')} {
+${qss.filter(qs => !qssDontDisplayNone.includes(qs)).map(qs => `.fullscreen-hide ${qs}`).join(',\n')} {
   display: none !important;
 }
       `;
