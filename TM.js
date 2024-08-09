@@ -2235,10 +2235,10 @@ ${msgEditToolbarEleQs} {
         `[data-element-id="upload-document-button"]`,
         `[data-element-id="voice-input-button"]`,
         `[id^="message-timestamp-"]`,
-        `[data-element-id="pinned-characters-container"] > div:first-child`,
         `.mine_notes:placeholder-shown`,  // empty notes tab
 
         // display none causes dom shifts
+        `[data-element-id="pinned-characters-container"] > div:first-child`,
         `.hide-when-print.sticky`,
         `#elements-in-action-buttons`,
       ];
@@ -2251,7 +2251,7 @@ ${qss.map(qs => `.fullscreen-active ${qs}`).join(',\n')} {
   opacity: 0;
   pointer-events: none;
 }
-${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`].includes(qs)).map(qs => `.fullscreen-hide ${qs}`).join(',\n')} {
+${qss.filter(qs => ![`.hide-when-print.sticky`, `#elements-in-action-buttons`, `[data-element-id="pinned-characters-container"] > div:first-child`].includes(qs)).map(qs => `.fullscreen-hide ${qs}`).join(',\n')} {
   display: none !important;
 }
       `;
